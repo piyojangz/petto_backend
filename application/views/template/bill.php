@@ -15,78 +15,80 @@
         <link href="<?= base_url("res/css/custom.css") ?>" rel="stylesheet" type="text/css"/>
     </head>
     <body>
+        <div class="overlay-loader">
+            <div class="bg"></div>
+            <div class="container">
+                <div class="loader"></div>
+                <p>กรุณารอสักครู่ระบบกำลังดำเนินการ...</p>
+            </div>
+        </div>
         <div class="container">
-            <div class="header">
-                <div class="row">
-                    <div class="logo">
-                        <img src="http://www.rochubeauty.com//public/images/logo_white.png"/>
+            <form method="POST" id="submitform" >
+                <div class="header">
+                    <div class="row">
+                        <div class="logo">
+                            <img src="<?= $merchant->image ?>"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h4 class="text-center head-section">Billing Detail</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <ul class="nav nav-list">
+                                <li class="nav-header">รายการสินค้า</li>  
+                                <?php foreach ($items as $item): ?>
+                                    <li  > 
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <span class="itemname"><?= $item->name ?></span> <br/>  <span class="itemprice"><?= number_format($item->price, 2, '.', ','); ?></span>
+                                            </div>
+                                            <div class="col-xs-4"> 
+                                                <input type="hidden" value="<?= $item->id ?>"/>
+                                                <input type="hidden" value="<?= $item->price ?>"/>
+                                                <input type="number" class="form-control input-sm itemamount" value="<?= $obj->getamount($orderdetail, $item->id) ?>"  placeholder="0" /> 
+                                            </div>
+                                        </div>
+                                    </li>
+                                <?php endforeach; ?> 
+                                <li class="divider"></li>
+                                <li class="nav-header">สรุปยอด</li>
+                                <li>
+                                    <a href="#fakelink">
+                                        +ค่าจัดส่ง
+                                        <span class="badge pull-right"><?= number_format($merchant->deliverycharge, 2, '.', ',') ?>฿</span>
+                                    </a>
+                                </li> 
+                                <li class="active">
+                                    <a href="#fakelink">
+                                        ยอดที่ต้องชำระ
+                                        <span class="badge pull-right" id="total"><?= number_format($order->total, 2, '.', ',') ?>฿</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
                     </div>
                 </div>
+
                 <div class="row">
+                    <h4 class="text-center head-section payment">Payment Method</h4>
                     <div class="col-xs-12">
-                        <h4 class="text-center head-section">Billing Detail</h4>
-                    </div>
+                        <?php foreach ($paymentmethod as $index => $item): ?>
+                            <label class="bank" for="checkbox<?= $index ?>"> 
+                                <input name="paymenttype"  type="radio" id="checkbox<?= $index ?>"  required value="<?= $item->id ?>"  <?= $item->id == $order->paymentmethodid ? 'checked' : '' ?>/>
+                                <img src="<?= $item->banklogo ?>" style="width: 30px; height: 30px;">
+                                ธนาคาร <?= $item->bankname ?> ประเภท <?= $item->acctype ?> ชื่อบัญชี <?= $item->accname ?> เลขที่บัญชี <?= $item->accno ?>
+                            </label> 
+                        <?php endforeach; ?> 
+                        <input type="hidden" id="orderid" value="<?= $order->id ?>" />
+                        <button type="submit"  class="btn btn-hg btn-block btn-primary">แจ้งชำระเงิน</button>
+                    </div><!-- /.demo-col -->
+
                 </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <ul class="nav nav-list">
-                            <li class="nav-header">รายการสินค้า</li>  
-                            <li>
-                                <a href="#fakelink">
-                                    ชุดทดลอง 5 ชิ้น
-                                    <span class="badge pull-right">930.00฿ x 5</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#fakelink">
-                                    เซรั่มลอกฝ้า Rochu White
-                                    <span class="badge pull-right">490.00฿ x 1</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#fakelink">
-                                    ครีมบำรุงผิวเนื้อแมทท์
-                                    <span class="badge pull-right">590.00฿ x 1</span>
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li class="nav-header">สรุปยอด</li>
-                            <li>
-                                <a href="#fakelink">
-                                    +ค่าจัดส่ง
-                                    <span class="badge pull-right">50.00฿</span>
-                                </a>
-                            </li> 
-                            <li class="active">
-                                <a href="#fakelink">
-                                    ยอดที่ต้องชำระ
-                                    <span class="badge pull-right">5,780.00฿</span>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <h4 class="text-center head-section payment">Payment Method</h4>
-                <div class="col-xs-12">
-                    <label class="bank" for="checkbox1"> 
-                        <input name="paymenttype"  type="radio" id="checkbox1" checked/>
-                        <img src="http://www.magazinedee.com/share/images/icon_payment_kbank.gif " style="width: 30px; height: 30px;">
-                        ธนาคาร กสิกรไทย ประเภท ออมทรัพย์ สาขามหาวิทยาลัยเกษตรศาสตร์ บางเขน ชื่อบัญชี ชนิกานต์ สงวนพันธุ์ เลขที่บัญชี 694-2-09854-3
-                    </label> 
-                    <label class="bank" for="checkbox3"> 
-                        <input name="paymenttype" type="radio" id="checkbox3"/>
-                        <img src="http://ext.truemoney.com/m/info/addmoney/instruction/images/logo-scb.png " style="width: 30px; height: 30px;">
-                        ธนาคาร ไทยพานิชย์ ประเภท ออมทรัพย์ สาขามหาวิทยาลัยเกษตรศาสตร์ บางเขน ชื่อบัญชี ชนิกานต์ สงวนพันธุ์ เลขที่บัญชี 694-2-09854-3
-                    </label> 
-                    <a href="<?= base_url("order/payment/011547")?>" class="btn btn-hg btn-block btn-primary">แจ้งชำระเงิน</a>
-                </div><!-- /.demo-col -->
-
-            </div>
-
+            </form>
         </div> 
         <div class="mtl pbl">
             <div class="bottom-menu">
@@ -111,6 +113,76 @@
 
 
     <script>
+        $(document).ready(function () {
+            init();
 
+            $("input[type=number]").change(function () {
+                updateprice();
+            });
+        });
+
+        function updateprice() {
+            var deliverycharge = '<?= $merchant->deliverycharge ?>';
+            var total = 0;
+            $('input[type=number]').each(function () {
+                total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
+            });
+            total += parseFloat(deliverycharge);
+            $("#total").html(numberWithCommas(total) + "฿");
+        }
+
+
+        $("#submitform").submit(function () {
+            $(".overlay-loader").show();
+            var total = 0;
+            var deliverycharge = '<?= $merchant->deliverycharge ?>';
+            var itemselected = "";
+            var hasitem = 0;
+            $('input[type=number]').each(function () {
+                hasitem += $(this).val();
+                itemselected += $(this).prev().prev().val() + "," + parseFloat($(this).val() == "" ? 0 : $(this).val()) + "," + parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val()) + ";";
+                total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
+            });
+
+            if (hasitem == 0) {
+                $(".overlay-loader").hide();
+                alert("เลือกสินค้าอย่างน้อย 1 ชิ้น");
+
+                return false;
+            }
+            itemselected = itemselected.slice(0, -1);
+            total += parseFloat(deliverycharge);
+            var paymenttype = $('input[name=paymenttype]:checked', '#submitform').val()
+
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('service/submitorder'); ?>",
+                data: {'itemselected': itemselected, 'total': total, 'paymenttype': paymenttype, 'orderid': $("#orderid").val(), 'ordertoken': '<?= $ordertoken ?>', 'deliverycharge': '<?= $merchant->deliverycharge ?>'},
+                dataType: "json",
+                success: function (data) {
+                    if (data.result != null) {
+                        location.href = "<?= base_url("shipinginfo/$ordertoken") ?>";
+                    }
+                    $(".overlay-loader").hide();
+                },
+                error: function (XMLHttpRequest) {
+                    $(".overlay-loader").hide();
+                }
+            });
+
+
+            return false;
+        });
+
+
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function init() {
+            $(".overlay-loader").hide();
+            updateprice();
+        }
     </script>
 </html>

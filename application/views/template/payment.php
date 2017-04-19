@@ -26,89 +26,115 @@
             <div class="header">
                 <div class="row">
                     <div class="logo">
-                        <img src="http://www.rochubeauty.com//public/images/logo_white.png"/>
+                        <img src="<?= $merchant->image ?>"/>
                     </div>
                 </div>
+
+
+
+
                 <div class="row">
                     <div class="col-xs-12">
                         <h4 class="text-center head-section userdetail">Shipping info</h4>
                     </div>
                 </div>
-                <div class="row">
+                <!--                <div class="row" id="lookup">
+                                    <div class="col-xs-12"> 
+                                        <form id="formlookup"> 
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input class="form-control" id="txttellookup" name="txttellookup" type="tel" required placeholder="เบอร์โทร">
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-default" type="button"><i class="fa fa-phone-square" aria-hidden="true"></i></button> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input class="form-control" id="txtidcard" name="txtidcard" type="number" required placeholder="เลขบัตรประชาชน" maxlength="13"> 
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-default" type="button"><i class="fa fa-id-card" aria-hidden="true"></i></button> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-hg btn-block btn-primary" id="btnlookup">LOOKUP</button>
+                                        </form>
+                                    </div>
+                                </div>-->
+
+                <div class="row" id="fulladdress">
                     <div class="col-xs-12">
 
-                        <form> 
+                        <form  action="<?= base_url("order/payment/$ordertoken") ?>" method="post" enctype="multipart/form-data"> 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input class="form-control" id="appendedInputButton-03" type="text" placeholder="ชื่อ - นามสกุล" required>
+                                    <input class="form-control" id="txtfullname" name="txtfullname" type="text" placeholder="ชื่อ - นามสกุล" value="<?= isset($customer) ? $customer->fullname : '' ?>" required>
                                     <div class="input-group-btn">
                                         <button class="btn btn-default" type="button"><span class="fa fa-user-circle-o" aria-hidden="true"></span></button> 
                                     </div>
                                 </div>
-                            </div>
+                            </div> 
+
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input class="form-control" id="appendedInputButton-03" type="tel" placeholder="เบอร์โทร">
+                                    <input class="form-control" id="txttel" name="txttel" type="tel" placeholder="เบอร์โทร" value="<?= isset($customer) ? $customer->tel : '' ?>" required>
                                     <div class="input-group-btn">
                                         <button class="btn btn-default" type="button"><i class="fa fa-phone-square" aria-hidden="true"></i></button> 
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input class="form-control" id="appendedInputButton-03" type="email" placeholder="อีเมลล์">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-default" type="button"><i class="fa fa-envelope-open-o" aria-hidden="true"></i></button> 
-                                    </div>
-                                </div>
-                            </div>
+
+                            <!--                            <div class="form-group">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedInputButton-03" type="email" placeholder="อีเมลล์">
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-default" type="button"><i class="fa fa-envelope-open-o" aria-hidden="true"></i></button> 
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+
+
                             <div class="form-group">
                                 <div class="input">
-                                    <input class="form-control" id="appendedInputButton-03" type="text" placeholder="บ้านเลขที่/หมู่บ้าน"> 
+                                    <input class="form-control" id="txtaddress" name="txtaddress" type="text" placeholder="บ้านเลขที่/หมู่บ้าน" required value="<?= isset($customer) ? $customer->fulladdress : '' ?>"> 
                                 </div>
                             </div> 
 
                             <div class="form-group"> 
-                                <select class="selectpicker">
-                                    <option>== กรุณาเลือกจังหวัด ==</option>
-                                    <option>Ketchup</option>
-                                    <option>Relish</option>
+                                <select class="selectpicker" name="txtprovince" id="txtprovince" required>
+                                    <option value="">== กรุณาเลือกจังหวัด ==</option>
+                                    <?php foreach ($province as $value): $provid = isset($customer) ? $customer->provinceid : ''; ?>
+                                        <option value="<?= $value->PROVINCE_ID ?>"   <?= $value->PROVINCE_ID == $provid ? 'selected' : '' ?>><?= $value->PROVINCE_NAME ?></option>
+                                    <?php endforeach; ?> 
                                 </select>
 
                             </div>
                             <div class="form-group"> 
-                                <select class="selectpicker">
-                                    <option>== กรุณาเลือกอำเภอ ==</option>
-                                    <option>Ketchup</option>
-                                    <option>Relish</option>
+                                <select class="selectpicker" name="txtaumpure" id="txtaumpure" required>
+                                    <option  value="">== กรุณาเลือกอำเภอ ==</option>
                                 </select>
 
                             </div>
                             <div class="form-group"> 
-                                <select class="selectpicker">
-                                    <option>== กรุณาเลือกตำบล ==</option>
-                                    <option>Ketchup</option>
-                                    <option>Relish</option>
+                                <select class="selectpicker" name="txttumbol" id="txttumbol" required>
+                                    <option  value="">== กรุณาเลือกตำบล ==</option>
                                 </select>
 
                             </div>
                             <div class="form-group">
                                 <div class="input">
-                                    <input class="form-control" id="appendedInputButton-03" type="number" placeholder="รหัสไปรษณีย์" max="5"> 
+                                    <input class="form-control" id="txtzipcode" name="txtzipcode" type="number" placeholder="รหัสไปรษณีย์"  value="<?= isset($customer) ? $customer->zipcode : '' ?>" required > 
                                 </div>
                             </div>
                             <div class="form-group">
                                 <h4 class="text-center head-section payment">Payment Method</h4>
-                                <label class="bank" for="checkbox1"> 
-                                    <input name="paymenttype"  type="radio" id="checkbox1" checked/>
-                                    <img src="http://www.magazinedee.com/share/images/icon_payment_kbank.gif " style="width: 30px; height: 30px;">
-                                    ธนาคาร กสิกรไทย ประเภท ออมทรัพย์ สาขามหาวิทยาลัยเกษตรศาสตร์ บางเขน ชื่อบัญชี ชนิกานต์ สงวนพันธุ์ เลขที่บัญชี 694-2-09854-3
-                                </label> 
-                                <label class="bank" for="checkbox3"> 
-                                    <input name="paymenttype" type="radio" id="checkbox3"/>
-                                    <img src="http://ext.truemoney.com/m/info/addmoney/instruction/images/logo-scb.png " style="width: 30px; height: 30px;">
-                                    ธนาคาร ไทยพานิชย์ ประเภท ออมทรัพย์ สาขามหาวิทยาลัยเกษตรศาสตร์ บางเขน ชื่อบัญชี ชนิกานต์ สงวนพันธุ์ เลขที่บัญชี 694-2-09854-3
-                                </label> 
+                                <?php foreach ($paymentmethod as $index => $item): ?>
+                                    <label class="bank" for="checkbox<?= $index ?>"> 
+                                        <input name="paymenttype"  type="radio" id="checkbox<?= $index ?>"  required value="<?= $item->id ?>" <?= $item->id == $order->paymentmethodid ? 'checked' : '' ?>/>
+                                        <img src="<?= $item->banklogo ?>" style="width: 30px; height: 30px;">
+                                        ธนาคาร <?= $item->bankname ?> ประเภท <?= $item->acctype ?> ชื่อบัญชี <?= $item->accname ?> เลขที่บัญชี <?= $item->accno ?>
+                                    </label> 
+                                <?php endforeach; ?> 
                             </div>
                             <div class="form-group">
                                 รูปถ่าย/สลิป
@@ -118,12 +144,13 @@
                                         <span class="btn btn-info btn-embossed btn-file">
                                             <span class="fileinput-new"><span class="fui-image"></span>  Select image</span>
                                             <span class="fileinput-exists"><span class="fui-gear"></span>  Change</span>
-                                            <input type="file" name="...">
+                                            <input type="file" name="txtfileupload" id="txtfileupload" accept=".png,.jpg,.gif,.jpeg">
                                         </span>
                                         <a href="#" class="btn btn-primary btn-embossed fileinput-exists" data-dismiss="fileinput"><span class="fui-trash"></span>  Remove</a>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 วัน / เวลา ที่ชำระเงิน
                                 <div class="form-group">
@@ -133,17 +160,18 @@
                                                 <span class="input-group-btn">
                                                     <button class="btn" type="button"><span class="fui-calendar"></span></button>
                                                 </span>
-                                                <input type="text" class="form-control" value="02/04/2017" id="datepicker-01" />
+                                                <input type="text"  class="form-control" value="<?= date('d/m/Y') ?>" id="txtpaiddate"  name="txtpaiddate" required/>
                                             </div>
                                         </div>
                                         <div class="col-xs-5">
-                                            <input class="form-control" id="appendedInputButton-03" type="text" placeholder="09:00"> 
+                                            <input class="form-control" id="txtpaidtime" name="txtpaidtime" type="text" placeholder="09:00" required> 
                                         </div>
                                     </div> 
                                 </div> 
 
 
                             </div>
+                            <input type="hidden" value="<?= $ordertoken ?>" id="ordertoken" />
                             <button type="submit" class="btn btn-hg btn-block btn-inverse">ส่งข้อมูลการชำระเงิน</button>
                         </form>
                     </div>
@@ -176,7 +204,7 @@
     <script type="text/javascript" src="<?= base_url("res/js/prettify.js") ?>"></script> 
     <script type="text/javascript" src="<?= base_url("res/js/application-docs.js") ?>"></script>    
     <script>
-        var datepickerSelector = $('#datepicker-01');
+        var datepickerSelector = $('#txtpaiddate');
         datepickerSelector.datepicker({
             showOtherMonths: true,
             selectOtherMonths: true,
@@ -189,13 +217,145 @@
         $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
                 return offset;
             }});
-
         // Now let's align datepicker with the prepend button
         datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
-
-
         $(document).ready(function () {
-            $(".overlay-loader").hide();
+
+            init();
+            var provinceid = '<?= isset($customer) ? $customer->provinceid : '' ?>';
+            var aumpureid = '<?= isset($customer) ? $customer->aumpureid : '' ?>';
+            var tumbolid = '<?= isset($customer) ? $customer->tumbolid : '' ?>';
+            if (provinceid != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('service/getaumphure'); ?>",
+                    data: {'provinceid': provinceid},
+                    dataType: "json",
+                    success: function (data) {
+                        var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+                        $.each(data.result, function (index, value) {
+                            if (value.AMPHUR_ID == aumpureid) {
+                                html += "<option selected value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+                            } else {
+                                html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+                            }
+
+                        });
+                        $("#txtaumpure").html(html);
+                        html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+                        ;
+                        $(".overlay-loader").hide();
+                    },
+                    error: function (XMLHttpRequest) {
+                        $(".overlay-loader").hide();
+                    }
+                });
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('service/gettumbol'); ?>",
+                    data: {'aumpureid': aumpureid},
+                    dataType: "json",
+                    success: function (data) {
+
+                        var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+
+                        $.each(data.result, function (index, value) {
+
+                            if (value.DISTRICT_ID == tumbolid) {
+                                html += "<option selected value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+                            } else {
+                                html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+                            }
+
+                        });
+                        $("#txttumbol").html(html);
+                    },
+                    error: function (XMLHttpRequest) {
+                    }
+                });
+            }
+
+
+            $("#formlookup").submit(function () {
+                $(".overlay-loader").show();
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('service/sendorder'); ?>",
+                    data: {'txttel': $("#txttellookup").val(), 'txtidcard': $("#txtidcard").val()},
+                    dataType: "json",
+                    success: function (data) {
+
+                        if (data.result != null) {
+                            console.log(data);
+                        }
+                        $(".overlay-loader").hide();
+                    },
+                    error: function (XMLHttpRequest) {
+                        $(".overlay-loader").hide();
+                    }
+                });
+                $("#txttel").val($("#txttellookup").val());
+                return false;
+            });
+            $("#txtprovince").change(function () {
+                $(".overlay-loader").show();
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('service/getaumphure'); ?>",
+                    data: {'provinceid': $(this).val()},
+                    dataType: "json",
+                    success: function (data) {
+                        var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+                        $.each(data.result, function (index, value) {
+                            html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+                        });
+                        $("#txtaumpure").html(html);
+                        html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                        $("#txttumbol").html(html);
+                        $(".overlay-loader").hide();
+                    },
+                    error: function (XMLHttpRequest) {
+                        $(".overlay-loader").hide();
+                    }
+                });
+            });
+            $("#txtaumpure").change(function () {
+                $(".overlay-loader").show();
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('service/gettumbol'); ?>",
+                    data: {'aumpureid': $(this).val()},
+                    dataType: "json",
+                    success: function (data) {
+                        var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                        $.each(data.result, function (index, value) {
+                            html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+                        });
+                        $("#txttumbol").html(html);
+                        $(".overlay-loader").hide();
+                    },
+                    error: function (XMLHttpRequest) {
+                        $(".overlay-loader").hide();
+                    }
+                });
+            });
         });
+        function init() {
+            $(".overlay-loader").hide();
+        }
+    </script>
+    <input type="hidden" id="refreshed" value="no">
+    <script type="text/javascript">
+        onload = function () {
+            var e = document.getElementById("refreshed");
+            if (e.value == "no")
+                e.value = "yes";
+            else {
+                e.value = "no";
+                location.reload(); 
+            }
+        }
     </script>
 </html>

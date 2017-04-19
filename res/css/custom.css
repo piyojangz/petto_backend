@@ -86,13 +86,13 @@
     position: fixed;
     width: 100%;
     height: 100%;
-      z-index: 999;
+    z-index: 999;
 }
 .overlay-loader .bg{  
     width: 100%;
     height: 100%;
     background: #000;
-  
+
     opacity: .5;
 }
 .overlay-loader .container{
@@ -114,6 +114,24 @@
     animation: spin .5s linear infinite;
 }
 
+.itemname{
+    color: #16a085;
+    font-size: 15px;
+    font-weight: 700;
+    text-shadow: none;
+}
+.itemprice{
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    text-shadow: none;
+}
+.itemamount{
+    margin: 7px 0px;
+    width: 70px;
+    float: right;
+    text-align: center;
+}
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
