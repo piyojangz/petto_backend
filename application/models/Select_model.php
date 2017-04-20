@@ -10,6 +10,15 @@ class Select_model extends CI_Model {
         return $query->row();
     }
 
+    
+     function v_merchantlineuid($cond) {
+        $this->db->select('lineuid');
+        $this->db->from('v_merchantlineuid');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+    
     function paymentmethod($cond) {
         $this->db->select('*');
         $this->db->from('paymentmethod');

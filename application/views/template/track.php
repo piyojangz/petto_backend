@@ -73,6 +73,10 @@
                         <li class="divider"></li>
                         <li class="nav-header">ข้อมูลการชำระเงิน</li>
                         <li class="active">
+                            <p style="font-size: 14px;width: 100%;">เวลา <?= $order->paymentinfo ?></p>
+                            <div class="clearfix"></div>
+                        </li>
+                        <li class="active">
                             <p style="font-size: 14px;width: 100%;"><?= $obj->getpaymentmethoddetail($order->paymentmethodid); ?></p>
                             <div class="clearfix"></div>
                         </li>
@@ -86,6 +90,13 @@
                                 <div class="clearfix"></div>
                             </li>
                         <?php endif; ?>
+                        <li class="divider"></li>
+                        <li class="nav-header">ข้อมูลผู้สั่ง</li>
+                        <li class="active">
+                            <p style="font-size: 14px;width: 100%;"><?= $custdetail->fullname ?> <br/><i class="fa fa-phone-square"></i> <?= $custdetail->tel ?></p>
+                            <div class="clearfix"></div>
+
+                        </li>
                         <li class="divider"></li>
                         <li class="nav-header">ที่อยู่สำหรับจัดส่ง</li>
                         <li class="active">

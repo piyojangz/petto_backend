@@ -25,19 +25,25 @@ class Order extends CI_Controller {
         $this->load->view('template/paymentsuccess', $data);
     }
 
-    public function trackorder($token = "", $custuid = "") {
+    public function trackorder($token = "", $merchantuid = "") {
         $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
         $data["obj"] = $this;
         $uid = $ordertoken->uid;
-        $data["canedit"] = $custuid == $uid ? true : false;
-
+        $data["custdetail"] = $this->get->customer(array('uid' => $uid))->row();
         $merchantid = $ordertoken->merchantid;
         $orderid = $ordertoken->orderid;
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
         $data["orderdetail"] = $this->get->orderdetail(array('orderid' => $orderid))->result();
-
         $data["items"] = $this->get->items(array('merchantid' => $merchantid))->result();
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
+
+
+
+
+        $meruid = $this->get->v_merchantlineuid(array('token' => $token, 'lineuid' => $merchantuid))->num_rows();
+        $data["canedit"] = $meruid > 0 ? true : false;
+
+
         $this->load->view('template/track', $data);
     }
 
