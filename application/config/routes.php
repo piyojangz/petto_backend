@@ -54,8 +54,11 @@ $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['(:any)'] = "home/index/$1";
-$route['shipinginfo/(:any)'] = "order/payment/$1"; 
-$route['track/(:any)'] = "order/trackorder/$1"; 
-$route['track/(:any)/(:any)'] = "order/trackorder/$1/$2"; 
-$route['paymentsuccess/(:any)'] = "order/paymentsuccess/$1"; 
+
+
+$route['register'] = "register/index/";
+$route['(:any)'] = "bill/index/$1";
+$route['shipinginfo/(:any)'] = "order/payment/$1";
+$route['track/(:any)'] = "order/trackorder/$1";
+$route['track/(:any)/(:any)'] = "order/trackorder/$1/$2";
+$route['paymentsuccess/(:any)'] = "order/paymentsuccess/$1";
