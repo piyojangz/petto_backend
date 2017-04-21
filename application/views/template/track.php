@@ -178,7 +178,7 @@
                     $.ajax({
                         type: "POST",
                         url: "<?php echo base_url('service/confirmpayment'); ?>",
-                        data: {'orderid': orderid, 'status': 2},
+                        data: {'orderid': orderid},
                         dataType: "json",
                         success: function (data) {
                             if (data) {

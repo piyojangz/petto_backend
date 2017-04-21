@@ -11,6 +11,7 @@ class Home extends CI_Controller {
         $this->load->model('Update_model', 'set');
         $this->load->library('upload');
         $this->load->library('common');
+        $this->load->library('lineapi');
     }
 
     public function index($token = "") {
@@ -132,7 +133,7 @@ class Home extends CI_Controller {
         if ($sql->num_rows() > 0) {
             $billtoken = $this->generatebilltoken($sql->row(), $uid);
             if ($billtoken) {
-                $replymsg = "ลูกค้าสามารถซื้อสินค้าได้ที่ลิงค์นี้ https://www.servewellsolution.com/socialbill/$billtoken";
+                $replymsg = "ลูกค้าสามารถซื้อสินค้าได้ที่ลิงค์นี้ https://perdbill.co/$billtoken";
             } else {
                 $replymsg = "เราไม่พบร้านค้าที่คุณสั่งซื้อ";
             }
@@ -163,7 +164,7 @@ class Home extends CI_Controller {
                     if ($sql->num_rows() > 0) {
                         $billtoken = $this->generatebilltoken($sql->row(), $uid);
                         if ($billtoken) {
-                            $replymsg = "ลูกค้าสามารถซื้อสินค้าได้ที่ลิงค์นี้ https://www.servewellsolution.com/socialbill/$billtoken";
+                            $replymsg = "ลูกค้าสามารถซื้อสินค้าได้ที่ลิงค์นี้ https://perdbill.co/$billtoken";
                         } else {
                             $replymsg = "เราไม่พบร้านค้าที่คุณสั่งซื้อ";
                         }
@@ -224,32 +225,6 @@ class Home extends CI_Controller {
 
         return false;
     }
-
-    public function pushmsg($userid, $msg) {
-        $strAccessToken = LINETOKEN;
-        $strUrl = "https://api.line.me/v2/bot/message/push";
-
-        $arrHeader = array();
-        $arrHeader[] = "Content-Type: application/json";
-        $arrHeader[] = "Authorization: Bearer {$strAccessToken}";
-
-        $arrPostData = array();
-        $arrPostData['to'] = $userid;
-        $arrPostData['messages'][0]['type'] = "text";
-        $arrPostData['messages'][0]['text'] = $msg;
-
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $strUrl);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $arrHeader);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($arrPostData));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $result = curl_exec($ch);
-        print_r($result);
-        curl_close($ch);
-    }
+                
 
 }

@@ -10,6 +10,7 @@ class Order extends CI_Controller {
         $this->load->model('Select_model', 'get');
         $this->load->model('Update_model', 'set');
         $this->load->library('upload');
+        $this->load->library('lineapi');
     }
 
     public function Summary($orderid = "") {
@@ -153,11 +154,11 @@ class Order extends CI_Controller {
                 'updatedate' => date('Y-m-d H:i:s'),
             );
             $this->set->order($input);
-            $this->pushmsg($uid, "ขอบคุณที่อุดหนุนค่ะ ลูกค้าสามารถติดตามการสั่งซื้อได้ที่ลิงค์นี้ https://www.servewellsolution.com/socialbill/track/$token");
+            $this->lineapi->pushmsg($uid, "ขอบคุณที่อุดหนุนค่ะ ลูกค้าสามารถติดตามการสั่งซื้อได้ที่ลิงค์นี้ https://perdbill.co/track/$token");
 
             $v_merchantuid = $this->get->v_merchantuid(array('ordertoken' => $token))->result();
             foreach ($v_merchantuid as $item) {
-                $this->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://www.servewellsolution.com/socialbill/track/$token/$item->lineuid");
+                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/$item->lineuid");
             }
 
             redirect(base_url("/paymentsuccess/$token"));
@@ -174,33 +175,6 @@ class Order extends CI_Controller {
         $fulladdr .= " จังหวัด " . $this->get->province(array('PROVINCE_ID' => $txtprovince))->row()->PROVINCE_NAME;
         $fulladdr .= " รหัสไปรษณีย์ " . $txtzipcode;
         return $fulladdr;
-    }
-
-    public function pushmsg($userid, $msg) {
-        $strAccessToken = LINETOKEN;
-        $strUrl = "https://api.line.me/v2/bot/message/push";
-
-        $arrHeader = array();
-        $arrHeader[] = "Content-Type: application/json";
-        $arrHeader[] = "Authorization: Bearer {$strAccessToken}";
-
-        $arrPostData = array();
-        $arrPostData['to'] = $userid;
-        $arrPostData['messages'][0]['type'] = "text";
-        $arrPostData['messages'][0]['text'] = $msg;
-
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $strUrl);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $arrHeader);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($arrPostData));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $result = curl_exec($ch);
-        print_r($result);
-        curl_close($ch);
     }
 
 }

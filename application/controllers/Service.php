@@ -10,6 +10,7 @@ class Service extends CI_Controller {
         $this->load->model('Select_model', 'get');
         $this->load->model('Update_model', 'set');
         $this->load->library('upload');
+        $this->load->library('lineapi');
     }
 
     public function lookupcustomer() {
@@ -83,10 +84,10 @@ class Service extends CI_Controller {
 
     public function confirmpayment() {
         $orderid = $this->input->post('orderid');
-        $status = $this->input->post('status');
+        $ordertoken = $this->get->ordertoken(array('orderid' => $orderid))->row();
         $input = array(
             'id' => $orderid,
-            'status' => $status,
+            'status' => 2,
             'updatedate' => date('Y-m-d H:i:s'),
         );
         $data['result'] = false;
@@ -94,6 +95,7 @@ class Service extends CI_Controller {
             $data['result'] = true;
         }
 
+        $this->lineapi->pushmsg($ordertoken->uid, "สถานะของคุณถูกเปลี่ยนแล้ว https://perdbill.co/track/$ordertoken->token");
 
 
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
