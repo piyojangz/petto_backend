@@ -33,6 +33,17 @@ class Service extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function getshippingrate() {
+        $merchantid = $this->input->post('merchantid');
+        $unit = $this->input->post('unit');
+
+        $data['result'] = $this->get->shippingrate($merchantid, $unit)->row();
+
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
     public function gettumbol() {
         $aumpureid = $this->input->post('aumpureid');
         $cond = array('AMPHUR_ID' => $aumpureid);
@@ -47,13 +58,13 @@ class Service extends CI_Controller {
         $total = $this->input->post('total');
         $paymenttype = $this->input->post('paymenttype');
         $orderid = $this->input->post('orderid');
-        $deliverycharge = $this->input->post('deliverycharge');
+        $shipingrate = $this->input->post('shipingrate');
         $ordertoken = $this->input->post('ordertoken');
         //update order
         $input = array(
             'id' => $orderid,
             'total' => $total,
-            'deliverycharge' => $deliverycharge,
+            'shipingrate' => $shipingrate,
             'paymentmethodid' => $paymenttype,
             'updatedate' => date('Y-m-d H:i:s'),
         );
