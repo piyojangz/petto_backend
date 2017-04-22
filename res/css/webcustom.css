@@ -1,5 +1,4 @@
-body {
-    min-height: 2000px;
+body { 
     padding-top: 70px;
 }
 body.nopadding{
@@ -182,8 +181,7 @@ body.nopadding{
     text-align: center;
     color: #fff;
 }
-.panel-info > .panel-heading {
-    color: #ffffff !important;
-    background-color: #21bf64 !important;
-    border-color: #21bf64 !important;
+#fulladdress{
+    max-width: 550px;
+    margin: 0 auto;
 }

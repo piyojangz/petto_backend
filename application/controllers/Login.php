@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Register extends CI_Controller {
+class Login extends CI_Controller {
 
     function __construct() {
         parent::__construct();
@@ -17,24 +17,17 @@ class Register extends CI_Controller {
     }
 
     public function index() {
-        $data["emaildoesexit"] = false;
-        $data["register"] = false;
+        $data["login"] = true;
         if ($_POST) {
             $email = $this->input->post('email');
-            $cond = array('email' => $email);
-            if ($this->get->merchant($cond)->num_rows() > 0) {
-                $data["emaildoesexit"] = true;
-            } else {
-                $password = $this->input->post('password');
-                $token = $this->common->getToken(6);
-                $input = array(
-                    'email' => $email,
-                    'password' => md5($password),
-                    'token' => $token,
-                );
-                $this->put->merchant($input);
-                $data["register"] = true;
+            $password = $this->input->post('password');
+            $remember_me = 'on';
+
+            $result = $this->user->user_login($email, md5($password), $remember_me);
+            if ($result) {
+                redirect('account', 'index');
             }
+            $data["login"] = false;
         }
 
         $cm_account = $this->user->get_account_cookie();
@@ -43,7 +36,7 @@ class Register extends CI_Controller {
         }
 
 
-        $this->load->view('register/index', $data);
+        $this->load->view('login/index', $data);
     }
 
 }

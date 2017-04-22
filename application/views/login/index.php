@@ -51,68 +51,39 @@
 
             <div class="row">
                 <div class="col-xs-12">
-                    <h4 class="text-center head-section userdetail " style="margin-top: 50px;">Register</h4>
+                    <h4 class="text-center head-section userdetail " style="margin-top: 50px;">Login</h4>
                 </div>
             </div>
 
             <div class="row" id="fulladdress">
-                <div class="col-xs-12"> 
-                    <!-- Alert Info -->
+                <?php if (!$login): ?>
                     <div class="alert alert-info" id="passwordnotmath">
                         <button type="button" class="close fui-cross" data-dismiss="alert"></button>
-                        กรุณาระบุพาสเวิร์ดให้ตรงกัน
+                        ชื่อผู้ใช้ / รหัสผ่านผิดพลาด
                     </div>
-                    <div class="alert alert-info" id="passwordincorrectformat">
-                        <button type="button" class="close fui-cross" data-dismiss="alert"></button>
-                        พาสเวิร์ดต้องมีมากกว่า 8 ตัวอักษร
-                        และต้องมีอย่างน้อย 1 ตัวเลข, ตัวอักษรภาษาอังกฤษพิมพ์เล็กและพิมพ์ใหญ่
-                    </div>
-
-                    <?php if ($emaildoesexit): ?>
-                        <div class="alert alert-info" id="passwordnotmath">
-                            <button type="button" class="close fui-cross" data-dismiss="alert"></button>
-                            อีเมลล์นี้มีผู้ใช้งานแล้ว
-                        </div>
-                    <?php endif; ?>
-                    <?php if ($register): ?>
-                        <div class="alert alert-success" id="passwordnotmath">
-                            <button type="button" class="close fui-cross" data-dismiss="alert"></button>
-                            สมัครสมาชิกเรียบร้อย <a href="<?= base_url("login") ?>">คลิกที่นี่</a> เพื่อไปหน้าเข้าสู่ระบบ
-                        </div>
-                    <?php endif; ?>
-
-                    <form  action="" method="post"  id="formsubmit"> 
+                <?php endif; ?>
+                <div class="col-xs-12"> 
+                    <form  action="" method="post" enctype="multipart/form-data"> 
                         <div class="row mbl">
                             <div class="col-lg-12">
                                 <input type="email" value="" name="email" placeholder="Email address" class="form-control input-sm" required>
                             </div>
                         </div>
 
-                        <div class="row mbl">
 
-                            <div class="col-lg-12">
-                                <p class="ptl mtl">พาสเวิร์ดต้องมีมากกว่า 8 ตัวอักษร
-                                    และต้องมีอย่างน้อย 1 ตัวเลข, ตัวอักษรภาษาอังกฤษพิมพ์เล็กและพิมพ์ใหญ่
-                                </p>
-                                <input required type="password" value="" name="password" id="password" placeholder="Password" class="form-control input-sm">
-                            </div>
-
-
-
-                        </div>
 
                         <div class="row mbl">
                             <div class="col-lg-12"> 
-                                <input required type="password" value="" name="confirmpassword" id="confirmpassword" placeholder="Confirm Password" class="form-control input-sm">
+                                <input type="password" value="" name="password" placeholder="Confirm Password" class="form-control input-sm" required>
                             </div>
                         </div>
                         <button class="btn btn-lg btn-embossed btn-primary" style="width: 100%;">
-                            Register
+                            เข้าใช้งาน
                         </button>
 
                     </form>
                     <hr/>
-                    <p  class="text-center"><a href="<?= base_url("login") ?>" >มีบัญชีอยู่แล้ว คลิกที่นี่เพื่อไปหน้าล็อคอิน</a></p>
+                    <p  class="text-center"><a href="<?= base_url("register") ?>" >ยังไม่มีบัญชี? คลิกที่นี่เพื่อไปหน้าสมัครสมาชิก</a></p>
                 </div>
             </div>
         </div> 
@@ -140,30 +111,15 @@
     <script type="text/javascript" src="<?= base_url("res/bootstrap/js/bootstrap.min.js") ?>"></script>
     <script>
         $(document).ready(function () {
+
+
             init();
-            $("#formsubmit").submit(function () {
-                if ($("#password").val() != $("#confirmpassword").val()) {
-                    $("#passwordnotmath").show();
-                    return false;
-                }
-                if (!checkPassword($("#password").val())) {
-                    $("#passwordincorrectformat").show();
-                    return false;
-                }
-                return true;
-            });
         });
 
-        function checkPassword(str)
-        {
-            // at least one number, one lowercase and one uppercase letter
-            // at least 8 characters
-            var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-            return re.test(str);
-        }
+
         function init() {
-            $("#passwordnotmath").hide();
-            $("#passwordincorrectformat").hide();
+
+
             $(".overlay-loader").hide();
         }
     </script>

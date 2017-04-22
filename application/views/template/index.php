@@ -40,7 +40,13 @@
                         <li><a href="#contact">ติดต่อเรา</a></li> 
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="startusing"><a href="<?= base_url("register")?>">เริ่มใช้เลยฟรี!</a></li>
+                        <?php if ($islogin): ?>
+                            <li class="startusing"><a href="<?= base_url("account/$token") ?>">จัดการร้านค้า</a></li>
+                            <li><a href="<?= base_url("logout") ?>">ออกจากระบบ</a></li>
+                        <?php else: ?>
+                            <li class="startusing"><a href="<?= base_url("register") ?>">เริ่มใช้เลยฟรี!</a></li>
+                        <?php endif; ?>
+
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -69,16 +75,16 @@
     <script type="text/javascript" src="<?= base_url("res/js/jquery-3.2.0.min.js") ?>"></script>
     <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
     <script src="https://npmcdn.com/bootstrap@4.0.0-alpha.5/dist/js/bootstrap.min.js"></script
-    <script type="text/javascript" src="<?= base_url("res/bootstrap/js/bootstrap.min.js") ?>"></script>
-    <script>
-                $(document).ready(function () {
-            init();
+        <script type="text/javascript" src="<?= base_url("res/bootstrap/js/bootstrap.min.js") ?>"></script>
+<script>
+            $(document).ready(function () {
+        init();
 
-        });
+    });
 
 
-        function init() {
-            $(".overlay-loader").hide();
-        }
-        </script>
-    </html>
+    function init() {
+        $(".overlay-loader").hide();
+    }
+    </script>
+</html>

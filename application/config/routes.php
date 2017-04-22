@@ -55,8 +55,9 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 
-
+$route['logout'] = "logout/index/";
 $route['register'] = "register/index/";
+$route['login'] = "login/index/";
 $route['(:any)'] = "bill/index/$1";
 $route['shipinginfo/(:any)'] = "order/payment/$1";
 $route['track/(:any)'] = "order/trackorder/$1";
