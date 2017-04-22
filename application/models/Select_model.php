@@ -10,15 +10,14 @@ class Select_model extends CI_Model {
         return $query->row();
     }
 
-    
-     function v_merchantlineuid($cond) {
+    function v_merchantlineuid($cond) {
         $this->db->select('lineuid');
         $this->db->from('v_merchantlineuid');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
     }
-    
+
     function paymentmethod($cond) {
         $this->db->select('*');
         $this->db->from('paymentmethod');
@@ -71,6 +70,14 @@ class Select_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('merchant');
         $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function merchantin($tokens) {
+        $this->db->select('*');
+        $this->db->where_in('token',$tokens);
+        $this->db->from('merchant');
         $query = $this->db->get();
         return $query;
     }
