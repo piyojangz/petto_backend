@@ -19,6 +19,9 @@ class Order extends CI_Controller {
 
     public function paymentsuccess($token = "") {
         $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
+        if ($ordertoken == null) {
+            redirect(base_url());
+        }
         $data["obj"] = $this;
         $uid = $ordertoken->uid;
         $merchantid = $ordertoken->merchantid;
@@ -28,9 +31,12 @@ class Order extends CI_Controller {
 
     public function trackorder($token = "", $merchantuid = "") {
         $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
+        if ($ordertoken == null) {
+            redirect(base_url());
+        }
         $data["obj"] = $this;
-        $uid = $ordertoken->uid;
-        $data["custdetail"] = $this->get->customer(array('uid' => $uid))->row();
+        $data["uid"] = $ordertoken->uid;
+        $data["custdetail"] = $this->get->customer(array('uid' => $data["uid"]))->row();
         $merchantid = $ordertoken->merchantid;
         $orderid = $ordertoken->orderid;
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
@@ -72,15 +78,16 @@ class Order extends CI_Controller {
         $data["ordertoken"] = $token;
 
         $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
-        $uid = $ordertoken->uid;
+        $data["uid"] = $ordertoken->uid;
         $merchantid = $ordertoken->merchantid;
         $orderid = $ordertoken->orderid;
-
+        $data["obj"] = $this;
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
+        $data["orderdetail"] = $this->get->orderdetail(array('orderid' => $orderid))->result();
         $data["items"] = $this->get->items(array('merchantid' => $merchantid))->result();
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid))->result();
-        $data["customer"] = $this->get->customer(array('uid' => $uid))->row();
+        $data["customer"] = $this->get->customer(array('uid' => $data["uid"]))->row();
 
         if ($data["order"]->status >= 1) {
             redirect(base_url("/track/$token"));
@@ -132,29 +139,32 @@ class Order extends CI_Controller {
                 'aumpureid' => $txtaumpure,
                 'zipcode' => $txtzipcode,
                 'fulladdress' => $txtaddress,
-                'uid' => $uid,
+                'uid' => $data["uid"],
                 'updatedate' => date('Y-m-d H:i:s'),
             );
+            $custid = $this->put->customer($input);
 
-            $cond = array('uid' => $input['uid']);
-            if ($this->get->customer($cond)->num_rows() == 0) {
-                $this->put->customer($input);
-            } else {
-                $this->set->customer($input);
-            }
+//            $cond = array('uid' => $input['uid']);
+//            if ($this->get->customer($cond)->num_rows() == 0) {
+//                $this->put->customer($input);
+//            } else {
+//                $this->set->customer($input);
+//            }
 
 
 
             $input = array(
                 'id' => $orderid,
+                'custid' => $custid,
                 'billingaddress' => $this->getfulladdress($txtaddress, $txttumbol, $txtaumpure, $txtprovince, $txtzipcode),
                 'status' => '1',
                 'slipimage' => $imagepath,
+                'paymentmethodid' => $paymenttype,
                 'paymentinfo' => $txtpaiddate . ' ' . $txtpaidtime,
                 'updatedate' => date('Y-m-d H:i:s'),
             );
             $this->set->order($input);
-            $this->lineapi->pushmsg($uid, "ขอบคุณที่อุดหนุนค่ะ ลูกค้าสามารถติดตามการสั่งซื้อได้ที่ลิงค์นี้ https://perdbill.co/track/$token");
+            //$this->lineapi->pushmsg($data["uid"], "ขอบคุณที่อุดหนุนค่ะ ลูกค้าสามารถติดตามการสั่งซื้อได้ที่ลิงค์นี้ https://perdbill.co/track/$token");
 
             $v_merchantuid = $this->get->v_merchantuid(array('ordertoken' => $token))->result();
             foreach ($v_merchantuid as $item) {

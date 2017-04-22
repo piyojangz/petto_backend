@@ -10,6 +10,17 @@ class Select_model extends CI_Model {
         return $query->row();
     }
 
+    function shippingrate($merchatid, $unit) {
+        $this->db->select('*');
+        $this->db->from('shippingrate');
+        $this->db->where('merchantid', $merchatid);
+        $this->db->where('unit<=', $unit);
+        $this->db->limit(1);
+        $this->db->order_by("unit", "desc");
+        $query = $this->db->get();
+        return $query;
+    }
+
     function v_merchantlineuid($cond) {
         $this->db->select('lineuid');
         $this->db->from('v_merchantlineuid');
@@ -74,9 +85,21 @@ class Select_model extends CI_Model {
         return $query;
     }
 
+    function v_serchorderbytelandmerchantuid($tel, $lineuid) {
+        $this->db->select('*');
+        $this->db->where('tel', $tel);
+        $this->db->where('lineuid', $lineuid);
+        $this->db->where('status >=', 1);
+        $this->db->from('v_serchorderbytelandmerchantuid');
+        $this->db->order_by("paiddate", "desc");
+        $this->db->limit(10);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function merchantin($tokens) {
         $this->db->select('*');
-        $this->db->where_in('token',$tokens);
+        $this->db->where_in('token', $tokens);
         $this->db->from('merchant');
         $query = $this->db->get();
         return $query;

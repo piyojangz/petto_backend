@@ -16,10 +16,8 @@ class Service extends CI_Controller {
     public function lookupcustomer() {
         $txttel = $this->input->post('txttel');
         $txtidcard = $this->input->post('txtidcard');
-
         $cond = array('tel' => $txttel, 'idcard' => $txtidcard);
         $data['result'] = $this->get->customerdetail($cond);
-
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -28,7 +26,6 @@ class Service extends CI_Controller {
         $provinceid = $this->input->post('provinceid');
         $cond = array('PROVINCE_ID' => $provinceid);
         $data['result'] = $this->get->amphur($cond)->result();
-
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -48,7 +45,6 @@ class Service extends CI_Controller {
         $aumpureid = $this->input->post('aumpureid');
         $cond = array('AMPHUR_ID' => $aumpureid);
         $data['result'] = $this->get->district($cond)->result();
-
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -60,12 +56,19 @@ class Service extends CI_Controller {
         $orderid = $this->input->post('orderid');
         $shipingrate = $this->input->post('shipingrate');
         $ordertoken = $this->input->post('ordertoken');
+        $shippingdiscount = $this->input->post('shippingdiscount');
+        $pricediscount = $this->input->post('pricediscount');
+        $mnbillstatus  = $this->input->post('mnbillstatus');
+
         //update order
         $input = array(
             'id' => $orderid,
             'total' => $total,
             'shipingrate' => $shipingrate,
             'paymentmethodid' => $paymenttype,
+            'shippingdiscount' => $shippingdiscount,
+            'pricediscount' => $pricediscount,
+            'mnbillstatus' => $mnbillstatus,
             'updatedate' => date('Y-m-d H:i:s'),
         );
         $this->set->order($input);
@@ -78,7 +81,6 @@ class Service extends CI_Controller {
                 'amount' => $item[1],
                 'price' => $item[2],
             );
-
             $cond = array('orderid' => $input['orderid'], 'itemid' => $input['itemid']);
             if ($this->get->orderdetail($cond)->num_rows() == 0) {
                 $this->put->orderdetail($input);
@@ -86,9 +88,7 @@ class Service extends CI_Controller {
                 $this->set->orderdetail($input);
             }
         }
-
         $data['result'] = true;
-
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -105,10 +105,7 @@ class Service extends CI_Controller {
         if ($this->set->order($input)) {
             $data['result'] = true;
         }
-
         $this->lineapi->pushmsg($ordertoken->uid, "สถานะของคุณถูกเปลี่ยนแล้ว https://perdbill.co/track/$ordertoken->token");
-
-
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }

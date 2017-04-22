@@ -17,8 +17,10 @@ class Bill extends CI_Controller {
     public function index($token = "") {
         $data["ordertoken"] = $token;
         $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
-
-        $uid = $ordertoken->uid;
+        if ($ordertoken == null) {
+            redirect(base_url());
+        }
+        $data["uid"] = $ordertoken->uid;
         $merchantid = $ordertoken->merchantid;
         $orderid = $ordertoken->orderid;
 
@@ -31,6 +33,10 @@ class Bill extends CI_Controller {
 
         if ($data["order"]->status >= 1) {
             redirect(base_url("/track/$token"));
+        }
+
+        if ($data["order"]->mnbillstatus >= 1) {
+            redirect(base_url("/shipinginfo/$token"));
         }
 
         $this->load->view('template/bill', $data);
@@ -162,7 +168,7 @@ class Bill extends CI_Controller {
 //                        'type' => 'text',
 //                        'text' => $postbackdata
 //                    ];
-//
+
 
                     $data = [
                         'replyToken' => $replyToken,
@@ -191,6 +197,9 @@ class Bill extends CI_Controller {
     public function splitparmtest() {
         $msg = "ลงทะเบียน:AbrH2JG210";
         $uid = "U7fbb7c7d7ba6f2642c0eb7026f8da615";
+
+        $data["sqlmerchant"] = $this->get->v_serchorderbytelandmerchantuid("0863647397", $uid);
+        print_r($data["sqlmerchant"]->result());
 
         $replymsg = "";
 
@@ -252,6 +261,12 @@ class Bill extends CI_Controller {
                         break;
                 }
             } else {
+                $telno = $command;
+                if (preg_match('/^[0-9]{9,10}$/', trim($command))) {
+                    $command = "ค้นหา";
+                }
+
+
                 switch ($command) {
                     case "เปิดบิล":
                         // get all merchant $uid
@@ -268,6 +283,25 @@ class Bill extends CI_Controller {
                             $replymsg = "คุณยังไม่เคยลงทะเบียนกับเรา";
                         }
 
+                        break;
+                    case "ค้นหา":
+                        $msg = "";
+                        $orderhistory = $this->get->v_serchorderbytelandmerchantuid($telno, $uid)->result();
+                        $msg = "ไม่พบรายการสั่งซื้อ";
+                        if (count($orderhistory) > 0) {
+                            $msg = "รายการสั่งซื้อล่าสุด\n";
+                            $no = 1;
+                            foreach ($orderhistory as $index => $item) {
+                                $paidtime = date("d/m/Y ,เวลา H:i:s", strtotime($item->paiddate));
+                                $msg .= "$no. https://perdbill.co/$item->token \n    $paidtime\n";
+                                $no++;
+                            }
+                        }
+
+                        return $messages = [
+                            'type' => 'text',
+                            'text' => $msg
+                        ];
                         break;
                     default:
                         $replymsg = "ขออภัย เราไม่ทราบคำขอของคุณ";
@@ -292,7 +326,12 @@ class Bill extends CI_Controller {
                                     'actions' => array(
                                         array(
                                             "type" => "postback",
-                                            "label" => "รับลิงค์สำหรับลูกค้า",
+                                            "label" => "- รับลิงค์สำหรับร้านค้า -",
+                                            "data" => "getbilltokenformerchant|$item->id|$uid"
+                                        ),
+                                        array(
+                                            "type" => "postback",
+                                            "label" => "- รับลิงค์สำหรับลูกค้า -",
                                             "data" => "getbilltoken|$item->id"
                                         )
                                     )
@@ -305,9 +344,15 @@ class Bill extends CI_Controller {
                                 "thumbnailImageUrl" => "$item->image",
                                 "title" => "ร้านค้า : $item->name",
                                 "text" => "$item->description",
-                                'actions' => array(array(
+                                'actions' => array(
+                                    array(
                                         "type" => "postback",
-                                        "label" => "รับลิงค์สำหรับลูกค้า",
+                                        "label" => "- รับลิงค์สำหรับร้านค้า -",
+                                        "data" => "getbilltokenformerchant|$item->id|$uid"
+                                    ),
+                                    array(
+                                        "type" => "postback",
+                                        "label" => "- รับลิงค์สำหรับลูกค้า -",
                                         "data" => "getbilltoken|$item->id"
                                     )
                                 )
@@ -391,18 +436,51 @@ class Bill extends CI_Controller {
                 ];
             }
         }
+        if ($msg[0] == "getbilltokenformerchant") {
+            $data["sqlmerchant"] = $this->get->merchant(array('id' => $msg[1]));
+            if ($data["sqlmerchant"]->num_rows() > 0) {
+                $billtoken = $this->getbilltokenformerchant($data["sqlmerchant"]->row(), $msg[2]);
+                return $messages = [
+                    'type' => 'text',
+                    'text' => "https://perdbill.co/$billtoken"
+                ];
+            }
+        }
     }
 
     public function generatebilltoken($merchant) {
         $uniqid = $this->common->getToken(6);
+        $cond = array('token' => $uniqid);
+        if ($this->get->ordertoken($cond)->num_rows() > 0) {
+            return $this->generatebilltoken($merchant);
+        }
         $input = array(
-            'deliverycharge' => $merchant->deliverycharge,
+            'shipingrate' => 0,
         );
         $orderid = $this->put->order($input);
         $input = array(
             'orderid' => $orderid,
             'merchantid' => $merchant->id,
             'token' => $uniqid,
+        );
+
+        if ($this->put->ordertoken($input)) {
+            return $uniqid;
+        }
+        return false;
+    }
+
+    public function getbilltokenformerchant($merchant, $merchantuid) {
+        $uniqid = $this->common->getToken(6);
+        $input = array(
+            'shipingrate' => 0,
+        );
+        $orderid = $this->put->order($input);
+        $input = array(
+            'orderid' => $orderid,
+            'merchantid' => $merchant->id,
+            'token' => $uniqid,
+            'uid' => $merchantuid,
         );
 
         if ($this->put->ordertoken($input)) {

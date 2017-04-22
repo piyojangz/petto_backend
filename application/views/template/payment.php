@@ -61,14 +61,71 @@
                                         </form>
                                     </div>
                                 </div>-->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">รายการสินค้าที่สั่ง</li>  
+                            <?php foreach ($items as $item): ?>
+                                <?php if ($obj->getamount($orderdetail, $item->id) > 0): ?>
+                                    <li> 
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <span class="itemname"> <?= $item->name ?></span> <br/>  <span class="itemprice"><?= number_format($item->price, 2, '.', ','); ?></span>
+                                            </div>
+                                            <div class="col-xs-4 text-right"> 
+                                                <span class="badge">จำนวน <?= $obj->getamount($orderdetail, $item->id) ?></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endforeach; ?> 
+                            <li class="divider"></li>
+                            <li class="nav-header">สรุปยอด</li>
+                            <li>
+                                <a href="#fakelink">
+                                    +ค่าจัดส่ง
+                                    <span class="badge pull-right"><?= number_format($order->shipingrate, 2, '.', ',') ?>฿</span>
+                                </a>
+                            </li> 
+                            <?php if ($uid != ""): ?>
+                                <li class="divider"></li>
+                                <li class="nav-header">รายการส่วนลด</li>
+                                <li>
+                                    <a href="#fakelink">
+                                        - ส่วนลดค่าจัดส่ง
+                                        <span class="badge pull-right"><?= number_format($order->shippingdiscount, 2, '.', ',') ?>฿</span>
+                                    </a>
+                                </li> 
+                                <li>
+                                    <a href="#fakelink">
+                                        - ส่วนลดค่าสินค้า
+                                        <span class="badge pull-right"><?= number_format($order->pricediscount, 2, '.', ',') ?>฿</span>
+                                    </a>
+                                </li> 
+
+                            <?php endif; ?>
+                            <li class="active">
+                                <a href="#fakelink">
+                                    ยอดที่ต้องชำระทั้งสิ้น
+                                    <span class="badge pull-right" id="total"><?= number_format($order->total, 2, '.', ',') ?>฿</span>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                        </ul>
+                        <?php if ($uid == ""): ?>
+                            <button type="button" class="btn btn-warning btn-xs" onclick="location.href = '<?= base_url("/$ordertoken") ?>'">กลับไปแก้ไข</button>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
                 <div class="row" id="fulladdress">
-                    <div class="col-xs-12">
+                    <div class="col-xs-12"> 
+                        <h4 class="text-center head-sectionsmall userdetail">กรุณากรอกข้อมูลให้ครบถ้วน</h4>
 
                         <form  action="<?= base_url("order/payment/$ordertoken") ?>" method="post" enctype="multipart/form-data"> 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input class="form-control" id="txtfullname" name="txtfullname" type="text" placeholder="ชื่อ - นามสกุล" value="<?= isset($customer) ? $customer->fullname : '' ?>" required>
+                                    <input class="form-control" id="txtfullname" name="txtfullname" type="text" placeholder="ชื่อ - นามสกุล" value="" required>
                                     <div class="input-group-btn">
                                         <button class="btn btn-default" type="button"><span class="fa fa-user-circle-o" aria-hidden="true"></span></button> 
                                     </div>
@@ -77,7 +134,7 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input class="form-control" id="txttel" name="txttel" type="tel" placeholder="เบอร์โทร" value="<?= isset($customer) ? $customer->tel : '' ?>" required>
+                                    <input class="form-control" id="txttel" name="txttel" type="tel" placeholder="เบอร์โทร" value="" required>
                                     <div class="input-group-btn">
                                         <button class="btn btn-default" type="button"><i class="fa fa-phone-square" aria-hidden="true"></i></button> 
                                     </div>
@@ -96,7 +153,7 @@
 
                             <div class="form-group">
                                 <div class="input">
-                                    <input class="form-control" id="txtaddress" name="txtaddress" type="text" placeholder="บ้านเลขที่/หมู่บ้าน" required value="<?= isset($customer) ? $customer->fulladdress : '' ?>"> 
+                                    <input class="form-control" id="txtaddress" name="txtaddress" type="text" placeholder="บ้านเลขที่/หมู่บ้าน" required value=""> 
                                 </div>
                             </div> 
 
@@ -104,7 +161,7 @@
                                 <select class="selectpicker" name="txtprovince" id="txtprovince" required>
                                     <option value="">== กรุณาเลือกจังหวัด ==</option>
                                     <?php foreach ($province as $value): $provid = isset($customer) ? $customer->provinceid : ''; ?>
-                                        <option value="<?= $value->PROVINCE_ID ?>"   <?= $value->PROVINCE_ID == $provid ? 'selected' : '' ?>><?= $value->PROVINCE_NAME ?></option>
+                                        <option value="<?= $value->PROVINCE_ID ?>"   ><?= $value->PROVINCE_NAME ?></option>
                                     <?php endforeach; ?> 
                                 </select>
 
@@ -123,7 +180,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="input">
-                                    <input class="form-control" id="txtzipcode" name="txtzipcode" type="number" placeholder="รหัสไปรษณีย์"  value="<?= isset($customer) ? $customer->zipcode : '' ?>" required > 
+                                    <input class="form-control" id="txtzipcode" name="txtzipcode" type="number" placeholder="รหัสไปรษณีย์"  value="" required > 
                                 </div>
                             </div>
                             <div class="form-group">
@@ -137,7 +194,7 @@
                                 <?php endforeach; ?> 
                             </div>
                             <div class="form-group">
-                                รูปถ่าย/สลิป
+                                รูปถ่าย/สลิป <span style="color: red;font-size: 12px;">*กรณีผู้ใช้ Line ใน Android อาจอัพโหลดไม่ได้ให้แจ้งข้อมูลด้านล่าง</span>
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 100%; height: 150px;"></div>
                                     <div>
@@ -152,7 +209,7 @@
                             </div>
 
                             <div class="form-group">
-                                วัน / เวลา ที่ชำระเงิน
+                                วัน / เวลา ที่ชำระเงิน <span style="color: red;font-size: 12px;">*กรุณาชำระเงินก่อนระบุ</span>
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-xs-7">
@@ -198,153 +255,152 @@
             </div> <!-- /bottom-menu-inverse -->
         </div>
     </body>
-    <script type="text/javascript" src="<?= base_url("res/js/jquery-3.2.0.min.js") ?>"></script>
-    <script type="text/javascript" src="<?= base_url("res/bootstrap/js/bootstrap.min.js") ?>"></script>
-    <script type="text/javascript" src="<?= base_url("res/dist/js/flat-ui-pro.js") ?>"></script> 
-    <script type="text/javascript" src="<?= base_url("res/js/prettify.js") ?>"></script> 
+    <script type="text/javascript" src="<?= base_url("res/dist/js/vendor/jquery.min.js") ?>"></script> 
+    <script src="<?= base_url("res/dist/js/flat-ui-pro.min.js") ?>"></script>
+    <script src="<?= base_url("res/js/application.js") ?>"></script>  
     <script type="text/javascript" src="<?= base_url("res/js/application-docs.js") ?>"></script>    
     <script>
-        var datepickerSelector = $('#txtpaiddate');
-        datepickerSelector.datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            dateFormat: 'dd/mm/yy',
-            yearRange: '-1:+1'
-        }).prev('.input-group-btn').on('click', function (e) {
-            e && e.preventDefault();
-            datepickerSelector.focus();
-        });
-        $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
-                return offset;
-            }});
-        // Now let's align datepicker with the prepend button
-        datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
-        $(document).ready(function () {
+                                var datepickerSelector = $('#txtpaiddate');
+                                datepickerSelector.datepicker({
+                                    showOtherMonths: true,
+                                    selectOtherMonths: true,
+                                    dateFormat: 'dd/mm/yy',
+                                    yearRange: '-1:+1'
+                                }).prev('.input-group-btn').on('click', function (e) {
+                                    e && e.preventDefault();
+                                    datepickerSelector.focus();
+                                });
+                                $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
+                                        return offset;
+                                    }});
+                                // Now let's align datepicker with the prepend button
+                                datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
+                                $(document).ready(function () {
 
-            init();
-            var provinceid = '<?= isset($customer) ? $customer->provinceid : '' ?>';
-            var aumpureid = '<?= isset($customer) ? $customer->aumpureid : '' ?>';
-            var tumbolid = '<?= isset($customer) ? $customer->tumbolid : '' ?>';
-            if (provinceid != '') {
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('service/getaumphure'); ?>",
-                    data: {'provinceid': provinceid},
-                    dataType: "json",
-                    success: function (data) {
-                        var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
-                        $.each(data.result, function (index, value) {
-                            if (value.AMPHUR_ID == aumpureid) {
-                                html += "<option selected value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
-                            } else {
-                                html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
-                            }
+                                    init();
+//            var provinceid = '<?= isset($customer) ? $customer->provinceid : '' ?>';
+//            var aumpureid = '<?= isset($customer) ? $customer->aumpureid : '' ?>';
+//            var tumbolid = '<?= isset($customer) ? $customer->tumbolid : '' ?>';
+//            if (provinceid != '') {
+//                $.ajax({
+//                    type: "POST",
+//                    url: "<?php echo base_url('service/getaumphure'); ?>",
+//                    data: {'provinceid': provinceid},
+//                    dataType: "json",
+//                    success: function (data) {
+//                        var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+//                        $.each(data.result, function (index, value) {
+//                            if (value.AMPHUR_ID == aumpureid) {
+//                                html += "<option selected value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+//                            } else {
+//                                html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+//                            }
+//
+//                        });
+//                        $("#txtaumpure").html(html);
+//                        html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+//                        ;
+//                        $(".overlay-loader").hide();
+//                    },
+//                    error: function (XMLHttpRequest) {
+//                        $(".overlay-loader").hide();
+//                    }
+//                });
+//
+//
+//                $.ajax({
+//                    type: "POST",
+//                    url: "<?php echo base_url('service/gettumbol'); ?>",
+//                    data: {'aumpureid': aumpureid},
+//                    dataType: "json",
+//                    success: function (data) {
+//
+//                        var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+//
+//                        $.each(data.result, function (index, value) {
+//
+//                            if (value.DISTRICT_ID == tumbolid) {
+//                                html += "<option selected value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+//                            } else {
+//                                html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+//                            }
+//
+//                        });
+//                        $("#txttumbol").html(html);
+//                    },
+//                    error: function (XMLHttpRequest) {
+//                    }
+//                });
+//            }
 
-                        });
-                        $("#txtaumpure").html(html);
-                        html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
-                        ;
-                        $(".overlay-loader").hide();
-                    },
-                    error: function (XMLHttpRequest) {
-                        $(".overlay-loader").hide();
-                    }
-                });
 
+                                    $("#formlookup").submit(function () {
+                                        $(".overlay-loader").show();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "<?php echo base_url('service/sendorder'); ?>",
+                                            data: {'txttel': $("#txttellookup").val(), 'txtidcard': $("#txtidcard").val()},
+                                            dataType: "json",
+                                            success: function (data) {
 
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('service/gettumbol'); ?>",
-                    data: {'aumpureid': aumpureid},
-                    dataType: "json",
-                    success: function (data) {
-
-                        var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-
-                        $.each(data.result, function (index, value) {
-
-                            if (value.DISTRICT_ID == tumbolid) {
-                                html += "<option selected value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
-                            } else {
-                                html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
-                            }
-
-                        });
-                        $("#txttumbol").html(html);
-                    },
-                    error: function (XMLHttpRequest) {
-                    }
-                });
-            }
-
-
-            $("#formlookup").submit(function () {
-                $(".overlay-loader").show();
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('service/sendorder'); ?>",
-                    data: {'txttel': $("#txttellookup").val(), 'txtidcard': $("#txtidcard").val()},
-                    dataType: "json",
-                    success: function (data) {
-
-                        if (data.result != null) {
-                            console.log(data);
-                        }
-                        $(".overlay-loader").hide();
-                    },
-                    error: function (XMLHttpRequest) {
-                        $(".overlay-loader").hide();
-                    }
-                });
-                $("#txttel").val($("#txttellookup").val());
-                return false;
-            });
-            $("#txtprovince").change(function () {
-                $(".overlay-loader").show();
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('service/getaumphure'); ?>",
-                    data: {'provinceid': $(this).val()},
-                    dataType: "json",
-                    success: function (data) {
-                        var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
-                        $.each(data.result, function (index, value) {
-                            html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
-                        });
-                        $("#txtaumpure").html(html);
-                        html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-                        $("#txttumbol").html(html);
-                        $(".overlay-loader").hide();
-                    },
-                    error: function (XMLHttpRequest) {
-                        $(".overlay-loader").hide();
-                    }
-                });
-            });
-            $("#txtaumpure").change(function () {
-                $(".overlay-loader").show();
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('service/gettumbol'); ?>",
-                    data: {'aumpureid': $(this).val()},
-                    dataType: "json",
-                    success: function (data) {
-                        var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-                        $.each(data.result, function (index, value) {
-                            html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
-                        });
-                        $("#txttumbol").html(html);
-                        $(".overlay-loader").hide();
-                    },
-                    error: function (XMLHttpRequest) {
-                        $(".overlay-loader").hide();
-                    }
-                });
-            });
-        });
-        function init() {
-            $(".overlay-loader").hide();
-        }
+                                                if (data.result != null) {
+                                                    console.log(data);
+                                                }
+                                                $(".overlay-loader").hide();
+                                            },
+                                            error: function (XMLHttpRequest) {
+                                                $(".overlay-loader").hide();
+                                            }
+                                        });
+                                        $("#txttel").val($("#txttellookup").val());
+                                        return false;
+                                    });
+                                    $("#txtprovince").change(function () {
+                                        $(".overlay-loader").show();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "<?php echo base_url('service/getaumphure'); ?>",
+                                            data: {'provinceid': $(this).val()},
+                                            dataType: "json",
+                                            success: function (data) {
+                                                var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+                                                $.each(data.result, function (index, value) {
+                                                    html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+                                                });
+                                                $("#txtaumpure").html(html);
+                                                html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                                                $("#txttumbol").html(html);
+                                                $(".overlay-loader").hide();
+                                            },
+                                            error: function (XMLHttpRequest) {
+                                                $(".overlay-loader").hide();
+                                            }
+                                        });
+                                    });
+                                    $("#txtaumpure").change(function () {
+                                        $(".overlay-loader").show();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "<?php echo base_url('service/gettumbol'); ?>",
+                                            data: {'aumpureid': $(this).val()},
+                                            dataType: "json",
+                                            success: function (data) {
+                                                var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                                                $.each(data.result, function (index, value) {
+                                                    html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+                                                });
+                                                $("#txttumbol").html(html);
+                                                $(".overlay-loader").hide();
+                                            },
+                                            error: function (XMLHttpRequest) {
+                                                $(".overlay-loader").hide();
+                                            }
+                                        });
+                                    });
+                                });
+                                function init() {
+                                    $(".overlay-loader").hide();
+                                }
     </script>
     <input type="hidden" id="refreshed" value="no">
     <script type="text/javascript">
@@ -354,8 +410,8 @@
                 e.value = "yes";
             else {
                 e.value = "no";
-                location.reload(); 
+                location.reload();
             }
-        }
+        };
     </script>
 </html>

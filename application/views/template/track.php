@@ -22,6 +22,35 @@
                 <p>กรุณารอสักครู่ระบบกำลังดำเนินการ...</p>
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal" id="imgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title" id="imgModalLabel">รายละเอียดสินค้า</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="thumbnail">
+                                    <img id="itemimg" src="">
+                                    <div class="caption">
+                                        <h6 id="itemtitle"></h6>
+                                        <p id="itemprice"></p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">ปิดหน้าต่าง</button> 
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container">
             <div class="header">
                 <div class="row">
@@ -47,7 +76,7 @@
                                 <li> 
                                     <div class="row">
                                         <div class="col-xs-8">
-                                            <span class="itemname"><?= $item->name ?></span> <br/>  <span class="itemprice"><?= number_format($item->price, 2, '.', ','); ?></span>
+                                            <span class="itemname"><a href="javascript:;" onclick="openimgmodal('<?= $item->name ?>', '<?= $item->image ?>', '<?= number_format($item->price, 2, '.', ','); ?>')"><?= $item->name ?><i class="fa fa-external-link-square" style="    font-size: .7em;  padding-left: 4px;"></i></a></span> <br/>  <span class="itemprice"><?= number_format($item->price, 2, '.', ','); ?></span>
                                         </div>
                                         <div class="col-xs-4 text-right"> 
                                             <span class="badge">จำนวน <?= $obj->getamount($orderdetail, $item->id) ?></span>
@@ -61,12 +90,29 @@
                         <li>
                             <a href="#fakelink">
                                 +ค่าจัดส่ง
-                                <span class="badge pull-right"><?= number_format($merchant->deliverycharge, 2, '.', ',') ?>฿</span>
+                                <span class="badge pull-right"><?= number_format($order->shipingrate, 2, '.', ',') ?>฿</span>
                             </a>
                         </li> 
+                        <?php if ($uid != ""): ?>
+                            <li class="divider"></li>
+                            <li class="nav-header">รายการส่วนลด</li>
+                            <li>
+                                <a href="#fakelink">
+                                    - ส่วนลดค่าจัดส่ง
+                                    <span class="badge pull-right"><?= number_format($order->shippingdiscount, 2, '.', ',') ?>฿</span>
+                                </a>
+                            </li> 
+                            <li>
+                                <a href="#fakelink">
+                                    - ส่วนลดค่าสินค้า
+                                    <span class="badge pull-right"><?= number_format($order->pricediscount, 2, '.', ',') ?>฿</span>
+                                </a>
+                            </li> 
+
+                        <?php endif; ?>
                         <li class="active">
                             <a href="#fakelink">
-                                ยอดที่ต้องชำระ
+                                ยอดที่ต้องชำระทั้งสิ้น
                                 <span class="badge pull-right" id="total"><?= number_format($order->total, 2, '.', ',') ?>฿</span>
                             </a>
                         </li>
@@ -161,47 +207,52 @@
             </div> <!-- /bottom-menu-inverse -->
         </div>
     </body>
-    <script type="text/javascript" src="<?= base_url("res/js/jquery-3.2.0.min.js") ?>"></script>
-    <script type="text/javascript" src="<?= base_url("res/dist/js/flat-ui-pro.js") ?>"></script>  
-    <script type="text/javascript" src="<?= base_url("res/dist/js/bootstrap-switch.js") ?>"></script> 
-    <script type="text/javascript" src="<?= base_url("res/bootstrap/js/bootstrap.min.js") ?>"></script> 
+    <script type="text/javascript" src="<?= base_url("res/dist/js/vendor/jquery.min.js") ?>"></script> 
+    <script src="<?= base_url("res/dist/js/flat-ui-pro.min.js") ?>"></script>
+    <script src="<?= base_url("res/js/application.js") ?>"></script>
 
 
     <script>
-        $(document).ready(function () {
-            init();
-            $("#btnconfirmpaid").click(function () {
+                                                function openimgmodal(name, image, price) {
+                                                    $("#itemimg").attr("src", image)
+                                                    $("#itemtitle").html(name);
+                                                    $("#itemprice").html(price + "฿");
+                                                    $('#imgModal').modal('show');
+                                                }
+                                                $(document).ready(function () {
+                                                    init();
+                                                    $("#btnconfirmpaid").click(function () {
 
-                if (confirm('คุณต้องการยืนยันใช่หรือไม่?')) {
-                    $(".overlay-loader").show();
-                    var orderid = "<?= $order->id ?>";
-                    $.ajax({
-                        type: "POST",
-                        url: "<?php echo base_url('service/confirmpayment'); ?>",
-                        data: {'orderid': orderid},
-                        dataType: "json",
-                        success: function (data) {
-                            if (data) {
-                                $(".progress-bar").removeClass("progress-bar-warning");
-                                $(".progress-bar").css({width: "100%"});
-                                $("#headpaid").html("<i class=\"fa fa-check-circle\"></i> ยืนยันการชำระเงินแล้ว...");
-                                $("#btnconfirmpaid").attr("disabled", "disabled");
+                                                        if (confirm('คุณต้องการยืนยันใช่หรือไม่?')) {
+                                                            $(".overlay-loader").show();
+                                                            var orderid = "<?= $order->id ?>";
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "<?php echo base_url('service/confirmpayment'); ?>",
+                                                                data: {'orderid': orderid},
+                                                                dataType: "json",
+                                                                success: function (data) {
+                                                                    if (data) {
+                                                                        $(".progress-bar").removeClass("progress-bar-warning");
+                                                                        $(".progress-bar").css({width: "100%"});
+                                                                        $("#headpaid").html("<i class=\"fa fa-check-circle\"></i> ยืนยันการชำระเงินแล้ว...");
+                                                                        $("#btnconfirmpaid").attr("disabled", "disabled");
 
-                            }
-                            $(".overlay-loader").hide();
-                        },
-                        error: function (XMLHttpRequest) {
-                            $(".overlay-loader").hide();
-                        }
-                    });
+                                                                    }
+                                                                    $(".overlay-loader").hide();
+                                                                },
+                                                                error: function (XMLHttpRequest) {
+                                                                    $(".overlay-loader").hide();
+                                                                }
+                                                            });
 
-                }
-            });
-        });
+                                                        }
+                                                    });
+                                                });
 
 
-        function init() {
-            $(".overlay-loader").hide();
-        }
+                                                function init() {
+                                                    $(".overlay-loader").hide();
+                                                }
     </script>
 </html>
