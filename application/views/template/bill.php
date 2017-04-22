@@ -48,7 +48,7 @@
                                             <div class="col-xs-4"> 
                                                 <input type="hidden" value="<?= $item->id ?>"/>
                                                 <input type="hidden" value="<?= $item->price ?>"/>
-                                                <input type="number" class="form-control input-sm itemamount" value="<?= $obj->getamount($orderdetail, $item->id) ?>"  placeholder="0" /> 
+                                                <input type="number"  min="0" class="form-control input-sm itemamount" value="<?= $obj->getamount($orderdetail, $item->id) ?>"  placeholder="0" /> 
                                             </div>
                                         </div>
                                     </li>
@@ -58,7 +58,8 @@
                                 <li>
                                     <a href="#fakelink">
                                         +ค่าจัดส่ง
-                                        <span class="badge pull-right"><?= number_format($merchant->deliverycharge, 2, '.', ',') ?>฿</span>
+                                        <span class="badge pull-right" id="deliverycharge"><?= number_format($merchant->deliverycharge, 2, '.', ',') ?>฿</span>
+                                        <input type="hidden"   id="shipingratehidden" />
                                     </a>
                                 </li> 
                                 <li class="active">
@@ -121,14 +122,54 @@
             });
         });
 
+        function getshippingrate(merchantid, unit, cb_func) {
+            $(".overlay-loader").show();
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('service/getshippingrate'); ?>",
+                data: {'merchantid': merchantid, 'unit': unit},
+                dataType: "json",
+                success: function (data) {
+                    $(".overlay-loader").hide();
+                    if (data.result != null) {
+                        cb_func(data.result.price);
+                    } else {
+                        cb_func('0');
+                    }
+
+
+                },
+                error: function (XMLHttpRequest) {
+                    $(".overlay-loader").hide();
+                }
+            });
+        }
+
         function updateprice() {
-            var deliverycharge = '<?= $merchant->deliverycharge ?>';
+            var merchantid = '<?= $merchant->id ?>';
             var total = 0;
+            var unit = 0;
             $('input[type=number]').each(function () {
                 total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
+                unit += parseInt($(this).val());
             });
-            total += parseFloat(deliverycharge);
-            $("#total").html(numberWithCommas(total) + "฿");
+
+
+
+            this.getshippingrate(merchantid, unit, function (price) {
+                if (price == 0) {
+                    $("#deliverycharge").html("ฟรี");
+                    $("#shipingratehidden").val(0);
+                } else {
+                    $("#deliverycharge").html(price + "฿");
+                    $("#shipingratehidden").val(price);
+                }
+                total += parseFloat(price);
+                $("#total").html(numberWithCommas(total) + "฿");
+            });
+
+
         }
 
 
@@ -153,12 +194,11 @@
             itemselected = itemselected.slice(0, -1);
             total += parseFloat(deliverycharge);
             var paymenttype = $('input[name=paymenttype]:checked', '#submitform').val()
-
-
+            var shipingratehidden = $("#shipingratehidden").val();
             $.ajax({
                 type: "POST",
                 url: "<?php echo base_url('service/submitorder'); ?>",
-                data: {'itemselected': itemselected, 'total': total, 'paymenttype': paymenttype, 'orderid': $("#orderid").val(), 'ordertoken': '<?= $ordertoken ?>', 'deliverycharge': '<?= $merchant->deliverycharge ?>'},
+                data: {'itemselected': itemselected, 'total': total, 'paymenttype': paymenttype, 'orderid': $("#orderid").val(), 'ordertoken': '<?= $ordertoken ?>', 'shipingrate': shipingratehidden},
                 dataType: "json",
                 success: function (data) {
                     if (data.result != null) {
