@@ -63,3 +63,8 @@ $route['shipinginfo/(:any)'] = "order/payment/$1";
 $route['track/(:any)'] = "order/trackorder/$1";
 $route['track/(:any)/(:any)'] = "order/trackorder/$1/$2";
 $route['paymentsuccess/(:any)'] = "order/paymentsuccess/$1";
+
+$route['account'] = "account/index/";
+$route['account/(:any)'] = "account/index/$1";
+$route['account/(:any)/dashboard'] = "account/dashboard/$1";
+$route['account/(:any)/products'] = "account/products/$1";
