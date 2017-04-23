@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <title>Social Billing</title> 
+        <title>Perdbill.co - บริการเปิดบิลสินค้าผ่านไลน์ ใครๆก็ทำได้</title> 
+        <meta name="description" content="บริการเปิดบิลจาก <?= $merchant->name ?> ปลอดภัย สะดวก รวดเร็ว">
         <link href="<?= base_url("res/css/font-awesome.min.css") ?>" rel="stylesheet" type="text/css"/>
         <!-- Loading Bootstrap -->
         <link href="<?= base_url("res/dist/css/vendor/bootstrap.min.css") ?>" rel="stylesheet">
@@ -213,46 +214,46 @@
 
 
     <script>
-                                                function openimgmodal(name, image, price) {
-                                                    $("#itemimg").attr("src", image)
-                                                    $("#itemtitle").html(name);
-                                                    $("#itemprice").html(price + "฿");
-                                                    $('#imgModal').modal('show');
-                                                }
-                                                $(document).ready(function () {
-                                                    init();
-                                                    $("#btnconfirmpaid").click(function () {
+                                        function openimgmodal(name, image, price) {
+                                            $("#itemimg").attr("src", image)
+                                            $("#itemtitle").html(name);
+                                            $("#itemprice").html(price + "฿");
+                                            $('#imgModal').modal('show');
+                                        }
+                                        $(document).ready(function () {
+                                            init();
+                                            $("#btnconfirmpaid").click(function () {
 
-                                                        if (confirm('คุณต้องการยืนยันใช่หรือไม่?')) {
-                                                            $(".overlay-loader").show();
-                                                            var orderid = "<?= $order->id ?>";
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                url: "<?php echo base_url('service/confirmpayment'); ?>",
-                                                                data: {'orderid': orderid},
-                                                                dataType: "json",
-                                                                success: function (data) {
-                                                                    if (data) {
-                                                                        $(".progress-bar").removeClass("progress-bar-warning");
-                                                                        $(".progress-bar").css({width: "100%"});
-                                                                        $("#headpaid").html("<i class=\"fa fa-check-circle\"></i> ยืนยันการชำระเงินแล้ว...");
-                                                                        $("#btnconfirmpaid").attr("disabled", "disabled");
+                                                if (confirm('คุณต้องการยืนยันใช่หรือไม่?')) {
+                                                    $(".overlay-loader").show();
+                                                    var orderid = "<?= $order->id ?>";
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "<?php echo base_url('service/confirmpayment'); ?>",
+                                                        data: {'orderid': orderid},
+                                                        dataType: "json",
+                                                        success: function (data) {
+                                                            if (data) {
+                                                                $(".progress-bar").removeClass("progress-bar-warning");
+                                                                $(".progress-bar").css({width: "100%"});
+                                                                $("#headpaid").html("<i class=\"fa fa-check-circle\"></i> ยืนยันการชำระเงินแล้ว...");
+                                                                $("#btnconfirmpaid").attr("disabled", "disabled");
 
-                                                                    }
-                                                                    $(".overlay-loader").hide();
-                                                                },
-                                                                error: function (XMLHttpRequest) {
-                                                                    $(".overlay-loader").hide();
-                                                                }
-                                                            });
-
+                                                            }
+                                                            $(".overlay-loader").hide();
+                                                        },
+                                                        error: function (XMLHttpRequest) {
+                                                            $(".overlay-loader").hide();
                                                         }
                                                     });
-                                                });
 
-
-                                                function init() {
-                                                    $(".overlay-loader").hide();
                                                 }
+                                            });
+                                        });
+
+
+                                        function init() {
+                                            $(".overlay-loader").hide();
+                                        }
     </script>
 </html>

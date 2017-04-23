@@ -36,10 +36,13 @@ class Order extends CI_Controller {
         }
         $data["obj"] = $this;
         $data["uid"] = $ordertoken->uid;
-        $data["custdetail"] = $this->get->customer(array('uid' => $data["uid"]))->row();
+
         $merchantid = $ordertoken->merchantid;
         $orderid = $ordertoken->orderid;
+
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
+        $data["order"] = $this->get->order(array('id' => $orderid))->row();
+        $data["custdetail"] = $this->get->customer(array('id' => $data["order"]->custid))->row();
         $data["orderdetail"] = $this->get->orderdetail(array('orderid' => $orderid))->result();
         $data["items"] = $this->get->items(array('merchantid' => $merchantid))->result();
         $data["order"] = $this->get->order(array('id' => $orderid))->row();

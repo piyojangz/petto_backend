@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <title>Social Billing</title> 
+        <title>Perdbill.co - บริการเปิดบิลสินค้าผ่านไลน์ ใครๆก็ทำได้</title> 
+        <meta name="description" content="บริการเปิดบิลจาก <?= $merchant->name ?> ปลอดภัย สะดวก รวดเร็ว">
         <link href="<?= base_url("res/css/font-awesome.min.css") ?>" rel="stylesheet" type="text/css"/>
         <!-- Loading Bootstrap -->
         <link href="<?= base_url("res/dist/css/vendor/bootstrap.min.css") ?>" rel="stylesheet">
@@ -64,6 +65,6 @@
     <script type="text/javascript" src="<?= base_url("res/js/prettify.js") ?>"></script> 
     <script type="text/javascript" src="<?= base_url("res/js/application-docs.js") ?>"></script>    
 
- 
+
 
 </html>

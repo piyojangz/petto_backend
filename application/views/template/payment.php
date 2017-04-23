@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <title>Social Billing</title> 
+        <title>Perdbill.co - บริการเปิดบิลสินค้าผ่านไลน์ ใครๆก็ทำได้</title> 
+        <meta name="description" content="บริการเปิดบิลจาก <?= $merchant->name ?> ปลอดภัย สะดวก รวดเร็ว">
         <link href="<?= base_url("res/css/font-awesome.min.css") ?>" rel="stylesheet" type="text/css"/>
         <!-- Loading Bootstrap -->
         <link href="<?= base_url("res/dist/css/vendor/bootstrap.min.css") ?>" rel="stylesheet">
@@ -260,24 +261,24 @@
     <script src="<?= base_url("res/js/application.js") ?>"></script>  
     <script type="text/javascript" src="<?= base_url("res/js/application-docs.js") ?>"></script>    
     <script>
-                                var datepickerSelector = $('#txtpaiddate');
-                                datepickerSelector.datepicker({
-                                    showOtherMonths: true,
-                                    selectOtherMonths: true,
-                                    dateFormat: 'dd/mm/yy',
-                                    yearRange: '-1:+1'
-                                }).prev('.input-group-btn').on('click', function (e) {
-                                    e && e.preventDefault();
-                                    datepickerSelector.focus();
-                                });
-                                $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
-                                        return offset;
-                                    }});
-                                // Now let's align datepicker with the prepend button
-                                datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
-                                $(document).ready(function () {
+                            var datepickerSelector = $('#txtpaiddate');
+                            datepickerSelector.datepicker({
+                                showOtherMonths: true,
+                                selectOtherMonths: true,
+                                dateFormat: 'dd/mm/yy',
+                                yearRange: '-1:+1'
+                            }).prev('.input-group-btn').on('click', function (e) {
+                                e && e.preventDefault();
+                                datepickerSelector.focus();
+                            });
+                            $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
+                                    return offset;
+                                }});
+                            // Now let's align datepicker with the prepend button
+                            datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
+                            $(document).ready(function () {
 
-                                    init();
+                                init();
 //            var provinceid = '<?= isset($customer) ? $customer->provinceid : '' ?>';
 //            var aumpureid = '<?= isset($customer) ? $customer->aumpureid : '' ?>';
 //            var tumbolid = '<?= isset($customer) ? $customer->tumbolid : '' ?>';
@@ -334,73 +335,73 @@
 //            }
 
 
-                                    $("#formlookup").submit(function () {
-                                        $(".overlay-loader").show();
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "<?php echo base_url('service/sendorder'); ?>",
-                                            data: {'txttel': $("#txttellookup").val(), 'txtidcard': $("#txtidcard").val()},
-                                            dataType: "json",
-                                            success: function (data) {
+                                $("#formlookup").submit(function () {
+                                    $(".overlay-loader").show();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "<?php echo base_url('service/sendorder'); ?>",
+                                        data: {'txttel': $("#txttellookup").val(), 'txtidcard': $("#txtidcard").val()},
+                                        dataType: "json",
+                                        success: function (data) {
 
-                                                if (data.result != null) {
-                                                    console.log(data);
-                                                }
-                                                $(".overlay-loader").hide();
-                                            },
-                                            error: function (XMLHttpRequest) {
-                                                $(".overlay-loader").hide();
+                                            if (data.result != null) {
+                                                console.log(data);
                                             }
-                                        });
-                                        $("#txttel").val($("#txttellookup").val());
-                                        return false;
+                                            $(".overlay-loader").hide();
+                                        },
+                                        error: function (XMLHttpRequest) {
+                                            $(".overlay-loader").hide();
+                                        }
                                     });
-                                    $("#txtprovince").change(function () {
-                                        $(".overlay-loader").show();
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "<?php echo base_url('service/getaumphure'); ?>",
-                                            data: {'provinceid': $(this).val()},
-                                            dataType: "json",
-                                            success: function (data) {
-                                                var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
-                                                $.each(data.result, function (index, value) {
-                                                    html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
-                                                });
-                                                $("#txtaumpure").html(html);
-                                                html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-                                                $("#txttumbol").html(html);
-                                                $(".overlay-loader").hide();
-                                            },
-                                            error: function (XMLHttpRequest) {
-                                                $(".overlay-loader").hide();
-                                            }
-                                        });
-                                    });
-                                    $("#txtaumpure").change(function () {
-                                        $(".overlay-loader").show();
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "<?php echo base_url('service/gettumbol'); ?>",
-                                            data: {'aumpureid': $(this).val()},
-                                            dataType: "json",
-                                            success: function (data) {
-                                                var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-                                                $.each(data.result, function (index, value) {
-                                                    html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
-                                                });
-                                                $("#txttumbol").html(html);
-                                                $(".overlay-loader").hide();
-                                            },
-                                            error: function (XMLHttpRequest) {
-                                                $(".overlay-loader").hide();
-                                            }
-                                        });
+                                    $("#txttel").val($("#txttellookup").val());
+                                    return false;
+                                });
+                                $("#txtprovince").change(function () {
+                                    $(".overlay-loader").show();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "<?php echo base_url('service/getaumphure'); ?>",
+                                        data: {'provinceid': $(this).val()},
+                                        dataType: "json",
+                                        success: function (data) {
+                                            var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+                                            $.each(data.result, function (index, value) {
+                                                html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+                                            });
+                                            $("#txtaumpure").html(html);
+                                            html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                                            $("#txttumbol").html(html);
+                                            $(".overlay-loader").hide();
+                                        },
+                                        error: function (XMLHttpRequest) {
+                                            $(".overlay-loader").hide();
+                                        }
                                     });
                                 });
-                                function init() {
-                                    $(".overlay-loader").hide();
-                                }
+                                $("#txtaumpure").change(function () {
+                                    $(".overlay-loader").show();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "<?php echo base_url('service/gettumbol'); ?>",
+                                        data: {'aumpureid': $(this).val()},
+                                        dataType: "json",
+                                        success: function (data) {
+                                            var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                                            $.each(data.result, function (index, value) {
+                                                html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+                                            });
+                                            $("#txttumbol").html(html);
+                                            $(".overlay-loader").hide();
+                                        },
+                                        error: function (XMLHttpRequest) {
+                                            $(".overlay-loader").hide();
+                                        }
+                                    });
+                                });
+                            });
+                            function init() {
+                                $(".overlay-loader").hide();
+                            }
     </script>
     <input type="hidden" id="refreshed" value="no">
     <script type="text/javascript">
