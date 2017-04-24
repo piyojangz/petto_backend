@@ -74,7 +74,7 @@
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">สินค้า</h4> </div>
+                            <h4 class="page-title">คลังสินค้า</h4> </div>
                         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12"> 
                             <ol class="breadcrumb">
                                 <li ><a href="#" >คลังสินค้า</a></li> 
@@ -90,11 +90,9 @@
 
                     <div class="row el-element-overlay m-b-40 block1">
                         <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-sm-offset-11 col-lg-1  text-center"> 
-                                    <button type="button" class="btn-item-modal btn btn-success btn-circle btn-lg btn-outline"  ><i class="fa fa-plus"></i> </button>
-                                </div>
-                            </div>
+
+                            <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"> <i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
+
                             <hr>
                         </div> 
                         <?php foreach ($items as $item): ?> 
@@ -122,89 +120,83 @@
                     </div> 
 
                 </div>
-
-
-                <!-- sample modal content -->
-                <div class="modal  bs-example-modal-lg fade" id="itemmodal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-
-                            <div class="modal-body">
+                <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"  id="form-submit">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">เพิ่ม / แก้ไข</div>
+                        <div class="panel-wrapper collapse in">
+                            <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="panel panel-info ">
+                                        <div class="panel panel-info "> 
+                                            <div class="panel-body">
 
-                                            <div class="panel-wrapper collapse in" aria-expanded="true">
-                                                <div class="panel-body">
-                                                    <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-horizontal form-bordered"  id="form-submit">
-                                                        <div class="form-body">
-                                                            <div class="form-group">
-                                                                <label class="control-label col-md-3">ชื่อสินค้า</label>
-                                                                <div class="col-md-9">
-                                                                    <input type="text" name="name" id="name" class="form-control" maxlength="35" required>
+                                                <div class="form-body">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">ชื่อสินค้า</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" name="name" id="name" class="form-control" maxlength="35" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">ราคา</label>
+                                                        <div class="col-md-9">
+                                                            <input type="number" name="price" id="price" required  class="form-control"> 
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group"> 
+
+                                                        <label class="control-label col-md-3">รูปภาพ</label>  
+                                                        <div class="col-md-9"> 
+                                                            <div class="cropit-preview-edit"><img id="imgedit" src=""/>        </div> 
+                                                            <button class="btn-edit-img btn btn-warning waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>แก้ไขรูปภาพ</button>
+
+
+
+                                                            <div class="image-editor">
+                                                                <input type="hidden" id="imageData" name="imageData" />
+                                                                <input type="file"   class="cropit-image-input"   data-max-file-size="2M"  accept=".jpg,.png" /> 
+                                                                <div class="cropit-preview"></div>  
+                                                                <div class="image-size-label">
+                                                                    ย่อ / ขยายรูป
                                                                 </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label class="control-label col-md-3">ราคา</label>
-                                                                <div class="col-md-9">
-                                                                    <input type="number" name="price" id="price" required  class="form-control"> 
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="form-group"> 
-
-                                                                <label class="control-label col-md-3">รูปภาพ</label>  
-                                                                <div class="col-md-9"> 
-                                                                    <div class="cropit-preview-edit"><img id="imgedit" src=""/>        </div> 
-                                                                    <button class="btn-edit-img btn btn-warning waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>แก้ไขรูปภาพ</button>
+                                                                <input type="range" class="cropit-image-zoom-input" style="width:300px;" >    
+                                                                <button class="select-image-btn btn btn-info waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-image"></i></span>เลือกรูปภาพ</button> 
+                                                            </div> 
+                                                        </div>
+                                                    </div>
 
 
-
-                                                                    <div class="image-editor">
-                                                                        <input type="hidden" id="imageData" name="imageData" />
-                                                                        <input type="file"   class="cropit-image-input"   data-max-file-size="2M"  accept=".jpg,.png" /> 
-                                                                        <div class="cropit-preview"></div>  
-                                                                        <div class="image-size-label">
-                                                                            ย่อ / ขยายรูป
-                                                                        </div>
-                                                                        <input type="range" class="cropit-image-zoom-input" style="width:300px;" >    
-                                                                        <button class="select-image-btn btn btn-info waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-image"></i></span>เลือกรูปภาพ</button>
-<!--                                                                        <button class="export   btn btn-danger waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-crop"></i></span>CROP</button>-->
-                                                                    </div> 
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="form-actions">
+                                                    <div class="form-actions">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
                                                                 <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <div class="row">
-                                                                            <div class="col-md-offset-9 col-md-3">
-                                                                                <button type="submit" id="btnsubmit"  class="btn btn-success"> <i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล</button> 
-                                                                            </div>
-                                                                        </div>
+                                                                    <div class="col-md-offset-9 col-md-3">
+                                                                        <button type="submit" id="btnsubmit"  class="btn btn-success"> <i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล</button> 
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <input type="hidden" id="id" name="id" />
-                                                    </form>
+                                                    </div>
                                                 </div>
+                                                <input type="hidden" id="id" name="id" />
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>   
                             </div>
-                            <div class="modal-footer">
-                                <button type="button"  class="btn btn-danger waves-effect text-left" data-dismiss="modal">Close</button>
-                            </div>
+
                         </div>
-                        <!-- /.modal-content -->
                     </div>
-                    <!-- /.modal-dialog -->
-                </div>
-                <!-- /.modal -->
+
+
+
+
+                </form>
+
                 <!-- /.container-fluid -->
+
                 <?php $this->load->view('account/template/footer'); ?> 
             </div>
             <!-- ============================================================== -->
@@ -235,9 +227,27 @@
         <script src="<?= base_url("res/account/plugins/bower_components/dropify/dist/js/dropify.min.js") ?>"></script>
         <script src="<?= base_url("res/account/plugins/bower_components/cropit/jquery.cropit.js") ?>"></script>
         <script src="<?= base_url("res/account/plugins/bower_components/blockUI/jquery.blockUI.js") ?>"></script>
+
+        <!-- Magnific popup JavaScript -->
+        <script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script> 
     </body>
     <script>
                                                     $(document).ready(function () {
+
+                                                        $('.popup-with-form').magnificPopup({
+                                                            type: 'inline',
+                                                            preloader: true,
+                                                            focus: '#name',
+                                                            callbacks: {
+                                                                beforeOpen: function () {
+                                                                    if ($(window).width() < 700) {
+                                                                        this.st.focus = false;
+                                                                    } else {
+                                                                        this.st.focus = '#name';
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
 
 
 
@@ -309,7 +319,9 @@
                                                             $("#price").val("");
                                                             $(".cropit-preview-edit").hide();
                                                             $(".btn-edit-img").hide();
-                                                            $('#itemmodal').modal('show');
+                                                            $("#imgedit").hide();
+                                                            $(".image-editor").show();
+                                                            $.magnificPopup.open({items: {src: '#form-submit'}, type: 'inline'}, 0);
                                                         });
 
 
@@ -340,14 +352,17 @@
                                                                         $(".image-editor").hide();
                                                                         $(".cropit-preview-edit").show();
                                                                         $(".btn-edit-img").show();
+                                                                        $("#imgedit").show();
                                                                     } else {
                                                                         $("#imgedit").attr("src", "");
                                                                         $(".image-editor").show();
                                                                         $(".cropit-preview-edit").hide();
                                                                         $(".btn-edit-img").hide();
+                                                                        $("#imgedit").hide();
                                                                     }
 
-                                                                    $('#itemmodal').modal('show');
+
+                                                                    $.magnificPopup.open({items: {src: '#form-submit'}, type: 'inline'}, 0);
                                                                 }
 
                                                             },

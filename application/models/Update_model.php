@@ -20,6 +20,15 @@ class Update_model extends CI_Model {
         endif;
     }
 
+    function paymentmethod($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('paymentmethod', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     function merchantlineuid($input) {
         $this->db->where('merchantid', $input['merchantid']);
         $this->db->where('token', $input['token']);

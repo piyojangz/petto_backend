@@ -34,6 +34,19 @@ class Account extends CI_Controller {
         $this->load->view('account/index', $data);
     }
 
+    public function customer($acctoken = "") {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+
+        $data["customer"] = $this->get->getcustomerlist($data["merchant"]->id); 
+
+        $this->load->view('account/customer', $data);
+    }
+
     public function products($acctoken = "") {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
@@ -55,6 +68,71 @@ class Account extends CI_Controller {
             );
             if ($this->set->items($input)) {
                 redirect("account/$acctoken/products");
+            }
+        }
+    }
+
+    public function addnewpaymentmethod($acctoken = "") {
+        if ($_POST) {
+            if (!$this->user->is_login()) {
+                redirect('/');
+            }
+            $id = $this->input->post("id");
+            $data["user"] = $this->user->get_account_cookie();
+            $bankaccount = $this->input->post("bankaccount");
+            $accounttype = $this->input->post("accounttype");
+            $accountbranch = $this->input->post("accountbranch");
+            $accountno = $this->input->post("accountno");
+            $accountname = $this->input->post("accountname");
+            $bank = $this->get->bank(array("name" => $bankaccount))->row();
+
+            if (empty($id)) {
+                $input = array(
+                    'merchantid' => $data["user"]["id"],
+                    'bankname' => $bankaccount,
+                    'accbranch' => $accountbranch,
+                    'accno' => $accountno,
+                    'status' => 1,
+                    'accname' => $accountname,
+                    'acctype' => $accounttype,
+                    'banklogo' => $bank->image,
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+                if ($this->put->paymentmethod($input)) {
+                    redirect("account/$acctoken/paymentmethod");
+                }
+            } else {
+                $input = array(
+                    'id' => $id,
+                    'merchantid' => $data["user"]["id"],
+                    'bankname' => $bankaccount,
+                    'accbranch' => $accountbranch,
+                    'accno' => $accountno,
+                    'status' => 1,
+                    'accname' => $accountname,
+                    'acctype' => $accounttype,
+                    'banklogo' => $bank->image,
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+                if ($image != "") {
+                    $input["image"] = $image;
+                }
+                if ($this->set->paymentmethod($input)) {
+                    redirect("account/$acctoken/paymentmethod");
+                }
+            }
+        }
+    }
+
+    public function updatepaymentmethod($id, $acctoken = "", $isdelete = "false") {
+        if ($isdelete == "true") {
+            $input = array(
+                'id' => $id,
+                'status' => 0,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            if ($this->set->paymentmethod($input)) {
+                redirect("account/$acctoken/paymentmethod");
             }
         }
     }
@@ -92,7 +170,7 @@ class Account extends CI_Controller {
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
                 if ($image != "") {
-                    $input["image"] = $image; 
+                    $input["image"] = $image;
                 }
                 if ($this->set->items($input)) {
                     redirect("account/$acctoken/products");
@@ -134,6 +212,19 @@ class Account extends CI_Controller {
         } else {
             return array('upload_data' => $this->upload->data());
         }
+    }
+
+    public function paymentmethod($acctoken = "") {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+        $data["bank"] = $this->get->bank(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array("merchantid" => $data["user"]["id"], "status" => 1))->result();
+
+        $this->load->view('account/moneyaccount', $data);
     }
 
 }

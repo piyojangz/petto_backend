@@ -19,6 +19,15 @@ class Insert_model extends CI_Model {
         endif;
     }
 
+    function paymentmethod($input) {
+        if ($this->db->insert('paymentmethod', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
+
     function items($input) {
         if ($this->db->insert('items', $input)):
             $insert_id = $this->db->insert_id();

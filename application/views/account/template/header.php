@@ -24,6 +24,8 @@
          <!--alerts CSS -->
         <link href="<?= base_url("res/account/plugins/bower_components/sweetalert/sweetalert.css") ?>" rel="stylesheet" type="text/css">
          <link rel="stylesheet" href="<?= base_url("res/account/plugins/bower_components/dropify/dist/css/dropify.min.css") ?>">
+             <!-- Popup CSS -->
+    <link href="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/magnific-popup.css") ?>" rel="stylesheet">
         <!-- Custom CSS -->
         <link href="<?= base_url("res/account/css/style.css") ?>" rel="stylesheet">
         <!-- color CSS -->

@@ -37,6 +37,14 @@ class Select_model extends CI_Model {
         return $query;
     }
 
+    function bank($cond) {
+        $this->db->select('*');
+        $this->db->from('bank');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function province($cond) {
         $this->db->select('*');
         $this->db->from('province');
@@ -143,6 +151,18 @@ class Select_model extends CI_Model {
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
+    }
+
+    function getcustomerlist($merchantid) {
+        $query = $this->db->query("SELECT tb.*,(SELECT tk.token from customer c 
+inner join `order` o  
+on c.id = o.custid
+inner join ordertoken tk 
+on tk.orderid = o.id
+WHERE c.tel = tb.customertel order by o.id desc limit 1) as lastestordertoken from (SELECT a.* FROM `v_serchorderbytelandmerchantuid` a     group by a.customertel)  tb
+where tb.merchantid = $merchantid");
+
+        return $query->result();
     }
 
 }
