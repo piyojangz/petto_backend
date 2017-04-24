@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url("res/account/plugins/images/favicon.png") ?>">
-        <title>Perdbill | <?= $user["name"] ?></title>
-        <!-- Bootstrap Core CSS -->
-        <link href="<?= base_url("res/account/bootstrap/dist/css/bootstrap.min.css") ?>" rel="stylesheet">
-        <!-- Menu CSS -->
-        <link href="<?= base_url("res/account/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css") ?>" rel="stylesheet">
-        <!-- toast CSS -->
-        <link href="<?= base_url("res/account/plugins/bower_components/toast-master/css/jquery.toast.css") ?>" rel="stylesheet">
-        <!-- morris CSS -->
-        <link href="<?= base_url("res/account/plugins/bower_components/morrisjs/morris.css") ?>" rel="stylesheet">
-        <!-- chartist CSS -->
-        <link href="<?= base_url("res/account/plugins/bower_components/chartist-js/dist/chartist.min.css") ?>" rel="stylesheet">
-        <link href="<?= base_url("res/account/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css") ?>" rel="stylesheet">
-        <!-- Calendar CSS -->
-        <link href="<?= base_url("res/account/plugins/bower_components/calendar/dist/fullcalendar.css") ?>" rel="stylesheet" />
-        <!-- animation CSS -->
-        <link href="<?= base_url("res/account/css/animate.css") ?>" rel="stylesheet">
-        <!-- Custom CSS -->
-        <link href="<?= base_url("res/account/css/style.css") ?>" rel="stylesheet">
-        <!-- color CSS -->
-        <link href="<?= base_url("res/account/css/colors/default.css") ?>" id="theme" rel="stylesheet">
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    </head>
-
+    <?php $this->load->view('account/template/header'); ?>
+    <style>
+        .cropit-preview-edit{
+            background-color: #f8f8f8;
+            background-size: cover;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-top: 7px;
+            width: 300px;
+            height: 300px;
+        }
+        .cropit-preview-edit img{
+            width: 100%;
+        }
+        .cropit-preview {
+            background-color: #f8f8f8;
+            background-size: cover;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-top: 7px;
+            width: 300px;
+            height: 300px;
+        }
+        .cropit-image-input{
+            visibility: hidden;
+        }
+        .cropit-preview-image-container {
+            cursor: move;
+        }
+        .cropit-preview-background {
+            opacity: .2;
+            cursor: auto;
+        }
+        .image-size-label {
+            margin-top: 10px;
+        }
+        input, .export {
+            /* Use relative position to prevent from being covered by image background */
+            position: relative;
+            z-index: 10;
+            display: block;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
     <body class="fix-header">
         <!-- ============================================================== -->
         <!-- Preloader -->
         <!-- ============================================================== -->
-        <div class="preloader">
-            <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
-            </svg>
-        </div>
+        <?php $this->load->view('account/template/preloader'); ?> 
         <!-- ============================================================== -->
         <!-- Wrapper -->
         <!-- ============================================================== -->
@@ -52,101 +58,12 @@
             <!-- ============================================================== -->
             <!-- Topbar header - style you can find in pages.scss -->
             <!-- ============================================================== -->
-            <nav class="navbar navbar-default navbar-static-top m-b-0">
-                <div class="navbar-header">
-                    <div class="top-left-part">
-                        <!-- Logo -->
-                        <a class="logo" href="index.html">
-                            <!-- Logo icon image, you can use font-icon also --><b>
-                                <!--This is dark logo icon--><img src="<?= base_url("res/account/plugins/images/admin-logo.png") ?>" alt="home" class="dark-logo" /><!--This is light logo icon--><img src="<?= base_url("res/account/plugins/images/admin-logo-dark.png") ?>" alt="home" class="light-logo" />
-                            </b>
-                            <!-- Logo text image you can use text also --><span class="hidden-xs">
-                                <!--This is dark logo text--><img src="<?= base_url("res/account/plugins/images/admin-text.png") ?>" alt="home" class="dark-logo" /><!--This is light logo text--><img src="<?= base_url("res/account/plugins/images/admin-text-dark.png") ?>" alt="home" class="light-logo" />
-                            </span> </a>
-                    </div>
-                    <!-- /Logo -->
-                    <!-- Search input and Toggle icon -->
-                    <ul class="nav navbar-top-links navbar-left">
-                        <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="fa fa-envelope"></i>
-                                <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
-                            </a>
-                            <ul class="dropdown-menu mailbox animated bounceInDown">
-                                <li>
-                                    <div class="drop-title text-center">คุณมีการชำระเงินเข้ามาใหม่</div>
-                                </li> 
-                                <li>
-                                    <a class="text-center" href="javascript:void(0);"> <strong>ดูทั้งหมด</strong> <i class="fa fa-angle-right"></i> </a>
-                                </li>
-                            </ul>
-                            <!-- /.dropdown-messages -->
-                        </li> 
-                    </ul>
-                    <ul class="nav navbar-top-links navbar-right pull-right">
-                        <li>
-                            <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
-                                <input type="text" placeholder="Search..." class="form-control"> <a href=""><i class="fa fa-search"></i></a> </form>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="<?= $user["image"] ?>" alt="user-img" width="36" class="img-circle"><b class="hidden-xs"><?= $user["name"] ?></b><span class="caret"></span> </a>
-                            <ul class="dropdown-menu dropdown-user animated flipInY">
-                                <li>
-                                    <div class="dw-user-box">
-                                        <div class="u-img"><img src="<?= $user["image"] ?>" alt="user" /></div>
-                                        <div class="u-text">
-                                            <h4><?= $user["name"] ?></h4>
-                                            <p class="text-muted"><?= $user["email"] ?></p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
-                                    </div>
-                                </li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="ti-user"></i> ข้อมูลร้านค้า</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="ti-settings"></i> ตั้งค่า</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#"><i class="fa fa-power-off"></i> ออกจากระบบ</a></li>
-                            </ul>
-                            <!-- /.dropdown-user -->
-                        </li>
-                        <!-- /.dropdown -->
-                    </ul>
-                </div>
-                <!-- /.navbar-header -->
-                <!-- /.navbar-top-links -->
-                <!-- /.navbar-static-side -->
-            </nav>
+            <?php $this->load->view('account/template/nav'); ?>  
             <!-- End Top Navigation -->
             <!-- ============================================================== -->
             <!-- Left Sidebar - style you can find in sidebar.scss  -->
             <!-- ============================================================== -->
-            <div class="navbar-default sidebar" role="navigation">
-                <div class="sidebar-nav slimscrollsidebar">
-                    <div class="sidebar-head">
-                        <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>  
-                    <ul class="nav" id="side-menu" style="margin-top: 50px;">
-                        <li> 
-                            <a href="<?= base_url("account/$token/dashboard") ?>" ><i class="icon-graph  fa-fw" data-icon="v"></i> แดชบอร์ด <span class="fa arrow"></span></a> 
-                        </li>
-                        <li> 
-                            <a href="<?= base_url("account/$token/report") ?>"><i class="ti-pie-chart fa-fw" data-icon="v"></i> รายงาน(Beta) <span class="fa arrow"></span></a> 
-                        </li>
-                        <li> 
-                            <a href="<?= base_url("account/$token/customer") ?>"><i class="icon-user fa-fw" data-icon="v"></i> ดูแลลูกค้า <span class="fa arrow"></span></a> 
-
-                        <li class="devider"></li>
-                        <li> <a href="javascript:;" ><i class="ti-package fa-fw"></i> <span class="hide-menu">คลังสินค้า<span class="fa arrow"></span></span></a>
-                            <ul class="nav nav-second-level">
-                                <li><a href="<?= base_url("account/$token/products") ?>"><i class="fa-fw">P</i><span class="hide-menu">สินค้า</span></a></li> 
-                            </ul>
-                        </li>
-                        <li> <a href="javascript:;" ><i class="ti-receipt fa-fw"></i> <span class="hide-menu">ออเดอร์<span class="fa arrow"></span></span></a>
-                            <ul class="nav nav-second-level">
-                                <li><a href="<?= base_url("account/$token/order/all") ?>"><i class="fa-fw">O</i><span class="hide-menu">ดูแลออเดอร์</span></a></li> 
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+            <?php $this->load->view('account/template/sidebar'); ?> 
             <!-- ============================================================== -->
             <!-- End Left Sidebar -->
             <!-- ============================================================== -->
@@ -157,10 +74,11 @@
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">แดชบอร์ด</h4> </div>
+                            <h4 class="page-title">สินค้า</h4> </div>
                         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12"> 
                             <ol class="breadcrumb">
-                                <li class="active"><a href="#" >แดชบอร์ด</a></li> 
+                                <li ><a href="#" >คลังสินค้า</a></li> 
+                                <li class="active">สินค้า</li> 
                             </ol>
                         </div>
                         <!-- /.col-lg-12 -->
@@ -169,47 +87,125 @@
                     <!-- ============================================================== -->
                     <!-- Different data widgets -->
                     <!-- ============================================================== -->
-                    <!-- .row -->
-                    <div class="row">
-                        <div class="col-lg-3 col-sm-6 col-xs-12">
-                            <div class="white-box analytics-info">
-                                <h3 class="box-title">บิลทั้งหมด</h3>
-                                <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success">659</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-xs-12">
-                            <div class="white-box analytics-info">
-                                <h3 class="box-title">ชำระเงินแล้ว</h3>
-                                <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple">869</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-xs-12">
-                            <div class="white-box analytics-info">
-                                <h3 class="box-title">ยังไม่ได้ชำระเงิน</h3>
-                                <ul class="list-inline two-part">
-                                    <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">911</span></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-xs-12">
-                            <div class="white-box analytics-info">
-                                <h3 class="box-title">รายได้เดือนนี้</h3>
-                                <ul class="list-inline"> 
-                                    <li class="text-right">  <i class="ti-arrow-up text-success"></i><span class="counter text-success">17,230.00</span>  
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!--/.row -->
 
+                    <div class="row el-element-overlay m-b-40 block1">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-sm-offset-11 col-lg-1  text-center"> 
+                                    <button type="button" class="btn-item-modal btn btn-success btn-circle btn-lg btn-outline"  ><i class="fa fa-plus"></i> </button>
+                                </div>
+                            </div>
+                            <hr>
+                        </div> 
+                        <?php foreach ($items as $item): ?> 
+
+                            <!-- /.usercard -->
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                                <div class="white-box">
+                                    <div class="el-card-item">
+                                        <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden"> <img src="<?= $item->image ?>"   />
+                                            <div class="el-overlay">
+                                                <ul class="el-info">
+                                                    <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);"  onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
+                                                    <li><a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="el-card-content" >
+                                            <h3 class="box-title text-info" ><?= $item->name ?></h3> <small>฿<?= number_format($item->price) ?></small>
+                                            <br> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.usercard--> 
+                        <?php endforeach; ?>
+                    </div> 
 
                 </div>
+
+
+                <!-- sample modal content -->
+                <div class="modal  bs-example-modal-lg fade" id="itemmodal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-info ">
+
+                                            <div class="panel-wrapper collapse in" aria-expanded="true">
+                                                <div class="panel-body">
+                                                    <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-horizontal form-bordered"  id="form-submit">
+                                                        <div class="form-body">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-3">ชื่อสินค้า</label>
+                                                                <div class="col-md-9">
+                                                                    <input type="text" name="name" id="name" class="form-control" maxlength="35" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-3">ราคา</label>
+                                                                <div class="col-md-9">
+                                                                    <input type="number" name="price" id="price" required  class="form-control"> 
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group"> 
+
+                                                                <label class="control-label col-md-3">รูปภาพ</label>  
+                                                                <div class="col-md-9"> 
+                                                                    <div class="cropit-preview-edit"><img id="imgedit" src=""/>        </div> 
+                                                                    <button class="btn-edit-img btn btn-warning waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>แก้ไขรูปภาพ</button>
+
+
+
+                                                                    <div class="image-editor">
+                                                                        <input type="hidden" id="imageData" name="imageData" />
+                                                                        <input type="file"   class="cropit-image-input"   data-max-file-size="2M"  accept=".jpg,.png" /> 
+                                                                        <div class="cropit-preview"></div>  
+                                                                        <div class="image-size-label">
+                                                                            ย่อ / ขยายรูป
+                                                                        </div>
+                                                                        <input type="range" class="cropit-image-zoom-input" style="width:300px;" >    
+                                                                        <button class="select-image-btn btn btn-info waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-image"></i></span>เลือกรูปภาพ</button>
+<!--                                                                        <button class="export   btn btn-danger waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-crop"></i></span>CROP</button>-->
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="form-actions">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="row">
+                                                                            <div class="col-md-offset-9 col-md-3">
+                                                                                <button type="submit" id="btnsubmit"  class="btn btn-success"> <i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล</button> 
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" id="id" name="id" />
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>   
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button"  class="btn btn-danger waves-effect text-left" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
                 <!-- /.container-fluid -->
-                <footer class="footer text-center"> 2017 &copy; Account panel by perdbill.co </footer>
+                <?php $this->load->view('account/template/footer'); ?> 
             </div>
             <!-- ============================================================== -->
             <!-- End Page Content -->
@@ -227,23 +223,162 @@
         <!-- Menu Plugin JavaScript -->
         <script src="<?= base_url("res/account/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js") ?>"></script>
         <!--slimscroll JavaScript -->
-        <script src="<?= base_url("res/account/js/jquery.slimscroll.js") ?>"></script>
-        <!--Wave Effects -->
-        <script src="<?= base_url("res/account/js/waves.js") ?>"></script>
-        <!--Counter js -->
-        <script src="<?= base_url("res/account/plugins/bower_components/waypoints/lib/jquery.waypoints.js") ?>"></script>
-        <script src="<?= base_url("res/account/plugins/bower_components/counterup/jquery.counterup.min.js") ?>"></script>
-        <!-- chartist chart -->
-        <script src="<?= base_url("res/account/plugins/bower_components/chartist-js/dist/chartist.min.js") ?>"></script>
-        <script src="<?= base_url("res/account/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js") ?>"></script>
-        <!-- Sparkline chart JavaScript -->
-        <script src="<?= base_url("res/account/plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js") ?>"></script>
+        <script src="<?= base_url("res/account/js/jquery.slimscroll.js") ?>"></script> 
         <!-- Custom Theme JavaScript -->
-        <script src="<?= base_url("res/account/js/custom.min.js") ?>"></script>
-        <script src="<?= base_url("res/account/js/dashboard1.js") ?>"></script>
+        <script src="<?= base_url("res/account/js/custom.min.js") ?>"></script> 
         <script src="<?= base_url("res/account/plugins/bower_components/toast-master/js/jquery.toast.js") ?>"></script>
         <!--Style Switcher -->
         <script src="<?= base_url("res/account/plugins/bower_components/styleswitcher/jQuery.style.switcher.js") ?>"></script>
-    </body>
+        <!-- Sweet-Alert  -->
+        <script src="<?= base_url("res/account/plugins/bower_components/sweetalert/sweetalert.min.js") ?>"></script> 
 
+        <script src="<?= base_url("res/account/plugins/bower_components/dropify/dist/js/dropify.min.js") ?>"></script>
+        <script src="<?= base_url("res/account/plugins/bower_components/cropit/jquery.cropit.js") ?>"></script>
+        <script src="<?= base_url("res/account/plugins/bower_components/blockUI/jquery.blockUI.js") ?>"></script>
+    </body>
+    <script>
+                                                    $(document).ready(function () {
+
+
+
+                                                        // Basic
+                                                        $('.dropify').dropify();
+                                                        // Translated
+                                                        $('.dropify-fr').dropify({
+                                                            messages: {
+                                                                default: 'Glissez-déposez un fichier ici ou cliquez',
+                                                                replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+                                                                remove: 'Supprimer',
+                                                                error: 'Désolé, le fichier trop volumineux'
+                                                            }
+                                                        });
+                                                        // Used events
+                                                        var drEvent = $('#input-file-events').dropify();
+                                                        drEvent.on('dropify.beforeClear', function (event, element) {
+                                                            return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+                                                        });
+                                                        drEvent.on('dropify.afterClear', function (event, element) {
+                                                            alert('File deleted');
+                                                        });
+                                                        drEvent.on('dropify.errors', function (event, element) {
+                                                            console.log('Has Errors');
+                                                        });
+                                                        var drDestroy = $('#input-file-to-destroy').dropify();
+                                                        drDestroy = drDestroy.data('dropify')
+                                                        $('#toggleDropify').on('click', function (e) {
+                                                            e.preventDefault();
+                                                            if (drDestroy.isDropified()) {
+                                                                drDestroy.destroy();
+                                                            } else {
+                                                                drDestroy.init();
+                                                            }
+                                                        });
+
+
+
+                                                        $('.select-image-btn').click(function () {
+                                                            $('.cropit-image-input').click();
+                                                        });
+                                                        $('.image-editor').cropit({
+                                                            exportZoom: 1.25,
+                                                            imageBackground: true,
+                                                            imageBackgroundBorderWidth: 30,
+                                                        });
+                                                        $('.rotate-cw').click(function () {
+                                                            $('.image-editor').cropit('rotateCW');
+                                                        });
+                                                        $('.rotate-ccw').click(function () {
+                                                            $('.image-editor').cropit('rotateCCW');
+                                                        });
+                                                        $('#form-submit').submit(function () {
+                                                            var imageData = $('.image-editor').cropit('export');
+                                                            if (imageData != null) {
+                                                                $("#imageData").val(imageData.split(",")[1]);
+                                                            }
+
+                                                            return true;
+                                                        });
+
+                                                        $('.btn-edit-img').click(function () {
+                                                            $(".image-editor").show();
+                                                        });
+
+                                                        $('.btn-item-modal').click(function () {
+                                                            $("#id").val("");
+                                                            $("#name").val("");
+                                                            $("#price").val("");
+                                                            $(".cropit-preview-edit").hide();
+                                                            $(".btn-edit-img").hide();
+                                                            $('#itemmodal').modal('show');
+                                                        });
+
+
+
+                                                    });
+
+                                                    function edititem(id) {
+                                                        $('div.block1').block({
+                                                            message: '<h3>กรุณารอสักครู่...</h3>',
+                                                            css: {
+                                                                border: '1px solid #fff'
+                                                            }
+                                                        });
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            url: "<?php echo base_url('service/getitem'); ?>",
+                                                            data: {'id': id},
+                                                            dataType: "json",
+                                                            success: function (data) {
+                                                                $('div.block1').unblock();
+                                                                if (data.result != null) {
+                                                                    $("#id").val(data.result.id);
+                                                                    $("#name").val(data.result.name);
+                                                                    $("#price").val(data.result.price);
+
+                                                                    if (data.result.image != "") {
+                                                                        $("#imgedit").attr("src", data.result.image);
+                                                                        $(".image-editor").hide();
+                                                                        $(".cropit-preview-edit").show();
+                                                                        $(".btn-edit-img").show();
+                                                                    } else {
+                                                                        $("#imgedit").attr("src", "");
+                                                                        $(".image-editor").show();
+                                                                        $(".cropit-preview-edit").hide();
+                                                                        $(".btn-edit-img").hide();
+                                                                    }
+
+                                                                    $('#itemmodal').modal('show');
+                                                                }
+
+                                                            },
+                                                            error: function (XMLHttpRequest) {
+                                                                $('div.block1').unblock();
+                                                            }
+                                                        });
+                                                    }
+
+                                                    function removeitem(id, token, isdelete) {
+
+                                                        swal({
+                                                            title: "Are you sure?",
+                                                            type: "warning",
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: "#DD6B55",
+                                                            confirmButtonText: "Yes",
+                                                            cancelButtonText: "No",
+                                                            closeOnConfirm: false,
+                                                            closeOnCancel: false
+                                                        }, function (isConfirm) {
+                                                            if (isConfirm) {
+                                                                swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                                                                location.href = '<?= base_url("account/updateproduct/") ?>' + id + '/' + token + '/' + isdelete;
+
+                                                            } else {
+                                                                swal("Cancelled", "", "error");
+                                                            }
+                                                        });
+                                                    }
+
+
+    </script>
 </html>

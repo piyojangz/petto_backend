@@ -30,6 +30,14 @@ class Service extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function getitem() {
+        $id = $this->input->post('id');
+        $cond = array('id' => $id);
+        $data['result'] = $this->get->items($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+    
     public function getshippingrate() {
         $merchantid = $this->input->post('merchantid');
         $unit = $this->input->post('unit');

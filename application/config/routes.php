@@ -67,4 +67,6 @@ $route['paymentsuccess/(:any)'] = "order/paymentsuccess/$1";
 $route['account'] = "account/index/";
 $route['account/(:any)'] = "account/index/$1";
 $route['account/(:any)/dashboard'] = "account/dashboard/$1";
-$route['account/(:any)/products'] = "account/products/$1";
+$route['account/(:any)/products'] = "account/products/$1"; 
+$route['account/(:any)/base64_to_jpeg'] = "account/base64_to_jpeg";
+$route['account/(:any)/addnewproduct'] = "account/addnewproduct/$1";

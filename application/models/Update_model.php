@@ -40,6 +40,15 @@ class Update_model extends CI_Model {
         endif;
     }
 
+    function items($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('items', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     function order($input) {
         $this->db->where('id', $input['id']);
         if ($this->db->update('order', $input)):
