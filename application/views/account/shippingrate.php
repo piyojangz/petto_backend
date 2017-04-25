@@ -163,14 +163,14 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-md-3">หน่วย</label>
                                                             <div class="col-md-9">
-                                                                <input type="text" name="unit" id="unit"    required class="form-control"> 
+                                                                <input type="number" name="unit" id="unit"    required class="form-control"> 
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label class="control-label col-md-3">ราคา</label>
                                                             <div class="col-md-9">
-                                                                <input type="text" name="price" id="price"   required class="form-control"> 
+                                                                <input type="number" name="price" id="price"   required class="form-control"> 
                                                             </div>
                                                         </div>
 
