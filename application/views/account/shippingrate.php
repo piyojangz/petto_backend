@@ -74,11 +74,11 @@
                 <div class="container-fluid">
                     <div class="row bg-title">
                         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <h4 class="page-title">ข้อมูลการเงิน</h4> </div>
+                            <h4 class="page-title">กำหนดค่า</h4> </div>
                         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12"> 
                             <ol class="breadcrumb">
-                                <li ><a href="#" >ข้อมูลการเงิน</a></li> 
-                                <li class="active">เพิ่มบัญชี</li> 
+                                <li ><a href="#" >กำหนดค่า</a></li> 
+                                <li class="active">เพิ่มค่าจัดส่ง</li> 
                             </ol>
                         </div>
                         <!-- /.col-lg-12 -->
