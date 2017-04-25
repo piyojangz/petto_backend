@@ -374,7 +374,7 @@ class Account extends CI_Controller {
      public function deleteshippingrate($id, $acctoken = "", $isdelete = "false") {
         if ($isdelete == "true") { 
             if ($this->set->delete_shippingrate($id)) {
-                redirect("account/$acctoken/shippingrate");
+                redirect(base_url("account/$acctoken/shippingrate"));
             }
         }
     }
@@ -399,7 +399,7 @@ class Account extends CI_Controller {
                     'price' => $price,
                 );
                 if ($this->put->shippingrate($input)) {
-                    redirect("account/$acctoken/shippingrate");
+                    redirect(base_url("account/$acctoken/shippingrate"));
                 }
             } else {
                 $input = array(
@@ -409,7 +409,7 @@ class Account extends CI_Controller {
                     'price' => $price,
                 ); 
                 if ($this->set->shippingrate($input)) {
-                    redirect("account/$acctoken/shippingrate");
+                    redirect(base_url("account/$acctoken/shippingrate"));
                 }
             }
         }
