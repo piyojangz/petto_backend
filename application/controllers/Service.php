@@ -201,7 +201,7 @@ class Service extends CI_Controller {
         if ($this->set->order($input)) {
             $data['result'] = true;
         }
-        $this->lineapi->pushmsg($ordertoken->uid, "สถานะของคุณถูกเปลี่ยนแล้ว https://perdbill.co/track/$ordertoken->token");
+        //$this->lineapi->pushmsg($ordertoken->uid, "สถานะของคุณถูกเปลี่ยนแล้ว https://perdbill.co/track/$ordertoken->token");
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }

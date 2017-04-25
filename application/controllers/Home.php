@@ -16,7 +16,7 @@ class Home extends CI_Controller {
         $this->load->library('lineapi');
     }
 
-    public function index() {
+    public function index() { 
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["islogin"] = $this->user->is_login();

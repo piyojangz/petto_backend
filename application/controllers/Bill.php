@@ -198,25 +198,32 @@ class Bill extends CI_Controller {
         $msg = "ลงทะเบียน:AbrH2JG210";
         $uid = "U7fbb7c7d7ba6f2642c0eb7026f8da615";
 
-        $data["sqlmerchant"] = $this->get->v_serchorderbytelandmerchantuid("0863647397", $uid);
-        print_r($data["sqlmerchant"]->result());
-
-        $replymsg = "";
 
         $tokens = array();
         $merchantlineuid = $this->get->merchantlineuid(array('lineuid' => $uid))->result();
-        print_r($merchantlineuid);
         foreach ($merchantlineuid as $item) {
             array_push($tokens, $item->token);
         }
-        print_r($tokens);
         $data["sqlmerchant"] = $this->get->merchantin($tokens);
-
-
-
-
-        print_r($data["sqlmerchant"]->result());
-
+        print_r($data["sqlmerchant"]);
+//        $data["sqlmerchant"] = $this->get->v_serchorderbytelandmerchantuid("0863647397", $uid);
+//        print_r($data["sqlmerchant"]->result());
+//
+//        $replymsg = "";
+//
+//        $tokens = array();
+//        $merchantlineuid = $this->get->merchantlineuid(array('lineuid' => $uid))->result();
+//        print_r($merchantlineuid);
+//        foreach ($merchantlineuid as $item) {
+//            array_push($tokens, $item->token);
+//        }
+//        print_r($tokens);
+//        $data["sqlmerchant"] = $this->get->merchantin($tokens);
+//
+//
+//
+//
+//        print_r($data["sqlmerchant"]->result());
         //$this->output->set_header('Content-Type: application/json; charset=utf-8');
         //echo json_encode($messages);
     }
@@ -281,10 +288,10 @@ class Bill extends CI_Controller {
                         }
                         $data["sqlmerchant"] = $this->get->merchantin($tokens);
                         if ($data["sqlmerchant"]->num_rows() > 0) {
-                            //$billtoken = $this->generatebilltoken($data["sqlmerchant"]->row());
+                            $billtoken = $this->generatebilltoken($data["sqlmerchant"]->row(), $uid);
                             $customtemplate = true;
                         } else {
-                            $replymsg = "คุณยังไม่เคยลงทะเบียนกับเรา";
+                            $replymsg = "คุณยังไม่เคยลงทะเบียนกับเรา" . $tokens;
                         }
 
                         break;
@@ -318,7 +325,7 @@ class Bill extends CI_Controller {
                 $colums = array();
                 if (count($merchants) > 0) {
                     if (count($merchants) == 1) {
-                        foreach ($merchants as $item) {
+                        foreach ($merchants as $item) { 
                             $messages = array(
                                 'type' => 'template',
                                 "altText" => "ร้านค้า $item->name ได้ส่งข้อมูลการสั่งซื้อสินค้าให้คุณ",
@@ -467,13 +474,13 @@ class Bill extends CI_Controller {
             'merchantid' => $merchant->id,
             'token' => $uniqid,
             'uid' => $merchantuid,
-            'status' => 0
+            'genstatus' => 0
         );
 
         if ($this->put->ordertoken($input)) {
             return $uniqid;
         }
-        return false;
+        return $uniqid;
     }
 
     public function getbilltokenformerchant($merchant, $merchantuid) {
@@ -487,7 +494,7 @@ class Bill extends CI_Controller {
             'merchantid' => $merchant->id,
             'token' => $uniqid,
             'uid' => $merchantuid,
-            'status' => 1
+            'genstatus' => 1
         );
 
         if ($this->put->ordertoken($input)) {
