@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div class="container mb">
             <div class="header">
                 <div class="row">
                     <div class="logo">
@@ -181,6 +181,18 @@
                         <h7><i class="fa fa-check-circle"></i> ยืนยันการชำระเงินแล้ว...</h7>
                         <div class="progress">
                             <div class="progress-bar" style="width: 100%;"></div>
+                        </div>
+
+                    <?php elseif ($order->status == "3"): ?>
+                       <h7><i class="fa fa-send-o"></i> จัดส่งแล้ว...</h7>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-warning" style="width: 100%;"></div>
+                        </div>
+
+                    <?php elseif ($order->status == "4"): ?>
+                        <h7><i class="fa fa-close"></i> ออเดอร์ถูกปิดแล้ว...</h7>
+                        <div class="progress">
+                            <div class="progress-bar  progress-bar-danger" style="width: 100%;"></div>
                         </div>
                     <?php endif; ?>
                 </div>
