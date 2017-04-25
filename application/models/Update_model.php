@@ -58,8 +58,14 @@ class Update_model extends CI_Model {
         endif;
     }
 
-    function order($input) {
-        $this->db->where('id', $input['id']);
+    function order($input, $wherein = null) {
+
+        if ($wherein != null) {
+            $this->db->where_in('id', $wherein);
+        } else {
+            $this->db->where('id', $input['id']);
+        }
+        
         if ($this->db->update('order', $input)):
             return true;
         else:

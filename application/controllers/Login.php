@@ -24,15 +24,19 @@ class Login extends CI_Controller {
             $remember_me = 'on';
 
             $result = $this->user->user_login($email, md5($password), $remember_me);
+            $user = $this->user->get_account_cookie();
+            $token = $user['token'];
             if ($result) {
-                redirect('account', 'index');
+
+                redirect(base_url("account/$token/dashboard"));
             }
             $data["login"] = false;
         }
 
-        $cm_account = $this->user->get_account_cookie();
+        $user = $this->user->get_account_cookie();
         if ($this->user->is_login()) {
-            redirect('account', 'index');
+            $token = $user['token'];
+            redirect(base_url("account/$token/dashboard"));
         }
 
 

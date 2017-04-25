@@ -161,3 +161,9 @@ body {
 .panel-theme a:hover {
     color: #0791e6;
 }
+
+.checkbox-order {
+    padding-left: 40px !important;
+    height: 20px  !important;
+    margin: 0px  !important;
+}

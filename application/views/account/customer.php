@@ -114,10 +114,10 @@
                                             <?php foreach ($customer as $index => $item): ?> 
                                                 <tr>
                                                     <td class="text-center" style="vertical-align: middle;"><?= $index + 1 ?></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><?= $item->fullname ?></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><?= $item->fulladdress ?> <?= $item->DISTRICT_NAME ?> <?= $item->AMPHUR_NAME ?> <?= $item->PROVINCE_NAME ?> <?= $item->zipcode ?></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><?= $item->customertel ?></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><a class="badge badge-info " target="_blank" href="<?= base_url($item->lastestordertoken) ?>"><?= $item->lastestordertoken ?></a> </td>  
+                                                    <td style="vertical-align: middle;"><?= $item->fullname ?></td>
+                                                    <td style="vertical-align: middle;"><?= $item->fulladdress ?> <?= $item->DISTRICT_NAME ?> <?= $item->AMPHUR_NAME ?> <?= $item->PROVINCE_NAME ?> <?= $item->zipcode ?></td>
+                                                    <td style="vertical-align: middle;"><?= $item->customertel ?></td>
+                                                    <td style="vertical-align: middle;"><a class="badge badge-info " target="_blank" href="<?= base_url($item->lastestordertoken) ?>"><?= $item->lastestordertoken ?></a> </td>  
                                                 </tr> 
                                             <?php endforeach; ?>
 

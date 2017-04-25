@@ -235,10 +235,14 @@ class Bill extends CI_Controller {
             if (count($msgqarr) >= 2) {
                 switch ($command) {
                     case "ลงทะเบียน":
-                        if ($this->registermerchant($msgqarr[1], $uid)) {
-                            $replymsg = "คุณได้ลงทะเบียนร้านค้าเพื่อรับการแจ้งเตือนเรียบร้อยแล้ว";
+                        if (count($msgqarr) >= 3) {
+                            if ($this->registermerchant($msgqarr[1], $msgqarr[2], $uid)) {
+                                $replymsg = "คุณได้ลงทะเบียนร้านค้าเพื่อรับการแจ้งเตือนเรียบร้อยแล้ว";
+                            } else {
+                                $replymsg = "เราไม่พบร้านค้าของคุณ";
+                            }
                         } else {
-                            $replymsg = "เราไม่พบร้านค้าของคุณ";
+                            $replymsg = "กรุณาระบุชื่อของท่านด้วยเช่น 'ลงทะเบียน perdbill เจ้าของร้าน'";
                         }
 
                         break;
@@ -332,7 +336,7 @@ class Bill extends CI_Controller {
                                         array(
                                             "type" => "postback",
                                             "label" => "- รับลิงค์สำหรับลูกค้า -",
-                                            "data" => "getbilltoken|$item->id"
+                                            "data" => "getbilltoken|$item->id|$uid"
                                         )
                                     )
                                 )
@@ -353,7 +357,7 @@ class Bill extends CI_Controller {
                                     array(
                                         "type" => "postback",
                                         "label" => "- รับลิงค์สำหรับลูกค้า -",
-                                        "data" => "getbilltoken|$item->id"
+                                        "data" => "getbilltoken|$item->id|$uid"
                                     )
                                 )
                             ));
@@ -429,7 +433,7 @@ class Bill extends CI_Controller {
         if ($msg[0] == "getbilltoken") {
             $data["sqlmerchant"] = $this->get->merchant(array('id' => $msg[1]));
             if ($data["sqlmerchant"]->num_rows() > 0) {
-                $billtoken = $this->generatebilltoken($data["sqlmerchant"]->row());
+                $billtoken = $this->generatebilltoken($data["sqlmerchant"]->row(), $msg[2]);
                 return $messages = [
                     'type' => 'text',
                     'text' => "https://perdbill.co/$billtoken"
@@ -448,7 +452,7 @@ class Bill extends CI_Controller {
         }
     }
 
-    public function generatebilltoken($merchant) {
+    public function generatebilltoken($merchant, $merchantuid) {
         $uniqid = $this->common->getToken(6);
         $cond = array('token' => $uniqid);
         if ($this->get->ordertoken($cond)->num_rows() > 0) {
@@ -462,6 +466,8 @@ class Bill extends CI_Controller {
             'orderid' => $orderid,
             'merchantid' => $merchant->id,
             'token' => $uniqid,
+            'uid' => $merchantuid,
+            'status' => 0
         );
 
         if ($this->put->ordertoken($input)) {
@@ -481,6 +487,7 @@ class Bill extends CI_Controller {
             'merchantid' => $merchant->id,
             'token' => $uniqid,
             'uid' => $merchantuid,
+            'status' => 1
         );
 
         if ($this->put->ordertoken($input)) {
@@ -489,10 +496,11 @@ class Bill extends CI_Controller {
         return false;
     }
 
-    public function registermerchant($token, $uid) {
+    public function registermerchant($token, $name, $uid) {
         $cond = array('token' => $token);
         $input = array(
             'token' => $token,
+            'name' => $name,
             'lineuid' => $uid,
             'updatedate' => date('Y-m-d H:i:s'),
         );

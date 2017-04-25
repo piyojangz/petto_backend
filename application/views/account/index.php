@@ -6,7 +6,7 @@
         <!-- ============================================================== -->
         <!-- Preloader -->
         <!-- ============================================================== -->
-         <?php $this->load->view('account/template/preloader'); ?> 
+        <?php $this->load->view('account/template/preloader'); ?> 
         <!-- ============================================================== -->
         <!-- Wrapper -->
         <!-- ============================================================== -->
@@ -19,7 +19,7 @@
             <!-- ============================================================== -->
             <!-- Left Sidebar - style you can find in sidebar.scss  -->
             <!-- ============================================================== -->
-             <?php $this->load->view('account/template/sidebar'); ?> 
+            <?php $this->load->view('account/template/sidebar'); ?> 
             <!-- ============================================================== -->
             <!-- End Left Sidebar -->
             <!-- ============================================================== -->
@@ -48,7 +48,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">บิลทั้งหมด</h3>
                                 <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success">659</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success">0</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">ชำระเงินแล้ว</h3>
                                 <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple">869</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple">0</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">ยังไม่ได้ชำระเงิน</h3>
                                 <ul class="list-inline two-part">
-                                    <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">911</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">0</span></li>
                                 </ul>
                             </div>
                         </div>
@@ -72,17 +72,42 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">รายได้เดือนนี้</h3>
                                 <ul class="list-inline"> 
-                                    <li class="text-right">  <i class="ti-arrow-up text-success"></i><span class="counter text-success">17,230.00</span>  
+                                    <li class="text-right">  <i class="ti-arrow-up text-success"></i><span class="counter text-success">0.00</span>  
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <!--/.row -->
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> 
+                            <div class="white-box p-b-0">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h2 class="font-medium m-t-0">LINE ADMIN</h2> 
+                                        <h5>จำนวน Admin ในร้าน</h5>
+                                        <small>คุณสามารถเพิ่ม Admin โดยการพิมพ์คำว่า <code>ลงทะเบียน <?= $token ?>  <?=$user["lineid"]?></code> ในไลน์ @perdbill</small>
+                                    </div>
+                                </div>
+                                <div class="row m-t-30 minus-margin">
+                                    <?php foreach ($lineadmin as $key => $value): ?>
+                                        <div class="col-sm-12 col-sm-6 b-t b-r">
+                                            <ul class="expense-box">
+                                                <li>
+                                                    <i class="fa fa-dollar"> </i>
+                                                    <span><h2><?= $value->name ?> (<?= $value->countorder ?>)</h2><h4>รายได้ <?= number_format($value->total) ?></h4></span></li>
+                                            </ul>
+                                        </div>
+                                    <?php endforeach; ?>
 
+
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <!-- /.container-fluid -->
-                 <?php $this->load->view('account/template/footer'); ?> 
+                <?php $this->load->view('account/template/footer'); ?> 
             </div>
             <!-- ============================================================== -->
             <!-- End Page Content -->

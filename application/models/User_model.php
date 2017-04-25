@@ -24,6 +24,7 @@ class User_model extends CI_Model {
             $set_cm_account['name'] = $row->name;
             $set_cm_account['email'] = $row->email;
             $set_cm_account['description'] = $row->description;
+            $set_cm_account['lineid'] = $row->lineid;
             $set_cm_account['image'] = $row->image;
             $set_cm_account['token'] = $row->token;
             $set_cm_account = $this->encrypt->encode(serialize($set_cm_account));

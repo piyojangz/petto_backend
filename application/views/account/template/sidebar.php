@@ -7,7 +7,7 @@
                 <a href="<?= base_url("account/$token/dashboard") ?>" ><i class="icon-graph  fa-fw" data-icon="v"></i> แดชบอร์ด <span class="fa arrow"></span></a> 
             </li>
             <li> 
-                <a href="<?= base_url("account/$token/report") ?>"><i class="ti-pie-chart fa-fw" data-icon="v"></i> รายงาน(Beta) <span class="fa arrow"></span></a> 
+                <a href="#"><i class="ti-pie-chart fa-fw" data-icon="v"></i> รายงาน(Beta) <span class="fa arrow"></span></a> 
             </li>
             <li> 
                 <a href="<?= base_url("account/$token/customer") ?>"><i class="icon-user fa-fw" data-icon="v"></i> ดูแลลูกค้า <span class="fa arrow"></span></a> 

@@ -21,14 +21,19 @@ class Register extends CI_Controller {
         $data["register"] = false;
         if ($_POST) {
             $email = $this->input->post('email');
+            $lineid = $this->input->post('lineid');
+            $name = $this->input->post('name');
             $cond = array('email' => $email);
             if ($this->get->merchant($cond)->num_rows() > 0) {
                 $data["emaildoesexit"] = true;
             } else {
                 $password = $this->input->post('password');
-                $token = $this->common->getToken(6);
+                $token = $this->common->getToken(10);
                 $input = array(
                     'email' => $email,
+                    'name' => $name,
+                    'lineid' => $lineid,
+                    'image' => base_url("public/avatar.png"),
                     'password' => md5($password),
                     'token' => $token,
                 );

@@ -29,6 +29,42 @@ class Select_model extends CI_Model {
         return $query;
     }
 
+    function v_adminsummary($cond) {
+        $this->db->select('*');
+        $this->db->from('v_adminsummary');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function v_order($cond, $notin = null, $in = null) {
+        if ($notin != null) {
+            $this->db->where_not_in('status', $notin);
+        }
+        if ($in != null) {
+            $this->db->where_in('status', $in);
+        }
+        $this->db->select('*');
+        $this->db->from('v_order');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function orderexcel($cond, $notin = null, $in = null) {
+        if ($notin != null) {
+            $this->db->where_not_in('status', $notin);
+        }
+        if ($in != null) {
+            $this->db->where_in('status', $in);
+        }
+        $this->db->select('fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total จำนวนเงินโอน, paymentinfo เวลาโอน, accno เลขบัญชี, bankname ธนาคาร');
+        $this->db->from('v_order');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function paymentmethod($cond) {
         $this->db->select('*');
         $this->db->from('paymentmethod');

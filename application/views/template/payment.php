@@ -126,7 +126,7 @@
                         <form  action="<?= base_url("order/payment/$ordertoken") ?>" method="post" enctype="multipart/form-data"> 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input class="form-control" id="txtfullname" name="txtfullname" type="text" placeholder="ชื่อ - นามสกุล" value="" required>
+                                    <input class="form-control" id="txtfullname" name="txtfullname" type="text" placeholder="ชื่อ - นามสกุล" value="" required  autocomplete="off" >
                                     <div class="input-group-btn">
                                         <button class="btn btn-default" type="button"><span class="fa fa-user-circle-o" aria-hidden="true"></span></button> 
                                     </div>
@@ -135,7 +135,7 @@
 
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input class="form-control" id="txttel" name="txttel" type="tel" placeholder="เบอร์โทร" value="" required>
+                                    <input class="form-control" id="txttel" name="txttel" type="tel" placeholder="เบอร์โทร" value="" required  autocomplete="off" >
                                     <div class="input-group-btn">
                                         <button class="btn btn-default" type="button"><i class="fa fa-phone-square" aria-hidden="true"></i></button> 
                                     </div>
@@ -154,7 +154,7 @@
 
                             <div class="form-group">
                                 <div class="input">
-                                    <input class="form-control" id="txtaddress" name="txtaddress" type="text" placeholder="บ้านเลขที่/หมู่บ้าน" required value=""> 
+                                    <input class="form-control" id="txtaddress" name="txtaddress" type="text" placeholder="บ้านเลขที่/หมู่บ้าน" required value=""  autocomplete="off" > 
                                 </div>
                             </div> 
 
@@ -181,7 +181,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="input">
-                                    <input class="form-control" id="txtzipcode" name="txtzipcode" type="number" placeholder="รหัสไปรษณีย์"  value="" required > 
+                                    <input class="form-control" id="txtzipcode" name="txtzipcode" type="number" placeholder="รหัสไปรษณีย์"  value="" required  autocomplete="off" > 
                                 </div>
                             </div>
                             <div class="form-group">
@@ -195,14 +195,14 @@
                                 <?php endforeach; ?> 
                             </div>
                             <div class="form-group">
-                                รูปถ่าย/สลิป <span style="color: red;font-size: 12px;">*กรณีผู้ใช้ Line ใน Android อาจอัพโหลดไม่ได้ให้แจ้งข้อมูลด้านล่าง</span>
+                                รูปถ่าย/สลิป
                                 <div class="fileinput fileinput-new" data-provides="fileinput">
                                     <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 100%; height: 150px;"></div>
                                     <div>
                                         <span class="btn btn-info btn-embossed btn-file">
                                             <span class="fileinput-new"><span class="fui-image"></span>  Select image</span>
                                             <span class="fileinput-exists"><span class="fui-gear"></span>  Change</span>
-                                            <input type="file" name="txtfileupload" id="txtfileupload" accept=".png,.jpg,.gif,.jpeg">
+                                            <input type="file" name="txtfileupload" id="txtfileupload" accept="image/*">
                                         </span>
                                         <a href="#" class="btn btn-primary btn-embossed fileinput-exists" data-dismiss="fileinput"><span class="fui-trash"></span>  Remove</a>
                                     </div>
@@ -222,7 +222,7 @@
                                             </div>
                                         </div>
                                         <div class="col-xs-5">
-                                            <input class="form-control" id="txtpaidtime" name="txtpaidtime" type="text" placeholder="09:00" required> 
+                                            <input class="form-control" id="txtpaidtime" name="txtpaidtime" type="text" placeholder="09:00" required  autocomplete="off" > 
                                         </div>
                                     </div> 
                                 </div> 

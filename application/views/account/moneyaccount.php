@@ -117,11 +117,11 @@
                                             <?php foreach ($paymentmethod as $index => $item): ?> 
                                                 <tr>
                                                     <td class="text-center" style="vertical-align: middle;"><?= $index + 1 ?></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><img src="<?= $item->banklogo ?>" style="width: 50px;"/></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><?= $item->bankname ?></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><?= $item->acctype ?></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><?= $item->accno ?></td>
-                                                    <td class="text-center" style="vertical-align: middle;"><?= $item->accname ?></td>
+                                                    <td style="vertical-align: middle;"><img src="<?= $item->banklogo ?>" style="width: 50px;"/></td>
+                                                    <td style="vertical-align: middle;"><?= $item->bankname ?></td>
+                                                    <td style="vertical-align: middle;"><?= $item->acctype ?></td>
+                                                    <td style="vertical-align: middle;"><?= $item->accno ?></td>
+                                                    <td style="vertical-align: middle;"><?= $item->accname ?></td>
 
                                                     </td>
                                                     <td> 
