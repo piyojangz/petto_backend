@@ -14,7 +14,7 @@
         <!-- Search input and Toggle icon -->
         <ul class="nav navbar-top-links navbar-left">
             <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
-            <li class="dropdown">
+<!--            <li class="dropdown">
                 <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="fa fa-envelope"></i>
                     <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
                 </a>
@@ -26,14 +26,14 @@
                         <a class="text-center" href="javascript:void(0);"> <strong>ดูทั้งหมด</strong> <i class="fa fa-angle-right"></i> </a>
                     </li>
                 </ul>
-                <!-- /.dropdown-messages -->
-            </li> 
+                 /.dropdown-messages 
+            </li> -->
         </ul>
         <ul class="nav navbar-top-links navbar-right pull-right">
-            <li>
+<!--            <li>
                 <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
                     <input type="text" placeholder="Search..." class="form-control"> <a href=""><i class="fa fa-search"></i></a> </form>
-            </li>
+            </li>-->
             <li class="dropdown">
                 <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="<?= $user["image"] ?>" alt="user-img" width="36" class="img-circle"><b class="hidden-xs"><?= $user["name"] ?></b><span class="caret"></span> </a>
                 <ul class="dropdown-menu dropdown-user animated flipInY">

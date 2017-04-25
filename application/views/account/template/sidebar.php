@@ -19,14 +19,15 @@
                 </ul>
             </li>
             <li class="devider"></li>
-            <li> <a href="javascript:;" ><i class="ti-money fa-fw"></i> <span class="hide-menu">ข้อมูลการเงิน<span class="fa arrow"></span></span></a>
+            <li> <a href="javascript:;" ><i class="ti-pencil-alt2 fa-fw"></i> <span class="hide-menu">กำหนดค่า<span class="fa arrow"></span></span></a>
                 <ul class="nav nav-second-level">
-                    <li><a href="<?= base_url("account/$token/paymentmethod") ?>"><i class="ti-credit-card fa-fw"></i><span class="hide-menu">เพิ่มบัญชี</span></a></li> 
+                    <li><a href="<?= base_url("account/$token/paymentmethod") ?>"><i class="ti-money fa-fw"></i><span class="hide-menu">เพิ่มบัญชี</span></a></li> 
+                    <li><a href="<?= base_url("account/$token/shippingrate") ?>"><i class="fa fa-truck fa-fw"></i><span class="hide-menu">เพิ่มค่าจัดส่ง</span></a></li> 
                 </ul>
             </li>
             <li> <a href="javascript:;" ><i class="ti-receipt fa-fw"></i> <span class="hide-menu">ออเดอร์<span class="fa arrow"></span></span></a>
                 <ul class="nav nav-second-level">
-                    <li><a href="<?= base_url("account/$token/order/all") ?>"><i class="fa-fw">O</i><span class="hide-menu">ดูแลออเดอร์</span></a></li> 
+                    <li><a href="<?= base_url("account/$token/order/all") ?>"><i class="fa-fw">O</i><span class="hide-menu">รายการสั่งซื้อ</span></a></li> 
                 </ul>
             </li>
         </ul>

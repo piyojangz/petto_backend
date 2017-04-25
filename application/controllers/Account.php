@@ -358,4 +358,61 @@ class Account extends CI_Controller {
         $this->load->view('account/moneyaccount', $data);
     }
 
+    public function shippingrate($acctoken = "") {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+        $data["bank"] = $this->get->bank(array())->result();
+        $data["shippingrate"] = $this->get->shippingrateconfig(array("merchantid" => $data["user"]["id"]))->result();
+
+        $this->load->view('account/shippingrate', $data);
+    }
+    
+     public function deleteshippingrate($id, $acctoken = "", $isdelete = "false") {
+        if ($isdelete == "true") { 
+            if ($this->set->delete_shippingrate($id)) {
+                redirect("account/$acctoken/shippingrate");
+            }
+        }
+    }
+
+
+    public function addnewshippingrate($acctoken = "") {
+        if ($_POST) {
+            if (!$this->user->is_login()) {
+                redirect('/');
+            }
+            $id = $this->input->post("id");
+            $data["user"] = $this->user->get_account_cookie();
+            $shippingtype = $this->input->post("shippingtype");
+            $unit = $this->input->post("unit");
+            $price = $this->input->post("price"); 
+
+            if (empty($id)) {
+                $input = array(
+                    'merchantid' => $data["user"]["id"],
+                    'type' => $shippingtype,
+                    'unit' => $unit,
+                    'price' => $price,
+                );
+                if ($this->put->shippingrate($input)) {
+                    redirect("account/$acctoken/shippingrate");
+                }
+            } else {
+                $input = array(
+                    'id' => $id,
+                    'type' => $shippingtype,
+                    'unit' => $unit,
+                    'price' => $price,
+                ); 
+                if ($this->set->shippingrate($input)) {
+                    redirect("account/$acctoken/shippingrate");
+                }
+            }
+        }
+    }
+
 }

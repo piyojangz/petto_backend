@@ -21,6 +21,15 @@ class Select_model extends CI_Model {
         return $query;
     }
 
+    function shippingrateconfig($cond) {
+        $this->db->select('*');
+        $this->db->from('shippingrate');
+         $this->db->order_by("unit", "asc");
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function v_merchantlineuid($cond) {
         $this->db->select('lineuid');
         $this->db->from('v_merchantlineuid');

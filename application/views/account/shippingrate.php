@@ -92,38 +92,33 @@
                     <div class="row el-element-overlay m-b-40 block1">
                         <div class="col-md-12">
 
-                            <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"> <i class="fa fa-credit-card-alt m-r-5"></i> <span>เพิ่มบัญชี</span></button>
+                            <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"> <i class="fa fa-truck m-r-5"></i> <span>เพิ่มรายการค่าจัดส่ง</span></button>
 
                             <hr>
                         </div> 
 
                         <div class="col-md-12">
                             <div class="panel">
-                                <div class="panel-heading">รายการบัญชี</div>
+                                <div class="panel-heading">รายการค่าจัดส่ง <code>* เพิ่มหน่วย = 0 กรณีต้องการให้มีขั้นต่ำ</code></div>
                                 <div class="table-responsive">
                                     <table class="table table-hover manage-u-table">
                                         <thead>
                                             <tr>
-                                                <th width="70" class="text-center">#</th>
-                                                <th width="70" class="text-center"></th>
-                                                <th>ธนาคาร/สาขา</th>
+                                                
                                                 <th>ประเภท</th>
-                                                <th>เลขที่บัญชี</th>
-                                                <th>ชื่อบัญชี</th>  
+                                                <th>หน่วย</th>
+                                                <th>ราคา</th> 
                                                 <th width="150">MANAGE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($paymentmethod as $index => $item): ?> 
+                                            <?php foreach ($shippingrate as $index => $item): ?> 
                                                 <tr>
-                                                    <td class="text-center" style="vertical-align: middle;"><?= $index + 1 ?></td>
-                                                    <td style="vertical-align: middle;"><img src="<?= $item->banklogo ?>" style="width: 50px;"/></td>
-                                                    <td style="vertical-align: middle;"><?= $item->bankname ?></td>
-                                                    <td style="vertical-align: middle;"><?= $item->acctype ?></td>
-                                                    <td style="vertical-align: middle;"><?= $item->accno ?></td>
-                                                    <td style="vertical-align: middle;"><?= $item->accname ?></td>
+                                                
+                                                    <td style="vertical-align: middle;"><?= $item->type ?></td> 
+                                                    <td style="vertical-align: middle;"><?= $item->unit ?></td>
+                                                    <td style="vertical-align: middle;"><?= number_format($item->price) ?></td>
 
-                                                    </td>
                                                     <td> 
                                                         <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5" onclick="edititem('<?= $item->id ?>');"><i class="ti-pencil-alt"></i></button> 
                                                         <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></button> 
@@ -144,7 +139,7 @@
 
 
 
-                    <form action="<?= base_url("account/$token/addnewpaymentmethod") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"  id="form-submit">
+                    <form action="<?= base_url("account/$token/addnewshippingrate") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"  id="form-submit">
                         <div class="panel panel-default">
                             <div class="panel-heading">เพิ่ม / แก้ไข</div>
                             <div class="panel-wrapper collapse in">
@@ -156,43 +151,26 @@
 
                                                     <div class="form-body">
                                                         <div class="form-group">
-                                                            <label class="control-label col-md-3">ธนาคาร</label>
+                                                            <label class="control-label col-md-3">ประเภท</label>
                                                             <div class="col-md-9">
-                                                                <select class="form-control" name="bankaccount" id="bankaccount">
-                                                                    <?php foreach ($bank as $item): ?> 
-                                                                        <option><?= $item->name ?></option>
-                                                                    <?php endforeach; ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label col-md-3">ประเภทบัญชี</label>
-                                                            <div class="col-md-9">
-                                                                <select class="form-control" name="accounttype" id="accounttype" required>
-                                                                    <option value="ออมทรัพย์">ออมทรัพย์</option>
-                                                                    <option value="ประจำ">ประจำ</option>
+                                                                <select class="form-control" name="shippingtype" id="shippingtype" required>
+                                                                    <option value="PEICE">ชิ้น/PEICE</option>
                                                                 </select>
                                                             </div>
                                                         </div>
 
+
                                                         <div class="form-group">
-                                                            <label class="control-label col-md-3">สาขา</label>
+                                                            <label class="control-label col-md-3">หน่วย</label>
                                                             <div class="col-md-9">
-                                                                <input type="text" name="accountbranch" id="accountbranch" accountno  required class="form-control"> 
+                                                                <input type="text" name="unit" id="unit"    required class="form-control"> 
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label class="control-label col-md-3">เลขที่บัญชี</label>
+                                                            <label class="control-label col-md-3">ราคา</label>
                                                             <div class="col-md-9">
-                                                                <input type="text" name="accountno" id="accountno"   required class="form-control"> 
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label class="control-label col-md-3">ชื่อบัญชี</label>
-                                                            <div class="col-md-9">
-                                                                <input type="text" name="accountname" id="accountname"   required class="form-control"> 
+                                                                <input type="text" name="price" id="price"   required class="form-control"> 
                                                             </div>
                                                         </div>
 
@@ -304,19 +282,16 @@
                                                             });
                                                             $.ajax({
                                                                 type: "POST",
-                                                                url: "<?php echo base_url('service/getpementmethod'); ?>",
+                                                                url: "<?php echo base_url('service/getshippingrateconfig'); ?>",
                                                                 data: {'id': id},
                                                                 dataType: "json",
                                                                 success: function (data) {
-                                                                    $('div.block1').unblock();
-                                                                    console.log(data.result);
+                                                                    $('div.block1').unblock(); 
                                                                     if (data.result != null) {
                                                                         $("#id").val(data.result.id);
-                                                                        $("#bankaccount").val(data.result.bankname);
-                                                                        $("#accounttype").val(data.result.acctype);
-                                                                        $("#accountbranch").val(data.result.accbranch);
-                                                                        $("#accountno").val(data.result.accno);
-                                                                        $("#accountname").val(data.result.accname);
+                                                                        $("#shippingtype").val(data.result.type);
+                                                                        $("#unit").val(data.result.unit);
+                                                                        $("#price").val(data.result.price); 
                                                                         $.magnificPopup.open({items: {src: '#form-submit'}, type: 'inline'}, 0);
                                                                     }
 
@@ -341,7 +316,7 @@
                                                             }, function (isConfirm) {
                                                                 if (isConfirm) {
                                                                     swal("Deleted!", "Your data been deleted.", "success");
-                                                                    location.href = '<?= base_url("account/updatepaymentmethod/") ?>' + id + '/' + token + '/' + isdelete;
+                                                                    location.href = '<?= base_url("account/deleteshippingrate/") ?>' + id + '/' + token + '/' + isdelete;
 
                                                                 } else {
                                                                     swal("Cancelled", "", "error");

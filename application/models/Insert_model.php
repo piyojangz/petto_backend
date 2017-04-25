@@ -18,6 +18,16 @@ class Insert_model extends CI_Model {
             return false;
         endif;
     }
+    
+    
+    function shippingrate($input) {
+        if ($this->db->insert('shippingrate', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
 
     function paymentmethod($input) {
         if ($this->db->insert('paymentmethod', $input)):

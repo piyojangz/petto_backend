@@ -11,6 +11,24 @@ class Update_model extends CI_Model {
         endif;
     }
 
+    public function delete_shippingrate($id) {
+        $this->db->where('id', $id);
+        if ($this->db->delete('shippingrate')):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
+    function shippingrate($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('shippingrate', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     function customer($input) {
         $this->db->where('uid', $input['uid']);
         if ($this->db->update('customer', $input)):
@@ -65,7 +83,7 @@ class Update_model extends CI_Model {
         } else {
             $this->db->where('id', $input['id']);
         }
-        
+
         if ($this->db->update('order', $input)):
             return true;
         else:
