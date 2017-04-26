@@ -68,7 +68,7 @@
                                                     <ul role="menu" class="dropdown-menu">
                                                         <li><a href="javascript:;" onclick="changstatus(2)">ยืนยันการชำระ</a></li>
                                                         <li><a href="javascript:;" onclick="changstatus(3)">แจ้งจัดส่ง</a></li> 
-                                                        <li><a href="javascript:;" onclick="changstatus(4)">ปิดออเดอร์</a></li> 
+                                                        <li><a href="javascript:;" onclick="changstatus(4)">ยกเลิก</a></li> 
                                                     </ul>
                                                 </div> 
 
@@ -82,7 +82,7 @@
                                                         <li><a href="javascript:;" onclick="getorderstatus(1, 'ยังไม่จ่าย')">ยังไม่จ่าย</a></li> 
                                                         <li><a href="javascript:;" onclick="getorderstatus(2, 'จ่ายแล้ว')">จ่ายแล้ว</a></li> 
                                                         <li><a href="javascript:;" onclick="getorderstatus(3, 'ส่งแล้ว')">ส่งแล้ว</a></li> 
-                                                        <li><a href="javascript:;" onclick="getorderstatus(4, 'ปิดแล้ว')">ปิดแล้ว</a></li> 
+                                                        <li><a href="javascript:;" onclick="getorderstatus(4, 'ยกเลิก')">ยกเลิก</a></li> 
                                                     </ul>
                                                     <input type="hidden" id="currentstatus" value="0" />
 

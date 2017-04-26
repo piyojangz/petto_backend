@@ -15,6 +15,15 @@ class Account extends CI_Controller {
         $this->load->library('common');
         $this->load->library('lineapi');
         $this->load->library('excel');
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"]["token"];
+        $data["merchantuid"] = $this->get->lineuid(array("token" => $data["token"]))->row();
+        $orderids = $this->get->orderids(array("merchantid" => $data["merchantuid"]->lineuid))->result();
+        $orderid = array();
+        foreach ($orderids as $id){ 
+            array_push($orderid, $id->orderid);
+        }
+        $this->paidorder = $this->get->orderin_statusopen($orderid)->num_rows();
     }
 
     public function index($acctoken = "") {
@@ -29,6 +38,7 @@ class Account extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -39,6 +49,7 @@ class Account extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -83,6 +94,7 @@ class Account extends CI_Controller {
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"]))->result();
+        $data["paidorder"] = $this->paidorder;
 
         if (!$this->user->is_login()) {
             redirect('/');
@@ -95,6 +107,7 @@ class Account extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -109,6 +122,7 @@ class Account extends CI_Controller {
         $data["obj"] = $this;
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
         $data["order"] = $this->get->v_order(array("merchantid" => $data["merchant"]->id), array("0", "3", "4"))->result();
 
         if (!$this->user->is_login()) {
@@ -123,7 +137,7 @@ class Account extends CI_Controller {
     public function getorderstatus($status) {
         switch ($status) {
             case "1":
-                return " <div class=\"label label-table label-warning\">Waiting for payment</div>";
+                return " <div class=\"label label-table label-warning\">Waiting for confirm payment</div>";
 
                 break;
             case "2":
@@ -133,7 +147,7 @@ class Account extends CI_Controller {
                 return " <div class=\"label label-table label-danger\">Shipped</div>";
                 break;
             case "4":
-                return " <div class=\"label label-table label-warning\">Closed</div>";
+                return " <div class=\"label label-table label-warning\">Canceled</div>";
                 break;
             default:
                 break;
@@ -147,6 +161,7 @@ class Account extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -349,6 +364,7 @@ class Account extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -362,6 +378,7 @@ class Account extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -370,15 +387,14 @@ class Account extends CI_Controller {
 
         $this->load->view('account/shippingrate', $data);
     }
-    
-     public function deleteshippingrate($id, $acctoken = "", $isdelete = "false") {
-        if ($isdelete == "true") { 
+
+    public function deleteshippingrate($id, $acctoken = "", $isdelete = "false") {
+        if ($isdelete == "true") {
             if ($this->set->delete_shippingrate($id)) {
                 redirect(base_url("account/$acctoken/shippingrate"));
             }
         }
     }
-
 
     public function addnewshippingrate($acctoken = "") {
         if ($_POST) {
@@ -389,7 +405,7 @@ class Account extends CI_Controller {
             $data["user"] = $this->user->get_account_cookie();
             $shippingtype = $this->input->post("shippingtype");
             $unit = $this->input->post("unit");
-            $price = $this->input->post("price"); 
+            $price = $this->input->post("price");
 
             if (empty($id)) {
                 $input = array(
@@ -407,7 +423,7 @@ class Account extends CI_Controller {
                     'type' => $shippingtype,
                     'unit' => $unit,
                     'price' => $price,
-                ); 
+                );
                 if ($this->set->shippingrate($input)) {
                     redirect(base_url("account/$acctoken/shippingrate"));
                 }

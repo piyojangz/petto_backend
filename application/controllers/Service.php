@@ -98,7 +98,7 @@ class Service extends CI_Controller {
     public function getorderstatuslabel($status) {
         switch ($status) {
             case "1":
-                return " <div class=\"label label-table label-warning\">Waiting for payment</div>";
+                return " <div class=\"label label-table label-warning\">Waiting for confirm payment</div>";
 
                 break;
             case "2":
@@ -108,7 +108,7 @@ class Service extends CI_Controller {
                 return " <div class=\"label label-table label-danger\">Shipped</div>";
                 break;
             case "4":
-                return " <div class=\"label label-table label-warning\">Closed</div>";
+                return " <div class=\"label label-table label-warning\">Canceled</div>";
                 break;
             default:
                 break;

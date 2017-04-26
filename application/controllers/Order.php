@@ -39,7 +39,7 @@ class Order extends CI_Controller {
 
         $merchantid = $ordertoken->merchantid;
         $orderid = $ordertoken->orderid;
-
+        $data["genstatus"] = $ordertoken->genstatus;
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
         $data["custdetail"] = $this->get->customer(array('id' => $data["order"]->custid))->row();
@@ -84,6 +84,7 @@ class Order extends CI_Controller {
         $data["uid"] = $ordertoken->uid;
         $merchantid = $ordertoken->merchantid;
         $orderid = $ordertoken->orderid;
+        $data["genstatus"] = $ordertoken->genstatus;
         $data["obj"] = $this;
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
         $data["orderdetail"] = $this->get->orderdetail(array('orderid' => $orderid))->result();
@@ -91,6 +92,7 @@ class Order extends CI_Controller {
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid))->result();
         $data["customer"] = $this->get->customer(array('uid' => $data["uid"]))->row();
+
 
         if ($data["order"]->status >= 1) {
             redirect(base_url("/track/$token"));
@@ -132,7 +134,8 @@ class Order extends CI_Controller {
             $txtzipcode = $this->input->post("txtzipcode");
             $paymenttype = $this->input->post("paymenttype");
             $txtpaiddate = $this->input->post("txtpaiddate");
-            $txtpaidtime = $this->input->post("txtpaidtime");
+            $txtpaidhour = $this->input->post("txtpaidhour");
+            $txtpaidmin = $this->input->post("txtpaidmin");
 
             $input = array(
                 'fullname' => $txtfullname,
@@ -163,7 +166,7 @@ class Order extends CI_Controller {
                 'status' => '1',
                 'slipimage' => $imagepath,
                 'paymentmethodid' => $paymenttype,
-                'paymentinfo' => $txtpaiddate . ' ' . $txtpaidtime,
+                'paymentinfo' => $txtpaiddate . ' ' . $txtpaidhour . ':' . $txtpaidmin,
                 'updatedate' => date('Y-m-d H:i:s'),
             );
             $this->set->order($input);

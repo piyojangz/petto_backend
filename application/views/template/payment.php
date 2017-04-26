@@ -70,7 +70,7 @@
                                 <?php if ($obj->getamount($orderdetail, $item->id) > 0): ?>
                                     <li> 
                                         <div class="row">
-                                            <div class="col-xs-8">
+                                            <div class="col-xs-8"><img src="<?= $item->image ?>" style="width:40px;" class="img img-thumbnail" />
                                                 <span class="itemname"> <?= $item->name ?></span> <br/>  <span class="itemprice"><?= number_format($item->price, 2, '.', ','); ?></span>
                                             </div>
                                             <div class="col-xs-4 text-right"> 
@@ -88,7 +88,7 @@
                                     <span class="badge pull-right"><?= number_format($order->shipingrate, 2, '.', ',') ?>฿</span>
                                 </a>
                             </li> 
-                            <?php if ($uid != ""): ?>
+                             <?php if ($genstatus == 1): ?>
                                 <li class="divider"></li>
                                 <li class="nav-header">รายการส่วนลด</li>
                                 <li>
@@ -113,8 +113,8 @@
                             </li>
                             <li class="divider"></li>
                         </ul>
-                        <?php if ($uid == ""): ?>
-                            <button type="button" class="btn btn-warning btn-xs" onclick="location.href = '<?= base_url("/$ordertoken") ?>'">กลับไปแก้ไข</button>
+                       <?php if ($genstatus == 1 ): ?>
+                            <!--<button type="button" class="btn btn-warning btn-xs" onclick="location.href = '<?= base_url("/$ordertoken") ?>'">กลับไปแก้ไข</button>-->
                         <?php endif; ?>
                     </div>
                 </div>
@@ -181,7 +181,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="input">
-                                    <input class="form-control" id="txtzipcode" name="txtzipcode" type="number" placeholder="รหัสไปรษณีย์"  value="" required  autocomplete="off" > 
+                                    <input class="form-control" id="txtzipcode" name="txtzipcode" type="number" placeholder="รหัสไปรษณีย์"  value="" required     autocomplete="off" > 
                                 </div>
                             </div>
                             <div class="form-group">
@@ -210,19 +210,41 @@
                             </div>
 
                             <div class="form-group">
-                                วัน / เวลา ที่ชำระเงิน <span style="color: red;font-size: 12px;">*กรุณาชำระเงินก่อนระบุ</span>
+                                วันที่ชำระเงิน <span style="color: red;font-size: 12px;">*กรุณาชำระเงินก่อนระบุ</span>
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="col-xs-7">
+                                        <div class="col-xs-12">
                                             <div class="input-group">
                                                 <span class="input-group-btn">
                                                     <button class="btn" type="button"><span class="fui-calendar"></span></button>
                                                 </span>
                                                 <input type="text"  class="form-control" value="<?= date('d/m/Y') ?>" id="txtpaiddate"  name="txtpaiddate" required/>
                                             </div>
+                                        </div> 
+                                    </div> 
+                                </div> 
+
+
+                            </div>
+                            <div class="form-group">
+                                เวลาชำระเงิน <span style="color: red;font-size: 12px;">*กรุณาชำระเงินก่อนระบุ</span>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <select class="selectpicker" name="txtpaidhour" id="txtpaidhour" required>
+                                                <?php for ($i = 1; $i <= 24; $i++): ?>
+                                                    <option <?= sprintf("%02d", $i) == date('H') ? 'selected' : '' ?>   value="<?= sprintf("%02d", $i); ?>"><?= sprintf("%02d", $i); ?></option> 
+                                                <?php endfor ?>
+                                            </select>
+
                                         </div>
-                                        <div class="col-xs-5">
-                                            <input class="form-control" id="txtpaidtime" name="txtpaidtime" type="text" placeholder="09:00" required  autocomplete="off" > 
+                                        <div class="col-xs-6">
+
+                                            <select class="selectpicker" name="txtpaidmin" id="txtpaidmin" required>
+                                                <?php for ($i = 1; $i <= 60; $i++): ?>
+                                                    <option  <?= sprintf("%02d", $i) == date('i') ? 'selected' : '' ?>  value="<?= sprintf("%02d", $i); ?>"><?= sprintf("%02d", $i); ?></option> 
+                                                <?php endfor ?>
+                                            </select>
                                         </div>
                                     </div> 
                                 </div> 
@@ -261,24 +283,24 @@
     <script src="<?= base_url("res/js/application.js") ?>"></script>  
     <script type="text/javascript" src="<?= base_url("res/js/application-docs.js") ?>"></script>    
     <script>
-                            var datepickerSelector = $('#txtpaiddate');
-                            datepickerSelector.datepicker({
-                                showOtherMonths: true,
-                                selectOtherMonths: true,
-                                dateFormat: 'dd/mm/yy',
-                                yearRange: '-1:+1'
-                            }).prev('.input-group-btn').on('click', function (e) {
-                                e && e.preventDefault();
-                                datepickerSelector.focus();
-                            });
-                            $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
-                                    return offset;
-                                }});
-                            // Now let's align datepicker with the prepend button
-                            datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
-                            $(document).ready(function () {
+                                var datepickerSelector = $('#txtpaiddate');
+                                datepickerSelector.datepicker({
+                                    showOtherMonths: true,
+                                    selectOtherMonths: true,
+                                    dateFormat: 'dd/mm/yy',
+                                    yearRange: '-1:+1'
+                                }).prev('.input-group-btn').on('click', function (e) {
+                                    e && e.preventDefault();
+                                    datepickerSelector.focus();
+                                });
+                                $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
+                                        return offset;
+                                    }});
+                                // Now let's align datepicker with the prepend button
+                                datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
+                                $(document).ready(function () {
 
-                                init();
+                                    init();
 //            var provinceid = '<?= isset($customer) ? $customer->provinceid : '' ?>';
 //            var aumpureid = '<?= isset($customer) ? $customer->aumpureid : '' ?>';
 //            var tumbolid = '<?= isset($customer) ? $customer->tumbolid : '' ?>';
@@ -335,73 +357,73 @@
 //            }
 
 
-                                $("#formlookup").submit(function () {
-                                    $(".overlay-loader").show();
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "<?php echo base_url('service/sendorder'); ?>",
-                                        data: {'txttel': $("#txttellookup").val(), 'txtidcard': $("#txtidcard").val()},
-                                        dataType: "json",
-                                        success: function (data) {
+                                    $("#formlookup").submit(function () {
+                                        $(".overlay-loader").show();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "<?php echo base_url('service/sendorder'); ?>",
+                                            data: {'txttel': $("#txttellookup").val(), 'txtidcard': $("#txtidcard").val()},
+                                            dataType: "json",
+                                            success: function (data) {
 
-                                            if (data.result != null) {
-                                                console.log(data);
+                                                if (data.result != null) {
+                                                    console.log(data);
+                                                }
+                                                $(".overlay-loader").hide();
+                                            },
+                                            error: function (XMLHttpRequest) {
+                                                $(".overlay-loader").hide();
                                             }
-                                            $(".overlay-loader").hide();
-                                        },
-                                        error: function (XMLHttpRequest) {
-                                            $(".overlay-loader").hide();
-                                        }
+                                        });
+                                        $("#txttel").val($("#txttellookup").val());
+                                        return false;
                                     });
-                                    $("#txttel").val($("#txttellookup").val());
-                                    return false;
-                                });
-                                $("#txtprovince").change(function () {
-                                    $(".overlay-loader").show();
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "<?php echo base_url('service/getaumphure'); ?>",
-                                        data: {'provinceid': $(this).val()},
-                                        dataType: "json",
-                                        success: function (data) {
-                                            var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
-                                            $.each(data.result, function (index, value) {
-                                                html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
-                                            });
-                                            $("#txtaumpure").html(html);
-                                            html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-                                            $("#txttumbol").html(html);
-                                            $(".overlay-loader").hide();
-                                        },
-                                        error: function (XMLHttpRequest) {
-                                            $(".overlay-loader").hide();
-                                        }
+                                    $("#txtprovince").change(function () {
+                                        $(".overlay-loader").show();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "<?php echo base_url('service/getaumphure'); ?>",
+                                            data: {'provinceid': $(this).val()},
+                                            dataType: "json",
+                                            success: function (data) {
+                                                var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+                                                $.each(data.result, function (index, value) {
+                                                    html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+                                                });
+                                                $("#txtaumpure").html(html);
+                                                html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                                                $("#txttumbol").html(html);
+                                                $(".overlay-loader").hide();
+                                            },
+                                            error: function (XMLHttpRequest) {
+                                                $(".overlay-loader").hide();
+                                            }
+                                        });
                                     });
-                                });
-                                $("#txtaumpure").change(function () {
-                                    $(".overlay-loader").show();
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "<?php echo base_url('service/gettumbol'); ?>",
-                                        data: {'aumpureid': $(this).val()},
-                                        dataType: "json",
-                                        success: function (data) {
-                                            var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-                                            $.each(data.result, function (index, value) {
-                                                html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
-                                            });
-                                            $("#txttumbol").html(html);
-                                            $(".overlay-loader").hide();
-                                        },
-                                        error: function (XMLHttpRequest) {
-                                            $(".overlay-loader").hide();
-                                        }
+                                    $("#txtaumpure").change(function () {
+                                        $(".overlay-loader").show();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "<?php echo base_url('service/gettumbol'); ?>",
+                                            data: {'aumpureid': $(this).val()},
+                                            dataType: "json",
+                                            success: function (data) {
+                                                var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                                                $.each(data.result, function (index, value) {
+                                                    html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+                                                });
+                                                $("#txttumbol").html(html);
+                                                $(".overlay-loader").hide();
+                                            },
+                                            error: function (XMLHttpRequest) {
+                                                $(".overlay-loader").hide();
+                                            }
+                                        });
                                     });
                                 });
-                            });
-                            function init() {
-                                $(".overlay-loader").hide();
-                            }
+                                function init() {
+                                    $(".overlay-loader").hide();
+                                }
     </script>
     <input type="hidden" id="refreshed" value="no">
     <script type="text/javascript">

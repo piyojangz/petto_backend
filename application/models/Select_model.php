@@ -24,7 +24,15 @@ class Select_model extends CI_Model {
     function shippingrateconfig($cond) {
         $this->db->select('*');
         $this->db->from('shippingrate');
-         $this->db->order_by("unit", "asc");
+        $this->db->order_by("unit", "asc");
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function lineuid($cond) {
+        $this->db->select('lineuid');
+        $this->db->from('merchantlineuid');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
@@ -93,6 +101,7 @@ class Select_model extends CI_Model {
     function province($cond) {
         $this->db->select('*');
         $this->db->from('province');
+        $this->db->order_by('PROVINCE_NAME', 'asc');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
@@ -186,6 +195,23 @@ class Select_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('order');
         $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function orderids($uid) {
+        $this->db->select('orderid');
+        $this->db->from('ordertoken');
+        $this->db->where_in("uid", $uid);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function orderin_statusopen($orderids) {
+        $this->db->select('*');
+        $this->db->from('order');
+        $this->db->where("status", 1);
+        $this->db->where_in("id", $orderids);
         $query = $this->db->get();
         return $query;
     }

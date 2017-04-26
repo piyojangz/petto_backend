@@ -76,7 +76,7 @@
                             <?php if ($obj->getamount($orderdetail, $item->id) > 0): ?>
                                 <li> 
                                     <div class="row">
-                                        <div class="col-xs-8">
+                                        <div class="col-xs-8"><img src="<?= $item->image ?>" style="width:40px;" class="img img-thumbnail" />
                                             <span class="itemname"><a href="javascript:;" onclick="openimgmodal('<?= $item->name ?>', '<?= $item->image ?>', '<?= number_format($item->price, 2, '.', ','); ?>')"><?= $item->name ?><i class="fa fa-external-link-square" style="    font-size: .7em;  padding-left: 4px;"></i></a></span> <br/>  <span class="itemprice"><?= number_format($item->price, 2, '.', ','); ?></span>
                                         </div>
                                         <div class="col-xs-4 text-right"> 
@@ -94,7 +94,7 @@
                                 <span class="badge pull-right"><?= number_format($order->shipingrate, 2, '.', ',') ?>฿</span>
                             </a>
                         </li> 
-                        <?php if ($uid != ""): ?>
+                       <?php if ($genstatus == 1 ): ?>
                             <li class="divider"></li>
                             <li class="nav-header">รายการส่วนลด</li>
                             <li>

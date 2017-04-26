@@ -79,7 +79,7 @@
                     </div>
                     <!--/.row -->
                     <div class="row">
-                        <div class="col-md-4 col-sm-12"> 
+                        <div class="col-md-12 col-sm-12"> 
                             <div class="white-box p-b-0">
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -90,7 +90,7 @@
                                 </div>
                                 <div class="row m-t-30 minus-margin">
                                     <?php foreach ($lineadmin as $key => $value): ?>
-                                        <div class="col-sm-12 col-sm-6 b-t b-r">
+                                        <div class="col-sm-12 col-sm-4 b-t b-r">
                                             <ul class="expense-box">
                                                 <li>
                                                     <i class="fa fa-dollar"> </i>

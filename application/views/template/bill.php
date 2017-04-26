@@ -72,12 +72,13 @@
                                     <li  > 
                                         <div class="row">
                                             <div class="col-xs-8"> 
+                                                <img src="<?= $item->image ?>" style="width:40px;" class="img img-thumbnail" />
                                                 <span class="itemname"><a href="javascript:;" onclick="openimgmodal('<?= $item->name ?>', '<?= $item->image ?>', '<?= number_format($item->price, 2, '.', ','); ?>')"><?= $item->name ?><i class="fa fa-external-link-square" style="    font-size: .7em;  padding-left: 4px;"></i></a></span> <br/>  <span class="itemprice"><?= number_format($item->price, 2, '.', ','); ?>฿</span>
                                             </div>
                                             <div class="col-xs-4"> 
                                                 <input type="hidden" value="<?= $item->id ?>"/>
                                                 <input type="hidden" value="<?= $item->price ?>"/>
-                                                <input type="number" name="amount" min="0" class="form-control input-sm itemamount" value="<?= $obj->getamount($orderdetail, $item->id) ?>"  placeholder="0" />
+                                                <input type="number" name="amount" min="0" class="form-control input-sm itemamount" value="<?= $obj->getamount($orderdetail, $item->id) ?>"  placeholder="0" autocomplete="off" />
                                             </div>
                                         </div>
                                     </li>
@@ -91,7 +92,7 @@
                                         <input type="hidden"   id="shipingratehidden" />
                                     </a>
                                 </li> 
-                                <?php if ($uid != ""): ?>
+                                <?php if ($genstatus == 1): ?>
                                     <li class="divider"></li>
                                     <li class="nav-header">รายการส่วนลด(ถ้ามี)</li>
                                     <li>
@@ -143,7 +144,7 @@
                             </label> 
                         <?php endforeach; ?> 
                         <input type="hidden" id="orderid" value="<?= $order->id ?>" /> 
-                        <?php if ($uid != ""): ?>
+                       <?php if ($genstatus == 1): ?>
                             <button type="submit"  class="btn btn-hg btn-block btn-primary">บันทึกรายการ</button>
                         <?php else: ?>
                             <button type="submit"  class="btn btn-hg btn-block btn-primary">แจ้งชำระเงิน</button>
@@ -192,8 +193,7 @@
                                                     $("input[type=number][name=amount]").change(function () {
                                                         updateprice();
                                                     });
-
-<?php if ($uid != ""): ?>
+  <?php if ($genstatus == 1): ?>
                                                         $("input[type=number][name=shippingdiscount]").change(function () {
                                                             var shippingdiscount = -Math.abs($(this).val());
                                                             $(this).val(shippingdiscount);
@@ -301,7 +301,7 @@
                                                     var shipingratehidden = $("#shipingratehidden").val();
                                                     var shippingdiscount = parseFloat($("#shippingdiscounthidden").val() == null ? 0 : $("#shippingdiscounthidden").val());
                                                     var pricediscount = parseFloat($("#pricediscounthidden").val() == null ? 0 : $("#pricediscounthidden").val());
-                                                    var mnbillstatus = '<?= $uid ?>' != "" ? 1 : 0;
+                                                    var mnbillstatus = '<?= $genstatus ?>';
 
                                                     total = total + shippingdiscount;
                                                     total = total + pricediscount;

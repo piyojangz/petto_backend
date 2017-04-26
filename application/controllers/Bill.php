@@ -25,8 +25,9 @@ class Bill extends CI_Controller {
         $orderid = $ordertoken->orderid;
 
         $data["obj"] = $this;
+        $data["genstatus"] = $ordertoken->genstatus;
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
-        $data["items"] = $this->get->items(array('merchantid' => $merchantid))->result();
+        $data["items"] = $this->get->items(array('merchantid' => $merchantid, 'status' => 1))->result();
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
         $data["orderdetail"] = $this->get->orderdetail(array('orderid' => $orderid))->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid))->result();
@@ -325,7 +326,7 @@ class Bill extends CI_Controller {
                 $colums = array();
                 if (count($merchants) > 0) {
                     if (count($merchants) == 1) {
-                        foreach ($merchants as $item) { 
+                        foreach ($merchants as $item) {
                             $messages = array(
                                 'type' => 'template',
                                 "altText" => "ร้านค้า $item->name ได้ส่งข้อมูลการสั่งซื้อสินค้าให้คุณ",
