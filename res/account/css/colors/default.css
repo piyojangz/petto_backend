@@ -167,3 +167,20 @@ body {
     height: 20px  !important;
     margin: 0px  !important;
 }
+
+tbody.selected tr{
+    cursor: pointer;
+}
+tbody.selected tr{
+    background: #f9f9f9;
+    color: #464c50;
+    font-weight: 300;
+}
+tbody.selected tr.selected{
+    background: #FFF;
+}
+
+tbody.selected tr small {
+    color: #8f989d;
+    font-size: 75%;
+}

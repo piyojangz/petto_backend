@@ -16,6 +16,26 @@ class Bill extends CI_Controller {
 
     public function index($token = "") {
         $data["ordertoken"] = $token;
+        $data["billtoken"] = "";
+        $billtoken = $this->get->billtoken(array('token' => $token))->row();
+        if (count($billtoken) > 0) {
+            $merchantid = $billtoken->merchantid;
+            $data["sqlmerchant"] = $this->get->merchant(array('id' => $merchantid));
+            if ($data["sqlmerchant"]->num_rows() > 0) {
+                //$billtoken = $this->generatebilltoken($data["sqlmerchant"]->row(), $billtoken->uid); // ifsubmit
+                //redirect(base_url("$token"));
+
+
+                $data["obj"] = $this;
+                $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
+                $data["province"] = $this->get->province(array())->result();
+                $data["items"] = $this->get->items(array('merchantid' => $merchantid, 'status' => 1))->result();
+                $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid))->result();
+                $this->load->view('template/merchantbill', $data);
+                return;
+            }
+        }
+
         $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
         if ($ordertoken == null) {
             redirect(base_url());
@@ -96,8 +116,7 @@ class Bill extends CI_Controller {
             )
         );
 
-        print_r(json_encode($messages));
-
+        //print_r(json_encode($messages));
         // Make a POST Request to Messaging API to reply to sender
         $url = 'https://api.line.me/v2/bot/message/reply';
         $data = [
@@ -229,14 +248,19 @@ class Bill extends CI_Controller {
         //echo json_encode($messages);
     }
 
-    public function splitparm($event) {
+    public function splitparm($event = "") {
         $msg = $event['message']['text'];
+
+//        $msg = "เปิดบิล";
+//        $event['source']['userId'] = "U7fbb7c7d7ba6f2642c0eb7026f8da615";
+
         $customtemplate = false;
         $billtoken = false;
         $messages = array();
-        //ลงทะเบียน:shoptoken
         $msgqarr = preg_split("/,|:|\s/", $msg);
         $command = $msgqarr[0];
+
+
         if (isset($event['source']['userId'])) {
             $uid = $event['source']['userId'];
             $data["sqlmerchant"] = null;
@@ -327,14 +351,15 @@ class Bill extends CI_Controller {
                 if (count($merchants) > 0) {
                     if (count($merchants) == 1) {
                         foreach ($merchants as $item) {
+                            $description = $item->description == '' ? '-' : $item->description;
                             $messages = array(
                                 'type' => 'template',
-                                "altText" => "ร้านค้า $item->name ได้ส่งข้อมูลการสั่งซื้อสินค้าให้คุณ",
+                                "altText" => "ร้านค้าได้ส่งข้อมูลการสั่งซื้อสินค้าให้คุณ",
                                 "template" => array(
                                     "type" => "buttons",
                                     "thumbnailImageUrl" => "$item->image",
                                     "title" => "ร้านค้า : $item->name",
-                                    "text" => "$item->description",
+                                    "text" => "$description",
                                     'actions' => array(
                                         array(
                                             "type" => "postback",
@@ -352,10 +377,11 @@ class Bill extends CI_Controller {
                         }
                     } else {
                         foreach ($merchants as $item) {
+                            $description = $item->description == '' ? '-' : $item->description;
                             array_push($colums, array(
                                 "thumbnailImageUrl" => "$item->image",
                                 "title" => "ร้านค้า : $item->name",
-                                "text" => "$item->description",
+                                "text" => "$description",
                                 'actions' => array(
                                     array(
                                         "type" => "postback",
@@ -372,7 +398,7 @@ class Bill extends CI_Controller {
                         }
                         $messages = array(
                             'type' => 'template',
-                            "altText" => "ร้านค้า $merchant->name ได้ส่งข้อมูลการสั่งซื้อสินค้าให้คุณ",
+                            "altText" => "คุณได้รับข้อมูลการสั่งซื้อสินค้า",
                             "template" => array(
                                 "type" => "carousel",
                                 "columns" => $colums
@@ -389,10 +415,7 @@ class Bill extends CI_Controller {
                 ];
             }
 
-
-
-
-
+            print_r($messages);
             return $messages;
         } else {
             if (count($msgqarr) >= 2) {

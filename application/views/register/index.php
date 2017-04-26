@@ -42,7 +42,7 @@
     <div class="preloader">
         <div class="cssload-speeding-wheel"></div>
     </div>
-    <section id="wrapper" class="new-login-register">
+    <section id="wrapper" class="new-login-register"  style="overflow-y: scroll;">
         <div class="lg-info-panel">
             <div class="inner-panel">
                 <a href="<?= base_url() ?>" class="p-20 di"><img src="<?= base_url("res/account/plugins/images/admin-logo.png") ?>"></a>

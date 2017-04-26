@@ -12,6 +12,7 @@ class Service extends CI_Controller {
         $this->load->library('upload');
         $this->load->library('lineapi');
         $this->load->library('excel');
+        $this->load->library('common');
     }
 
     public function lookupcustomer() {
@@ -27,6 +28,67 @@ class Service extends CI_Controller {
         $provinceid = $this->input->post('provinceid');
         $cond = array('PROVINCE_ID' => $provinceid);
         $data['result'] = $this->get->amphur($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getallbilltokenhtml() {
+        $merchantid = $this->input->post('merchantid');
+        $cond = array('merchantid' => $merchantid);
+        $result = $this->get->billtoken($cond)->result();
+        $html = "";
+
+        foreach ($result as $key => $value) {
+
+            $url = "perdbill.co/";
+            $html .= "<tr   id=\"$value->token\">";
+            $html .= "<td>";
+            $html .= "<div class=\"checkbox m-t-0 m-b-0\">";
+            $html .= "<input type=\"checkbox\" name=\"billtokenid\" id =\"billtokenid\">";
+            $html .= "<label for=\"checkbox0\"></label>";
+            $html .= "</div>";
+            $html .= "</td>";
+            $html .= "<td colspan=\"2\">";
+            $html .= "<small>$value->createdate</small><br/>$value->name</br>";
+            $html .= "<small style=\"color:#ee6123;\">$url<b>$value->token</b></small>";
+            $html .= "</td>";
+            $html .= "</tr>";
+        }
+
+        echo $html;
+    }
+
+    public function savebilltoken() {
+        $token = $this->input->post('token');
+        $merchantid = $this->input->post('merchantid');
+        $daterange = $this->input->post('daterange');
+        $merchantuid = $this->input->post('merchantuid');
+        $name = $this->input->post('name');
+        $daterange = preg_split("/,|:|\s/", $daterange);
+        $uniqid = $this->common->getToken(5);
+
+        $from = str_replace('/', '-', $daterange[0]);
+        $to = str_replace('/', '-', $daterange[2]);
+
+        $from = strtotime($from);
+        $to = strtotime($to);
+
+
+        $input = array(
+            'merchantid' => $merchantid,
+            'name' => $name,
+            'merchanttoken' => $token,
+            'token' => $uniqid,
+            'uid' => $merchantuid,
+            'datefrom' => date('Y-m-d H:i:s', $from),
+            'dateto' => date('Y-m-d H:i:s', $to),
+            'status' => 1,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+
+
+
+        $data['result'] = $this->put->billtoken($input);
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -126,14 +188,14 @@ class Service extends CI_Controller {
         echo json_encode($data);
     }
 
-        public function getpementmethod() {
+    public function getpementmethod() {
         $id = $this->input->post('id');
         $cond = array('id' => $id);
         $data['result'] = $this->get->paymentmethod($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
-    
+
     public function getshippingrate() {
         $merchantid = $this->input->post('merchantid');
         $unit = $this->input->post('unit');

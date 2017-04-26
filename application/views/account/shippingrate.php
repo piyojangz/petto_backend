@@ -104,7 +104,7 @@
                                     <table class="table table-hover manage-u-table">
                                         <thead>
                                             <tr>
-                                                
+
                                                 <th>ประเภท</th>
                                                 <th>หน่วย</th>
                                                 <th>ราคา</th> 
@@ -114,7 +114,7 @@
                                         <tbody>
                                             <?php foreach ($shippingrate as $index => $item): ?> 
                                                 <tr>
-                                                
+
                                                     <td style="vertical-align: middle;"><?= $item->type ?></td> 
                                                     <td style="vertical-align: middle;"><?= $item->unit ?></td>
                                                     <td style="vertical-align: middle;"><?= number_format($item->price) ?></td>
@@ -238,6 +238,9 @@
 
         <!-- Magnific popup JavaScript -->
         <script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script> 
+
+
+
     </body>
     <script>
                                                         $(document).ready(function () {
@@ -286,12 +289,12 @@
                                                                 data: {'id': id},
                                                                 dataType: "json",
                                                                 success: function (data) {
-                                                                    $('div.block1').unblock(); 
+                                                                    $('div.block1').unblock();
                                                                     if (data.result != null) {
                                                                         $("#id").val(data.result.id);
                                                                         $("#shippingtype").val(data.result.type);
                                                                         $("#unit").val(data.result.unit);
-                                                                        $("#price").val(data.result.price); 
+                                                                        $("#price").val(data.result.price);
                                                                         $.magnificPopup.open({items: {src: '#form-submit'}, type: 'inline'}, 0);
                                                                     }
 

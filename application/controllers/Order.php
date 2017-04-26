@@ -11,6 +11,7 @@ class Order extends CI_Controller {
         $this->load->model('Update_model', 'set');
         $this->load->library('upload');
         $this->load->library('lineapi');
+        $this->load->library('common');
     }
 
     public function Summary($orderid = "") {
@@ -18,13 +19,15 @@ class Order extends CI_Controller {
     }
 
     public function paymentsuccess($token = "") {
-        $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
-        if ($ordertoken == null) {
+        $data["ordertoken"] = $this->get->ordertoken(array('token' => $token))->row();
+        if ($data["ordertoken"] == null) {
             redirect(base_url());
         }
+        
+    
         $data["obj"] = $this;
-        $uid = $ordertoken->uid;
-        $merchantid = $ordertoken->merchantid;
+        $uid = $data["ordertoken"]->uid;
+        $merchantid = $data["ordertoken"]->merchantid;
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
         $this->load->view('template/paymentsuccess', $data);
     }
@@ -182,6 +185,134 @@ class Order extends CI_Controller {
 
 
         $this->load->view('template/payment', $data);
+    }
+
+    public function generatebilltoken($merchantid, $merchantuid, $orderid) {
+        $uniqid = $this->common->getToken(6);
+        $cond = array('token' => $uniqid);
+        if ($this->get->ordertoken($cond)->num_rows() > 0) {
+            return $this->generatebilltoken($merchantid, $merchantuid, $orderid);
+        }
+
+        $input = array(
+            'orderid' => $orderid,
+            'merchantid' => $merchantid,
+            'token' => $uniqid,
+            'uid' => $merchantuid,
+            'genstatus' => 0
+        );
+
+        if ($this->put->ordertoken($input)) {
+            return $uniqid;
+        }
+        return $uniqid;
+    }
+
+    public function paymentwithmerchant($token = "") {
+
+        if ($_POST) {
+            // สร้าง ordertoken ก่อน
+            $image = "";
+            if (!empty($_FILES['txtfileupload']['name'])) {
+
+                $upPath = "./public/upload/slip";
+
+                $config['upload_path'] = "$upPath";
+                $config['allowed_types'] = 'gif|jpg|png';
+                $config['max_size'] = '0';
+                $config['max_width'] = '0';
+                $config['max_height'] = '0';
+
+                $this->upload->initialize($config);
+
+                if (!$this->upload->do_upload('txtfileupload')) {
+                    $data['imageError'] = $this->upload->display_errors();
+                } else {
+                    $imageDetailArray = $this->upload->data();
+                    $image = $imageDetailArray['file_name'];
+                }
+            }
+            $imagepath = "";
+            if ($image != "") {
+                $imagepath = "/public/upload/slip/$image";
+            }
+
+            $itemselectedhd = $this->input->post("itemselectedhd");
+            $shippinghd = $this->input->post("shippinghd");
+            $totalhd = $this->input->post("totalhd");
+            // new
+
+            $txtfullname = $this->input->post("txtfullname");
+            $txttel = $this->input->post("txttel");
+            $txtaddress = $this->input->post("txtaddress");
+            $txtprovince = $this->input->post("txtprovince");
+            $txtaumpure = $this->input->post("txtaumpure");
+            $txttumbol = $this->input->post("txttumbol");
+            $txtzipcode = $this->input->post("txtzipcode");
+            $paymenttype = $this->input->post("paymenttype");
+            $txtpaiddate = $this->input->post("txtpaiddate");
+            $txtpaidhour = $this->input->post("txtpaidhour");
+            $txtpaidmin = $this->input->post("txtpaidmin");
+
+            $billtoken = $this->get->billtoken(array("token" => $token))->row();
+
+
+            $input = array(
+                'fullname' => $txtfullname,
+                'tel' => $txttel,
+                'provinceid' => $txtprovince,
+                'tumbolid' => $txttumbol,
+                'aumpureid' => $txtaumpure,
+                'zipcode' => $txtzipcode,
+                'fulladdress' => $txtaddress,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            $custid = $this->put->customer($input);
+
+
+            $input = array(
+                'custid' => $custid,
+                'shipingrate' => $shippinghd,
+                'total' => $totalhd,
+                'billingaddress' => $this->getfulladdress($txtaddress, $txttumbol, $txtaumpure, $txtprovince, $txtzipcode),
+                'status' => '1',
+                'slipimage' => $imagepath,
+                'paymentmethodid' => $paymenttype,
+                'paymentinfo' => $txtpaiddate . ' ' . $txtpaidhour . ':' . $txtpaidmin,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            $orderid = $this->put->order($input);
+
+            //สร้าง ordertoken
+            $billtoken = $this->generatebilltoken($billtoken->merchantid, $billtoken->uid, $orderid);
+
+
+            // loop เพื่อเพิ่มรายการสินค้า
+            $productselecteds = rtrim($itemselectedhd, ";");
+            $productselecteds = explode(";", $productselecteds);
+            foreach ($productselecteds as $item) {
+                $arritem = explode("|", $item);
+                $itemid = $arritem[0];
+                $price = $arritem[1];
+                $amount = $arritem[2];
+
+                $input = array(
+                    'orderid' => $orderid,
+                    'amount' => $amount,
+                    'price' => $price,
+                    'itemid' => $itemid
+                );
+                $orderid = $this->put->orderdetail($input);
+            }
+
+
+            $v_merchantuid = $this->get->v_merchantuid(array('ordertoken' => $billtoken))->result();
+            foreach ($v_merchantuid as $item) {
+                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$billtoken/$item->lineuid");
+            }
+
+            redirect(base_url("/paymentsuccess/$billtoken"));
+        }
     }
 
     public function getfulladdress($txtaddress, $txttumbol, $txtaumpure, $txtprovince, $txtzipcode) {

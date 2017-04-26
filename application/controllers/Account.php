@@ -18,12 +18,17 @@ class Account extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]["token"];
         $data["merchantuid"] = $this->get->lineuid(array("token" => $data["token"]))->row();
-        $orderids = $this->get->orderids(array("merchantid" => $data["merchantuid"]->lineuid))->result();
-        $orderid = array();
-        foreach ($orderids as $id){ 
-            array_push($orderid, $id->orderid);
+        $this->paidorder = 0;
+        if (count($data["merchantuid"]) > 0) {
+            $orderids = $this->get->orderids(array("merchantid" => $data["merchantuid"]->lineuid))->result();
+            $orderid = array();
+            foreach ($orderids as $id) {
+                array_push($orderid, $id->orderid);
+            }
+            if (count($orderid) > 0) {
+                $this->paidorder = $this->get->orderin_statusopen($orderid)->num_rows();
+            }
         }
-        $this->paidorder = $this->get->orderin_statusopen($orderid)->num_rows();
     }
 
     public function index($acctoken = "") {
@@ -90,11 +95,14 @@ class Account extends CI_Controller {
     }
 
     public function dashboard($acctoken = "") {
+        $data["daterange"] = date('d/m/Y') . " - " . date('d/m/Y', strtotime(date('Y-m-d') . ' + 30 days'));
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"]))->result();
         $data["paidorder"] = $this->paidorder;
+        $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"]))->result();
+
 
         if (!$this->user->is_login()) {
             redirect('/');

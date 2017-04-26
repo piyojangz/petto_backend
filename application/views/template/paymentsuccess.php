@@ -14,6 +14,8 @@
 
         <!-- Custom -->
         <link href="<?= base_url("res/css/custom.css") ?>" rel="stylesheet" type="text/css"/>   
+        <!-- animation CSS -->
+        <link href="<?= base_url("res/account/css/animate.css") ?>" rel="stylesheet">
     </head>
     <body>
 
@@ -38,6 +40,8 @@
                 <div class="col-xs-12 text-center">
                     <h4>การสั่งซื้อสินค้าเสร็จเรียบร้อย</h4>
                     <h5>Thank you!</h5>
+                    <small>ลูกค้าสามารถติดตามรายการสั่งได้ที่ลิงค์นี้<br/>   <span id="animationlink" class="text-danger" style="display: inline-block;">perdbill.co/track/<b><?= $ordertoken->token ?></b></span> <button id="copyanim" class="btn btn-small btn-warning" style="padding: 2px;">copy to clipboard</button></small>
+                    <span type="hidden" id="billinkhd" style="display: none;"><?= base_url("track/" . $ordertoken->token) ?></span>
                 </div>
             </div>
         </div>
@@ -65,6 +69,34 @@
     <script type="text/javascript" src="<?= base_url("res/js/prettify.js") ?>"></script> 
     <script type="text/javascript" src="<?= base_url("res/js/application-docs.js") ?>"></script>    
 
+    <script>
+        function copylink(x) {
+            $("#animationlink").removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                $(this).removeClass();
+            });
 
+        }
+        $(function () {
+            $('#copyanim').click(function (e) {
+                e.preventDefault();
+                var anim = "bounce";
+                copylink(anim);
+                copyToClipboard("billinkhd");
+            });
+        });
+
+        function copyToClipboard(elementId) {
+
+
+            var aux = document.createElement("input");
+            aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+            document.body.appendChild(aux);
+            aux.select();
+            document.execCommand("copy");
+
+            document.body.removeChild(aux);
+
+        }
+    </script>
 
 </html>

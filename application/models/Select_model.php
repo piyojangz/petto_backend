@@ -38,6 +38,15 @@ class Select_model extends CI_Model {
         return $query;
     }
 
+    function billtoken($cond) {
+        $this->db->select('*');
+        $this->db->from('billtoken');
+        $this->db->order_by("createdate", "desc");
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function v_merchantlineuid($cond) {
         $this->db->select('lineuid');
         $this->db->from('v_merchantlineuid');
