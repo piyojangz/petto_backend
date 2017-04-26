@@ -153,7 +153,7 @@
                             <div class="white-box p-b-0">
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <h2 class="font-medium m-t-0">ผู้ขาย</h2> 
+                                        <h2 class="font-medium m-t-0">ยอดขาย</h2> 
                                         <h5>จำนวน Admin ในร้าน</h5>
                                         <small>คุณสามารถเพิ่ม Admin โดยการพิมพ์คำว่า <code>ลงทะเบียน <?= $token ?>  <?= $user["lineid"] ?></code> ในไลน์ @perdbill</small>
                                     </div>
