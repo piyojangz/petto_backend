@@ -121,8 +121,7 @@
 
                                         </div>
                                         <div class="row">
-                                            <div class="col-xs-12 m-t-20" id="billtokenhead"><h3 id="billtokenname"></h3>
-
+                                            <div class="col-xs-12 m-t-20" id="billtokenhead"><h3 id="billtokenname"></h3> 
                                                 <span id="animationlink" style="display: inline-block;">
                                                     <a href="#" id="billink" ></a></span> <button class="btn btn-outline btn-default btn-xs" id="copyanim" >copy</button>
                                             </div>
@@ -462,9 +461,29 @@
     }
 
     function getbilldata(token) {
-        console.log(token);
         $("#billink").html('perdbill/' + '<b>' + token + '</b> ');
         $("#billinkhd").html('<?= base_url() ?>' + token);
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getmerchantbilldata'); ?>",
+            data: {'token': token},
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data != null) {
+                    $("#billtokenname").html(data.result.name);
+                }
+
+
+            },
+            error: function (XMLHttpRequest) {
+                $('div.block1').unblock();
+                return false;
+            }
+        });
+
+
     }
 
 

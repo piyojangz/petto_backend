@@ -31,6 +31,14 @@ class Service extends CI_Controller {
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
+    
+     public function getmerchantbilldata() {
+        $token = $this->input->post('token');
+        $cond = array('token' => $token);
+        $data['result'] = $this->get->billtoken($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
 
     public function getallbilltokenhtml() {
         $merchantid = $this->input->post('merchantid');
