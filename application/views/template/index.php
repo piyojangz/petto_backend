@@ -44,7 +44,7 @@
                             <li class="startusing"><a href="<?= base_url("account/$token") ?>">จัดการร้านค้า</a></li>
                             <li><a href="<?= base_url("logout") ?>">ออกจากระบบ</a></li>
                         <?php else: ?>
-                            <li class="startusing"><a href="<?= base_url("register") ?>">เริ่มใช้เลยฟรี!</a></li>
+                            <li class="startusing"><a href="<?= base_url("login") ?>">เริ่มใช้เลยฟรี!</a></li>
                         <?php endif; ?>
 
                     </ul>

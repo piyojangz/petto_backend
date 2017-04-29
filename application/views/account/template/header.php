@@ -26,7 +26,8 @@
     <link rel="stylesheet" href="<?= base_url("res/account/plugins/bower_components/dropify/dist/css/dropify.min.css") ?>">
     <!-- Popup CSS -->
     <link href="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/magnific-popup.css") ?>" rel="stylesheet">
-
+    <link href="<?= base_url("res/account/plugins/bower_components/custom-select/custom-select.css") ?>" rel="stylesheet">
+    <link href="<?= base_url("res/account/plugins/bower_components/multiselect/css/multi-select.css") ?>" rel="stylesheet">
     <!-- Daterange picker plugins css -->
     <link href="<?= base_url("res/account/plugins/bower_components/timepicker/bootstrap-timepicker.min.css") ?>" rel="stylesheet">
     <link href="<?= base_url("res/account/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css") ?>" rel="stylesheet">

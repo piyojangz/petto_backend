@@ -20,6 +20,24 @@ class Update_model extends CI_Model {
         endif;
     }
 
+    public function billtoken($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('billtoken',$input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
+    public function deletebillnotificationusers($id) {
+        $this->db->where('billtokenid', $id);
+        if ($this->db->delete('billnotificationusers')):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     function shippingrate($input) {
         $this->db->where('id', $input['id']);
         if ($this->db->update('shippingrate', $input)):

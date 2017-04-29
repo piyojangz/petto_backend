@@ -48,7 +48,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">บิลทั้งหมด</h3>
                                 <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?=$dashboarddata->bills?></span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?= $dashboarddata->bills ?></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">ชำระเงินแล้ว</h3>
                                 <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?=$dashboarddata->paid?></span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?= $dashboarddata->paid ?></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">ยังไม่ได้ชำระเงิน</h3>
                                 <ul class="list-inline two-part">
-                                    <li class="text-right"><i class="ti-arrow-up text-danger"></i> <span class="counter text-danger"><?=$dashboarddata->unpaid?></span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-danger"></i> <span class="counter text-danger"><?= $dashboarddata->unpaid ?></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">รายได้เดือนนี้</h3>
                                 <ul class="list-inline"> 
-                                    <li class="text-right">  <i class="ti-arrow-up text-success"></i><span class="counter text-success"><?= number_format($dashboarddata->monthlytotal)?></span>  
+                                    <li class="text-right">  <i class="ti-arrow-up text-success"></i> <span class="text-success">฿</span><span class="counter text-success"><?= number_format($dashboarddata->monthlytotal) ?></span>  
                                 </ul>
                             </div>
                         </div>
@@ -90,12 +90,12 @@
                                             <table class="table no-paging">
                                                 <thead>
                                                     <tr>
-                                                        <th width="30">
+<!--                                                        <th width="30">
                                                             <div class="checkbox m-t-0 m-b-0 ">
                                                                 <input id="checkAll" type="checkbox" class="checkbox-toggle" value="check all">
                                                                 <label for="checkAll"></label>
                                                             </div>
-                                                        </th>
+                                                        </th>-->
                                                         <th>
 
                                                             <div class="btn-group">
@@ -131,6 +131,16 @@
                                             <div class="col-md-12 col-lg-12 col-xs-12">
                                                 <div class="white-box">
                                                     <h3 class="box-title" id="billtotal"></h3>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <p>การแจ้งเตือนถึง <span id="billusernotification" class="text-purple"></span></p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <button id="billtokenremove" class="pull-right btn btn-outline btn-danger waves-effect waves-light">ลบ</button>
+                                                            <button id="billtokenedit" class="pull-right btn btn-outline btn-default waves-effect waves-light" style="margin-right: 15px;">แก้ไข</button> 
+                                                        </div>
+                                                    </div>
+
                                                     <div class="flot-chart">
                                                         <div class="flot-chart-content" id="flot-bar-chart"></div>
                                                     </div>
@@ -213,6 +223,19 @@
                                                             <input class="form-control input-daterange-datepicker" type="text" name="daterange" id="daterange" value="<?= $daterange ?>" /> 
                                                         </div>
                                                     </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">ส่งการแจ้งเตือนทางไลน์</label>
+                                                        <div class="col-md-9"> 
+                                                            <select class="select2 m-b-10 select2-multiple" multiple="multiple" name="usernoti" id="usernoti" data-placeholder="Choose" > 
+                                                                <?php foreach ($merchants as $item): ?> 
+                                                                    <option  value="<?= $item->lineuid ?>|<?= $item->name ?>"><?= $item->name ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+
+
+
+                                                        </div>
+                                                    </div>
                                                 </div>
 
 
@@ -241,6 +264,10 @@
                     </div>
                 </form>
             </div>
+
+            <input type="hidden" id="activetoken"/>
+            <input type="hidden" id="activetokenid"/>
+            <input type="hidden" id="editnotiusers"/>
 
 
         </form>
@@ -299,6 +326,12 @@
 <script src="<?= base_url("res/account/plugins/bower_components/timepicker/bootstrap-timepicker.min.js") ?>"></script>
 <script src="<?= base_url("res/account/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js") ?>"></script>
 <script src="<?= base_url("res/account/plugins/bower_components/blockUI/jquery.blockUI.js") ?>"></script>
+<!-- Sweet-Alert  -->
+<script src="<?= base_url("res/account/plugins/bower_components/sweetalert/sweetalert.min.js") ?>"></script> 
+
+<script type="text/javascript" src="<?= base_url("res/account/plugins/bower_components/custom-select/custom-select.min.js") ?>"></script>
+<script type="text/javascript" src="<?= base_url("res/account/plugins/bower_components/bootstrap-select/bootstrap-select.min.js") ?>"></script>
+<script type="text/javascript" src="<?= base_url("res/account/plugins/bower_components/multiselect/js/jquery.multi-select.js") ?>"></script>
 <script>
 
     function copylink(x) {
@@ -307,9 +340,20 @@
         });
 
     }
+
+    function todmy(datetime) {
+        var d = datetime;
+        d = d.substr(0, 10).split("-");
+        d = d[2] + "/" + d[1] + "/" + d[0];
+        return d;
+    }
     //Flot Bar Chart
 
     $(function () {
+        // For select 2
+        var $Multi = $(".select2").select2();
+
+
 
         $("#checkAll").click(function () {
             $('input:checkbox').not(this).prop('checked', this.checked);
@@ -328,7 +372,13 @@
         });
 
         $('.btn-genbill').click(function () {
+            $("#name").val("");
+            $("#editnotiusers").val("");
             $("#id").val("");
+             $("#merchantuid").removeAttr("disabled");
+            var val = $("#merchantuid option:first").val();
+            var text = $("#merchantuid option:first").text();
+            $Multi.val([val + "|" + text]).trigger("change");
             $.magnificPopup.open({items: {src: '#form-submit-billtoken'}, type: 'inline'}, 0);
         });
 
@@ -349,8 +399,102 @@
         });
 
 
+        $("#billtokenremove").click(function () {
+            swal({
+                title: "Are you sure?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo base_url('service/deletebilltoken'); ?>",
+                        data: {'id': $("#activetokenid").val()},
+                        dataType: "json",
+                        success: function (data) {
+
+                            $('div.block1').unblock();
+
+                            reload_billtoken();
+                            swal("Deleted!", "Your imaginary file has been deleted.", "success");
 
 
+                        },
+                        error: function (XMLHttpRequest) {
+
+                            $('div.block1').unblock();
+
+                        }
+                    });
+
+                } else {
+                    swal("Cancelled", "", "error");
+                }
+            });
+        });
+
+        $("#billtokenedit").click(function () {
+            $('div.block1').block();
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('service/getbilltoken'); ?>",
+                data: {'token': $("#activetoken").val()},
+                dataType: "json",
+                success: function (data) {
+                    $('div.block1').unblock();
+
+                    if (data.result != null) {
+                        $("#name").val(data.result.name);
+                        $("#merchantuid").val(data.result.uid);
+
+                        var from = todmy(data.result.datefrom);
+                        var to = todmy(data.result.dateto);
+                        $('.input-daterange-datepicker').daterangepicker({
+                            locale: {
+                                format: 'DD/MM/YYYY'
+                            },
+                            startDate: from,
+                            endDate: to
+                        });
+
+                        var selectednoti = [];
+                        $.each(data.result2, function (index, value) {
+                            selectednoti.push(value.lineuid + "|" + value.merchantlinename);
+                        });
+
+                        $Multi.val(selectednoti).trigger("change");
+                        $("#editnotiusers").val(data.result.id);
+                        $("#merchantuid").prop('disabled', 'disabled');
+
+                        $.magnificPopup.open({items: {src: '#form-submit-billtoken'}, type: 'inline'}, 0);
+                    }
+
+                    return false;
+
+                },
+                error: function (XMLHttpRequest) {
+                    console.log(XMLHttpRequest);
+                    $('div.block1').unblock();
+                    return false;
+                }
+            });
+
+
+
+        });
+
+        $("#merchantuid").change(function () {
+            var val = $(this).val();
+            var text = $(this).find(":selected").text();
+            $Multi.val([val + "|" + text]).trigger("change");
+        });
 
         $("#btn-refreshbilltoken").click(function () {
             reload_billtoken();
@@ -361,14 +505,16 @@
             var name = $("#name").val();
             var merchantuid = $("#merchantuid").val();
             var daterange = $("#daterange").val();
+            var usernoti = $("#usernoti").val();
+            var editnotiusers = $("#editnotiusers").val();
             $.ajax({
                 type: "POST",
                 url: "<?php echo base_url('service/savebilltoken'); ?>",
-                data: {'daterange': daterange, 'merchantuid': merchantuid, 'name': name, 'merchantid': <?= $merchant->id ?>, 'token': '<?= $token ?>'},
+                data: {'daterange': daterange, 'merchantuid': merchantuid, 'name': name, 'merchantid': <?= $merchant->id ?>, 'token': '<?= $token ?>', 'usernoti': usernoti, 'editnotiusers': editnotiusers},
                 dataType: "json",
                 success: function (data) {
+
                     $('div.block1').unblock();
-                    console.log(data);
                     if (data.result != null) {
                         reload_billtoken();
                         $.magnificPopup.close();
@@ -398,6 +544,7 @@
             dataType: "html",
             success: function (data) {
                 if (data == "") {
+
                     $("#billtokenhead").hide();
                     $("#billtokengraph").hide();
 
@@ -427,17 +574,27 @@
             data: {'token': token},
             dataType: "json",
             success: function (data) {
-
+                $("#activetoken").val(data.result.token);
                 if (data != null) {
-                    var arr = []; 
+                    var arr = [];
                     $("#billtokenname").html(data.result.name);
+                    $("#activetokenid").val(data.result.id);
                     var totalbill = 0;
                     $.each(data.result2, function (index, value) {
                         totalbill += parseInt(value.row2);
                         arr.push([parseInt(value.row1 + "000"), value.row2, value.row3]);
                     });
-                        $("#billtotal").html("จำนวน"  + totalbill + " บิล");
-                     
+                    $("#billtotal").html("จำนวน " + totalbill + " บิล");
+
+                    var html = "";
+                    $.each(data.result3, function (index, value) {
+                        html += value.merchantlinename + " ,";
+
+                    });
+                    html = html.substring(0, html.length - 1);
+                    $("#billusernotification").html(html);
+
+
                     potbarchart(arr);
                 }
 

@@ -174,11 +174,12 @@ class Order extends CI_Controller {
             );
             $this->set->order($input);
             //$this->lineapi->pushmsg($data["uid"], "ขอบคุณที่อุดหนุนค่ะ ลูกค้าสามารถติดตามการสั่งซื้อได้ที่ลิงค์นี้ https://perdbill.co/track/$token");
+//            $v_merchantuid = $this->get->v_merchantuid(array('ordertoken' => $token))->result();
+//            foreach ($v_merchantuid as $item) {
+//                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/$item->lineuid");
+//            }
 
-            $v_merchantuid = $this->get->v_merchantuid(array('ordertoken' => $token))->result();
-            foreach ($v_merchantuid as $item) {
-                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/$item->lineuid");
-            }
+            $this->lineapi->pushmsg($data["uid"], "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/" . $data["uid"]);
 
             redirect(base_url("/paymentsuccess/$token"));
         }
@@ -292,14 +293,14 @@ class Order extends CI_Controller {
 
             // loop เพื่อเพิ่มรายการสินค้า
             $productselecteds = rtrim($itemselectedhd, ";");
-            $productselecteds = explode(";", $productselecteds); 
+            $productselecteds = explode(";", $productselecteds);
 
             foreach ($productselecteds as $item) {
                 $arritem = explode("|", $item);
                 $itemid = $arritem[0];
                 $price = $arritem[1];
                 $amount = $arritem[2];
-                
+
                 $input = array(
                     'orderid' => $orderid,
                     'amount' => $amount,
@@ -309,13 +310,15 @@ class Order extends CI_Controller {
                 $this->put->orderdetail($input);
             }
 
-
-            $v_merchantuid = $this->get->v_merchantuid(array('ordertoken' => $billtoken))->result();
-            foreach ($v_merchantuid as $item) {
-                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$billtoken/$item->lineuid");
+            $v_notificationtousers = $this->get->v_notificationtousers(array('token' => $billtoken))->result();
+            foreach ($v_notificationtousers as $item) {
+                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/$item->lineuid");
             }
 
-              redirect(base_url("/paymentsuccess/$billtoken"));
+
+
+
+            redirect(base_url("/paymentsuccess/$billtoken"));
         }
     }
 

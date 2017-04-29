@@ -10,6 +10,14 @@ class Select_model extends CI_Model {
         return $query->row();
     }
 
+    function billnotificationusers($cond) {
+        $this->db->select('*');
+        $this->db->from('billnotificationusers');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function shippingrate($merchatid, $unit) {
         $this->db->select('*');
         $this->db->from('shippingrate');
@@ -58,6 +66,14 @@ class Select_model extends CI_Model {
     function v_adminsummary($cond) {
         $this->db->select('*');
         $this->db->from('v_adminsummary');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function v_notificationtousers($cond) {
+        $this->db->select('*');
+        $this->db->from('v_notificationtousers');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
@@ -268,8 +284,7 @@ FROM `dual`");
 
         return $query;
     }
-    
-    
+
 }
 
 ?>

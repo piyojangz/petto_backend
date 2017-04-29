@@ -24,6 +24,31 @@ class Service extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function getbilltoken() {
+        $token = $this->input->post('token');
+        $cond = array('token' => $token);
+        $data['result'] = $this->get->billtoken($cond)->row();
+        $data['result2'] = $this->get->billnotificationusers(array('billtokenid' => $data['result']->id))->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function deletebilltoken() {
+        $id = $this->input->post('id');
+
+        $input = array(
+            'id' => $id,
+            'status' => 0,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+
+        $data = $this->set->billtoken($input);
+
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
     public function getaumphure() {
         $provinceid = $this->input->post('provinceid');
         $cond = array('PROVINCE_ID' => $provinceid);
@@ -34,17 +59,18 @@ class Service extends CI_Controller {
 
     public function getmerchantbilldata() {
         $token = $this->input->post('token');
-        $cond = array('token' => $token);
+        $cond = array('token' => $token,'status' => '1');
         $billtoken = $this->get->billtoken($cond)->row();
         $data["result"] = $billtoken;
         $data["result2"] = $this->getordersumbibilltoken($billtoken->token);
+        $data["result3"] = $this->get->billnotificationusers(array("billtokenid" => $billtoken->id))->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
 
     public function getallbilltokenhtml() {
         $merchantid = $this->input->post('merchantid');
-        $cond = array('merchantid' => $merchantid);
+        $cond = array('merchantid' => $merchantid,'status' => '1');
         $result = $this->get->billtoken($cond)->result();
         $html = "";
 
@@ -52,12 +78,12 @@ class Service extends CI_Controller {
 
             $url = "perdbill.co/";
             $html .= "<tr   id=\"$value->token\">";
-            $html .= "<td>";
-            $html .= "<div class=\"checkbox m-t-0 m-b-0\">";
-            $html .= "<input type=\"checkbox\" name=\"billtokenid\" id =\"billtokenid\">";
-            $html .= "<label for=\"checkbox0\"></label>";
-            $html .= "</div>";
-            $html .= "</td>";
+//            $html .= "<td>";
+//            $html .= "<div class=\"checkbox m-t-0 m-b-0\">";
+//            $html .= "<input type=\"checkbox\" name=\"billtokenid\" id =\"billtokenid\">";
+//            $html .= "<label for=\"checkbox0\"></label>";
+//            $html .= "</div>";
+//            $html .= "</td>";
             $html .= "<td colspan=\"2\">";
             $html .= "<small>$value->createdate</small><br/>$value->name</br>";
             $html .= "<small style=\"color:#ee6123;\">$url<b>$value->token</b></small>";
@@ -70,9 +96,11 @@ class Service extends CI_Controller {
 
     public function savebilltoken() {
         $token = $this->input->post('token');
+        $editnotiusers = $this->input->post('editnotiusers');
         $merchantid = $this->input->post('merchantid');
         $daterange = $this->input->post('daterange');
         $merchantuid = $this->input->post('merchantuid');
+        $usernoti = $this->input->post('usernoti');
         $name = $this->input->post('name');
         $daterange = preg_split("/,|:|\s/", $daterange);
         $uniqid = $this->common->getToken(5);
@@ -84,21 +112,59 @@ class Service extends CI_Controller {
         $to = strtotime($to);
 
 
-        $input = array(
-            'merchantid' => $merchantid,
-            'name' => $name,
-            'merchanttoken' => $token,
-            'token' => $uniqid,
-            'uid' => $merchantuid,
-            'datefrom' => date('Y-m-d H:i:s', $from),
-            'dateto' => date('Y-m-d H:i:s', $to),
-            'status' => 1,
-            'updatedate' => date('Y-m-d H:i:s'),
-        );
+        if ($editnotiusers == "") {
+            $input = array(
+                'merchantid' => $merchantid,
+                'name' => $name,
+                'merchanttoken' => $token,
+                'token' => $uniqid,
+                'uid' => $merchantuid,
+                'datefrom' => date('Y-m-d H:i:s', $from),
+                'dateto' => date('Y-m-d H:i:s', $to),
+                'status' => 1,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+
+            $billtokenid = $this->put->billtoken($input);
+
+            if ($usernoti != "") {
+                foreach ($usernoti as $item) {
+                    $input = array(
+                        'billtokenid' => $billtokenid,
+                        'lineuid' => explode("|", $item)[0],
+                        'merchantlinename' => explode("|", $item)[1]
+                    );
+                    $this->put->billnotificationusers($input);
+                }
+            }
+        } else {
+            $input = array(
+                'id' => $editnotiusers,
+                'merchantid' => $merchantid, 
+                'name' => $name, 
+                'datefrom' => date('Y-m-d H:i:s', $from),
+                'dateto' => date('Y-m-d H:i:s', $to),
+                'status' => 1,
+            );
+
+            $this->set->billtoken($input);
+
+            if ($this->set->deletebillnotificationusers($editnotiusers)) {
+                if ($usernoti != "") {
+                    foreach ($usernoti as $item) {
+                        $input = array(
+                            'billtokenid' => $editnotiusers,
+                            'lineuid' => explode("|", $item)[0],
+                            'merchantlinename' => explode("|", $item)[1]
+                        );
+                        $this->put->billnotificationusers($input);
+                    }
+                }
+            }
+        }
 
 
-
-        $data['result'] = $this->put->billtoken($input);
+        $data['result'] = true;
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
