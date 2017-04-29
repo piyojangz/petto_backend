@@ -84,7 +84,7 @@ class Select_model extends CI_Model {
         if ($in != null) {
             $this->db->where_in('status', $in);
         }
-        $this->db->select('fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total จำนวนเงินโอน, paymentinfo เวลาโอน, accno เลขบัญชี, bankname ธนาคาร');
+        $this->db->select('fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total จำนวนเงินโอน, paymentinfo เวลาโอน, accno เลขบัญชี, bankname ธนาคาร , orderitems รายการสินค้า');
         $this->db->from('v_order');
         $this->db->where($cond);
         $query = $this->db->get();
@@ -245,6 +245,31 @@ where tb.merchantid = $merchantid");
         return $query->result();
     }
 
+    function getordersumbybilltoken($billtoken) {
+        $query = $this->db->query("select   unix_timestamp(b.createdate) as row1,COUNT(a.id) as row2,SUM(b.total) as row3
+from ordertoken a
+join `order` b
+on a.orderid = b.id
+where a.billtoken = '$billtoken'
+and createdate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+GROUP BY DATE(b.createdate)
+limit 0,30");
+
+        return $query;
+    }
+
+    function getdashboarddata($merchantid) {
+        $query = $this->db->query("SELECT 
+(select count(id)  from  `order` where merchantid = $merchantid and closestatus = 0) as bills
+, (select count(id)  from  `order` where status in (2,3) and merchantid = $merchantid and closestatus = 0) as paid
+, (select count(id)  from  `order` where status in (1) and merchantid = $merchantid and closestatus = 0) as unpaid
+, (select sum(total)  from  `order` where status in (2,3) and  MONTH(updatedate) = MONTH(CURRENT_DATE())  and merchantid = $merchantid and closestatus = 0) as monthlytotal
+FROM `dual`");
+
+        return $query;
+    }
+    
+    
 }
 
 ?>

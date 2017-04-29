@@ -102,6 +102,7 @@ class Account extends CI_Controller {
         $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"]))->result();
         $data["paidorder"] = $this->paidorder;
         $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"]))->result();
+        $data["dashboarddata"] = $this->get->getdashboarddata($data["merchant"]->id)->row();
 
 
         if (!$this->user->is_login()) {
@@ -131,7 +132,7 @@ class Account extends CI_Controller {
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["paidorder"] = $this->paidorder;
-        $data["order"] = $this->get->v_order(array("merchantid" => $data["merchant"]->id), array("0", "3", "4"))->result();
+        $data["order"] = $this->get->v_order(array("merchantid" => $data["merchant"]->id, "closestatus != " => 1), array("0", "3"))->result();
 
         if (!$this->user->is_login()) {
             redirect('/');
@@ -143,6 +144,7 @@ class Account extends CI_Controller {
     }
 
     public function getorderstatus($status) {
+
         switch ($status) {
             case "1":
                 return " <div class=\"label label-table label-warning\">Waiting for confirm payment</div>";
@@ -154,12 +156,10 @@ class Account extends CI_Controller {
             case "3":
                 return " <div class=\"label label-table label-danger\">Shipped</div>";
                 break;
-            case "4":
-                return " <div class=\"label label-table label-warning\">Canceled</div>";
-                break;
             default:
                 break;
         }
+
         return "-";
 
         // <div class="label label-table label-success">Paid</div>

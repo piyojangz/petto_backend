@@ -48,7 +48,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">บิลทั้งหมด</h3>
                                 <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success">0</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?=$dashboarddata->bills?></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">ชำระเงินแล้ว</h3>
                                 <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple">0</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?=$dashboarddata->paid?></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">ยังไม่ได้ชำระเงิน</h3>
                                 <ul class="list-inline two-part">
-                                    <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">0</span></li>
+                                    <li class="text-right"><i class="ti-arrow-up text-danger"></i> <span class="counter text-danger"><?=$dashboarddata->unpaid?></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                             <div class="white-box analytics-info">
                                 <h3 class="box-title">รายได้เดือนนี้</h3>
                                 <ul class="list-inline"> 
-                                    <li class="text-right">  <i class="ti-arrow-up text-success"></i><span class="counter text-success">0.00</span>  
+                                    <li class="text-right">  <i class="ti-arrow-up text-success"></i><span class="counter text-success"><?= number_format($dashboarddata->monthlytotal)?></span>  
                                 </ul>
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                                         <div class="row" id="billtokengraph">
                                             <div class="col-md-12 col-lg-12 col-xs-12">
                                                 <div class="white-box">
-                                                    <h3 class="box-title">8 Bills</h3>
+                                                    <h3 class="box-title" id="billtotal"></h3>
                                                     <div class="flot-chart">
                                                         <div class="flot-chart-content" id="flot-bar-chart"></div>
                                                     </div>
@@ -350,50 +350,7 @@
 
 
 
-        var barOptions = {
-            series: {
-                bars: {
-                    show: true,
-                    barWidth: 43200000
-                }
-            },
-            xaxis: {
-                mode: "time",
-                timeformat: "%d/%m/%Y",
-                minTickSize: [1, "day"]
-            },
-            grid: {
-                hoverable: true
-            },
-            legend: {
-                show: false
-            },
-            colors: ["#fb9678"],
-            grid: {
-                color: "#AFAFAF",
-                hoverable: true,
-                borderWidth: 0,
-                backgroundColor: '#FFF'
-            },
-            tooltip: true,
-            tooltipOpts: {
-                content: "วันที่: %x, จำนวนบิล: %y",
-                defaultTheme: false
-            }
-        };
-        var barData = {
-            label: "bar",
-            color: "#fb9678",
-            data: [
-                [1354521600000, 1],
-                [1355040000000, 3],
-                [1355223600000, 7],
-                [1355306400000, 12],
-                [1355487300000, 2],
-                [1355571900000, 1]
-            ]
-        };
-        $.plot($("#flot-bar-chart"), [barData], barOptions);
+
 
         $("#btn-refreshbilltoken").click(function () {
             reload_billtoken();
@@ -470,9 +427,18 @@
             data: {'token': token},
             dataType: "json",
             success: function (data) {
-                console.log(data);
+
                 if (data != null) {
+                    var arr = []; 
                     $("#billtokenname").html(data.result.name);
+                    var totalbill = 0;
+                    $.each(data.result2, function (index, value) {
+                        totalbill += parseInt(value.row2);
+                        arr.push([parseInt(value.row1 + "000"), value.row2, value.row3]);
+                    });
+                        $("#billtotal").html("จำนวน"  + totalbill + " บิล");
+                     
+                    potbarchart(arr);
                 }
 
 
@@ -484,6 +450,46 @@
         });
 
 
+    }
+
+    function potbarchart(data) {
+        var barOptions = {
+            series: {
+                bars: {
+                    show: true,
+                    barWidth: 43200000
+                }
+            },
+            xaxis: {
+                mode: "time",
+                timeformat: "%d/%m/%Y",
+                minTickSize: [1, "day"]
+            },
+            grid: {
+                hoverable: true
+            },
+            legend: {
+                show: false
+            },
+            colors: ["#fb9678"],
+            grid: {
+                color: "#AFAFAF",
+                hoverable: true,
+                borderWidth: 0,
+                backgroundColor: '#FFF'
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "วันที่: %x, จำนวนบิล: %y",
+                defaultTheme: false
+            }
+        };
+        var barData = {
+            label: "bar",
+            color: "#fb9678",
+            data: data
+        };
+        $.plot($("#flot-bar-chart"), [barData], barOptions);
     }
 
 

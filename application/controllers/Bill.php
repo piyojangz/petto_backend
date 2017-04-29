@@ -490,6 +490,7 @@ class Bill extends CI_Controller {
             return $this->generatebilltoken($merchant);
         }
         $input = array(
+            'merchantid' => $merchant->id,
             'shipingrate' => 0,
         );
         $orderid = $this->put->order($input);

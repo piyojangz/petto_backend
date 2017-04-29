@@ -23,8 +23,8 @@ class Order extends CI_Controller {
         if ($data["ordertoken"] == null) {
             redirect(base_url());
         }
-        
-    
+
+
         $data["obj"] = $this;
         $uid = $data["ordertoken"]->uid;
         $merchantid = $data["ordertoken"]->merchantid;
@@ -187,15 +187,17 @@ class Order extends CI_Controller {
         $this->load->view('template/payment', $data);
     }
 
-    public function generatebilltoken($merchantid, $merchantuid, $orderid) {
+    public function generatebilltoken($merchantid, $merchantuid, $orderid, $billtoken, $billtokenid) {
         $uniqid = $this->common->getToken(6);
         $cond = array('token' => $uniqid);
         if ($this->get->ordertoken($cond)->num_rows() > 0) {
-            return $this->generatebilltoken($merchantid, $merchantuid, $orderid);
+            return $this->generatebilltoken($merchantid, $merchantuid, $orderid, $billtoken, $billtokenid);
         }
 
         $input = array(
             'orderid' => $orderid,
+            'billtoken' => $billtoken,
+            'billtokenid' => $billtokenid,
             'merchantid' => $merchantid,
             'token' => $uniqid,
             'uid' => $merchantuid,
@@ -272,6 +274,7 @@ class Order extends CI_Controller {
 
             $input = array(
                 'custid' => $custid,
+                'merchantid' => $billtoken->merchantid,
                 'shipingrate' => $shippinghd,
                 'total' => $totalhd,
                 'billingaddress' => $this->getfulladdress($txtaddress, $txttumbol, $txtaumpure, $txtprovince, $txtzipcode),
@@ -284,25 +287,26 @@ class Order extends CI_Controller {
             $orderid = $this->put->order($input);
 
             //สร้าง ordertoken
-            $billtoken = $this->generatebilltoken($billtoken->merchantid, $billtoken->uid, $orderid);
+            $billtoken = $this->generatebilltoken($billtoken->merchantid, $billtoken->uid, $orderid, $billtoken->token, $billtoken->id);
 
 
             // loop เพื่อเพิ่มรายการสินค้า
             $productselecteds = rtrim($itemselectedhd, ";");
-            $productselecteds = explode(";", $productselecteds);
+            $productselecteds = explode(";", $productselecteds); 
+
             foreach ($productselecteds as $item) {
                 $arritem = explode("|", $item);
                 $itemid = $arritem[0];
                 $price = $arritem[1];
                 $amount = $arritem[2];
-
+                
                 $input = array(
                     'orderid' => $orderid,
                     'amount' => $amount,
                     'price' => $price,
                     'itemid' => $itemid
                 );
-                $orderid = $this->put->orderdetail($input);
+                $this->put->orderdetail($input);
             }
 
 
@@ -311,7 +315,7 @@ class Order extends CI_Controller {
                 $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$billtoken/$item->lineuid");
             }
 
-            redirect(base_url("/paymentsuccess/$billtoken"));
+              redirect(base_url("/paymentsuccess/$billtoken"));
         }
     }
 

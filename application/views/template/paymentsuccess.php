@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="mtl pbl" style="position: absolute; bottom: 0px;width: 100%;">
+        <div class="mtl pbl"  >
             <div class="bottom-menu">
                 <div class="container">
                     <div class="row">

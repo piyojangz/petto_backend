@@ -132,7 +132,7 @@
                                                         <td><?= $item->fullname ?></td>
                                                         <td><?= $item->billingaddress ?></td>
                                                         <td>
-                                                            <?= $obj->getorderstatus($item->status); ?> 
+                                                            <?= $obj->getorderstatus($item->status,$item->closestatus); ?> 
                                                         </td> 
                                                     </tr>
                                                 <?php endforeach; ?> 

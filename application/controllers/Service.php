@@ -31,11 +31,13 @@ class Service extends CI_Controller {
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
-    
-     public function getmerchantbilldata() {
+
+    public function getmerchantbilldata() {
         $token = $this->input->post('token');
         $cond = array('token' => $token);
-        $data['result'] = $this->get->billtoken($cond)->row();
+        $billtoken = $this->get->billtoken($cond)->row();
+        $data["result"] = $billtoken;
+        $data["result2"] = $this->getordersumbibilltoken($billtoken->token);
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -109,6 +111,10 @@ class Service extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function getordersumbibilltoken($billtoken) {
+        return $this->get->getordersumbybilltoken($billtoken)->result();
+    }
+
     public function updateorderstatus() {
         $items = $this->input->post('items');
         $status = $this->input->post('status');
@@ -116,7 +122,12 @@ class Service extends CI_Controller {
         foreach (explode("|", $items) as $value) {
             array_push($itemarr, $value);
         }
-        $input = array('status' => $status);
+        if ($status == "4") {
+            $input = array('closestatus' => "1");
+        } else {
+            $input = array('status' => $status);
+        }
+
         $data['result'] = $this->set->order($input, $itemarr);
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -126,7 +137,11 @@ class Service extends CI_Controller {
         $merchantid = $this->input->post('merchantid');
         $status = $this->input->post('exportorderstatus');
         if ($status != "0") {
-            $result = $this->get->orderexcel(array("merchantid" => $merchantid), null, array($status));
+            if ($status == "4") {
+                $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => "1"), null, null);
+            } else {
+                $result = $this->get->orderexcel(array("merchantid" => $merchantid), null, array($status));
+            }
         } else {
             $result = $this->get->orderexcel(array("merchantid" => $merchantid), array("0", "3"), null);
         }
@@ -138,14 +153,18 @@ class Service extends CI_Controller {
         $merchantid = $this->input->post('merchantid');
         $status = $this->input->post('status');
         if ($status != "0") {
-            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid), null, array($status))->result();
+            if ($status == "4") {
+                $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "1"), null, null)->result();
+            } else {
+                $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, array($status))->result();
+            }
         } else {
-            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid), array("0", "3", "4"), null)->result();
+            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), array("0", "3"), null)->result();
         }
 
         $html = "";
         foreach ($data['result'] as $item) {
-            $statuslabel = $this->getorderstatuslabel($item->status);
+            $statuslabel = $this->getorderstatuslabel($item->status, $item->closestatus);
             $html .= "<tr>";
             $html .= "<td>";
             $html .= "<div class=\"checkbox checkbox-success checkbox-order \">";
@@ -165,24 +184,26 @@ class Service extends CI_Controller {
         echo $html;
     }
 
-    public function getorderstatuslabel($status) {
-        switch ($status) {
-            case "1":
-                return " <div class=\"label label-table label-warning\">Waiting for confirm payment</div>";
+    public function getorderstatuslabel($status, $closestatus) {
+        if ($closestatus == "1") {
+            return " <div class=\"label label-table label-warning\">Canceled</div>";
+        } else {
+            switch ($status) {
+                case "1":
+                    return " <div class=\"label label-table label-warning\">Waiting for confirm payment</div>";
 
-                break;
-            case "2":
-                return " <div class=\"label label-table label-success\">Paid</div>";
-                break;
-            case "3":
-                return " <div class=\"label label-table label-danger\">Shipped</div>";
-                break;
-            case "4":
-                return " <div class=\"label label-table label-warning\">Canceled</div>";
-                break;
-            default:
-                break;
+                    break;
+                case "2":
+                    return " <div class=\"label label-table label-success\">Paid</div>";
+                    break;
+                case "3":
+                    return " <div class=\"label label-table label-danger\">Shipped</div>";
+                    break;
+                default:
+                    break;
+            }
         }
+
         return "-";
 
         // <div class="label label-table label-success">Paid</div>
