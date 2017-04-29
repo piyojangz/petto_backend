@@ -565,7 +565,7 @@
     }
 
     function getbilldata(token) {
-        $("#billink").html('perdbill/' + '<b>' + token + '</b> ');
+        $("#billink").html('perdbill.co/' + '<b>' + token + '</b> ');
         $("#billinkhd").html('<?= base_url() ?>' + token);
 
         $.ajax({
