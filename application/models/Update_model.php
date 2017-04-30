@@ -22,7 +22,7 @@ class Update_model extends CI_Model {
 
     public function billtoken($input) {
         $this->db->where('id', $input['id']);
-        if ($this->db->update('billtoken',$input)):
+        if ($this->db->update('billtoken', $input)):
             return true;
         else:
             return false;
@@ -66,8 +66,26 @@ class Update_model extends CI_Model {
     }
 
     function merchantlineuid($input) {
-        $this->db->where('merchantid', $input['merchantid']);
+        $this->db->where('id', $input['merchantid']);
         $this->db->where('token', $input['token']);
+        if ($this->db->update('merchantlineuid', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
+    function merchantlineuidbyid($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('merchantlineuid', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+    
+      function merchantlineuidbyinvitetoken($input) {
+        $this->db->where('invitetoken', $input['invitetoken']);
         if ($this->db->update('merchantlineuid', $input)):
             return true;
         else:

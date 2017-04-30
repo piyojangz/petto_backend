@@ -158,25 +158,45 @@
 
 
                     <!--/.row -->
-                    <div class="row">
+                    <div class="row block2">
                         <div class="col-md-12 col-sm-12"> 
-                            <div class="white-box p-b-0">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <h2 class="font-medium m-t-0">ยอดขาย</h2> 
-                                        <h5>จำนวน Admin ในร้าน</h5>
-                                        <small>คุณสามารถเพิ่ม Admin โดยการพิมพ์คำว่า <code>ลงทะเบียน <?= $token ?>  <?= $user["lineid"] ?></code> ในไลน์ @perdbill</small>
+                            <div class="white-box panel-wrapper collapse in  p-b-0">
+                                <div class="panel-body ">
+                                    <div class="col-xs-6">
+                                        <h3 class="font-medium m-t-0">รายชื่อผู้ใช้งาน</h3>  
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="btn-group pull-right">
+                                            <button type="button"  class="btn-createadminlink btn btn-primary waves-effect"><i class="fa fa-plus"></i></button> 
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row m-t-30 minus-margin">
-                                    <?php foreach ($lineadmin as $key => $value): ?>
-                                        <div class="col-sm-12 col-sm-4 b-t b-r">
-                                            <ul class="expense-box">
-                                                <li>
-                                                    <i class="fa fa-dollar"> </i>
-                                                    <span><h2><?= $value->name ?> (<?= $value->countorder ?>)</h2><h4>ยอดขาย <?= number_format($value->total) ?></h4></span></li>
-                                            </ul>
+                                <hr/>
+                                <div class="row">
+                                    <?php foreach ($lineadmin as $key => $value): ?> 
+                                        <div class="col-lg-4 col-sm-4 col-md-6">
+                                            <div class="panel panel-default" style="border:  1px #f5f5f5 solid">
+                                                <div class="panel-heading"><?= $value->name ?><small>- ยอดขาย <?= number_format($value->total) ?></small> 
+                                                    <?php if ($value->lineuid != ""): ?>
+                                                        <i class="fa fa-circle text-success" style="font-size: 12px;" ></i>
+                                                    <?php else: ?>
+                                                        <i class="fa fa-circle text-warning" style="font-size: 12px;" ></i>
+                                                    <?php endif; ?>
+                                                    <div class="pull-right"> <a href="javascript:;" onclick="deleteadminuid('<?= $value->id ?>')" ><i class="ti-close text-danger"></i></a> </div>
+                                                </div>
+                                                <div class="panel-wrapper collapse in" aria-expanded="true">
+                                                    <div class="panel-body">
+                                                        <?php if ($value->lineuid != ""): ?>
+                                                            <p>ลงทะเบียนผ่านไลน์เรียบร้อยแล้ว<br/>
+                                                                <code><?= $value->invitetoken ?></code></p>
+                                                        <?php else: ?>
+                                                            <p>นำรหัสนี้ไปให้ <strong><?= $value->name ?></strong> ลงทะเบียนผ่านไลน์ @perdbill <code><span style="display: inline-block;" id="<?= $value->invitetoken ?>" ><?= $value->invitetoken ?></span></code></span> <button class="btn btn-outline btn-default btn-xs" onclick="copyuid(event, '<?= $value->invitetoken ?>')" >copy</button></p>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
+
                                     <?php endforeach; ?>
 
 
@@ -187,7 +207,59 @@
 
                 </div>
 
+                <form   method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"  id="form-submit-createadminlink">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">เพิ่ม / แก้ไข</div>
+                        <div class="panel-wrapper collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-info "> 
+                                            <div class="panel-body">
 
+                                                <div class="form-body">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">ชื่อ</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" name="adminname" id="adminname" required class="form-control"> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">อีเมลล์</label>
+                                                        <div class="col-md-9">
+                                                            <input type="email" name="adminemail" id="adminemail" required class="form-control"> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">เบอร์โทร</label>
+                                                        <div class="col-md-9">
+                                                            <input type="tel" name="admintel" id="admintel" required class="form-control"> 
+                                                        </div>
+                                                    </div>
+
+                                                </div> 
+                                                <div class="form-actions">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-offset-9 col-md-3">
+                                                                    <button type="submit" id="btnadminubmit"  class="btn btn-success"> <i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล</button> 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            <input type="hidden" id="adminid" name="adminid" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>   
+                        </div>
+
+                    </div>
+                </form>
                 <form   method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"  id="form-submit-billtoken">
                     <div class="panel panel-default">
                         <div class="panel-heading">เพิ่ม / แก้ไข</div>
@@ -334,334 +406,421 @@
 <script type="text/javascript" src="<?= base_url("res/account/plugins/bower_components/multiselect/js/jquery.multi-select.js") ?>"></script>
 <script>
 
-    function copylink(x) {
-        $("#animationlink").removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-            $(this).removeClass();
-        });
-
-    }
-
-    function todmy(datetime) {
-        var d = datetime;
-        d = d.substr(0, 10).split("-");
-        d = d[2] + "/" + d[1] + "/" + d[0];
-        return d;
-    }
-    //Flot Bar Chart
-
-    $(function () {
-        // For select 2
-        var $Multi = $(".select2").select2();
-
-
-
-        $("#checkAll").click(function () {
-            $('input:checkbox').not(this).prop('checked', this.checked);
-        });
-
-
-        // Daterange picker
-        $('.input-daterange-datepicker').daterangepicker({
-            buttonClasses: ['btn', 'btn-sm'],
-            locale: {
-                format: 'DD/MM/YYYY'
-            },
-            minDate: '<?= date('d/m/Y') ?>',
-            applyClass: 'btn-danger',
-            cancelClass: 'btn-inverse'
-        });
-
-        $('.btn-genbill').click(function () {
-            $("#name").val("");
-            $("#editnotiusers").val("");
-            $("#id").val("");
-             $("#merchantuid").removeAttr("disabled");
-            var val = $("#merchantuid option:first").val();
-            var text = $("#merchantuid option:first").text();
-            $Multi.val([val + "|" + text]).trigger("change");
-            $.magnificPopup.open({items: {src: '#form-submit-billtoken'}, type: 'inline'}, 0);
-        });
-
-
-        $('#copyanim').click(function (e) {
-            e.preventDefault();
-            var anim = "bounce";
-            copylink(anim);
-            copyToClipboard("billinkhd");
-        });
-
-
-
-
-        $("tbody.selected").on("click", "tr", function () {
-            $(this).addClass('selected').siblings().removeClass("selected");
-            getbilldata($(this).attr("id"));
-        });
-
-
-        $("#billtokenremove").click(function () {
-            swal({
-                title: "Are you sure?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes",
-                cancelButtonText: "No",
-                closeOnConfirm: false,
-                closeOnCancel: false
-            }, function (isConfirm) {
-                if (isConfirm) {
-
-                    $.ajax({
-                        type: "POST",
-                        url: "<?php echo base_url('service/deletebilltoken'); ?>",
-                        data: {'id': $("#activetokenid").val()},
-                        dataType: "json",
-                        success: function (data) {
-
-                            $('div.block1').unblock();
-
-                            reload_billtoken();
-                            swal("Deleted!", "Your imaginary file has been deleted.", "success");
-
-
-                        },
-                        error: function (XMLHttpRequest) {
-
-                            $('div.block1').unblock();
-
-                        }
-                    });
-
-                } else {
-                    swal("Cancelled", "", "error");
-                }
-            });
-        });
-
-        $("#billtokenedit").click(function () {
-            $('div.block1').block();
-
-            $.ajax({
-                type: "POST",
-                url: "<?php echo base_url('service/getbilltoken'); ?>",
-                data: {'token': $("#activetoken").val()},
-                dataType: "json",
-                success: function (data) {
-                    $('div.block1').unblock();
-
-                    if (data.result != null) {
-                        $("#name").val(data.result.name);
-                        $("#merchantuid").val(data.result.uid);
-
-                        var from = todmy(data.result.datefrom);
-                        var to = todmy(data.result.dateto);
-                        $('.input-daterange-datepicker').daterangepicker({
-                            locale: {
-                                format: 'DD/MM/YYYY'
-                            },
-                            startDate: from,
-                            endDate: to
-                        });
-
-                        var selectednoti = [];
-                        $.each(data.result2, function (index, value) {
-                            selectednoti.push(value.lineuid + "|" + value.merchantlinename);
-                        });
-
-                        $Multi.val(selectednoti).trigger("change");
-                        $("#editnotiusers").val(data.result.id);
-                        $("#merchantuid").prop('disabled', 'disabled');
-
-                        $.magnificPopup.open({items: {src: '#form-submit-billtoken'}, type: 'inline'}, 0);
-                    }
-
-                    return false;
-
-                },
-                error: function (XMLHttpRequest) {
-                    console.log(XMLHttpRequest);
-                    $('div.block1').unblock();
-                    return false;
-                }
-            });
-
-
-
-        });
-
-        $("#merchantuid").change(function () {
-            var val = $(this).val();
-            var text = $(this).find(":selected").text();
-            $Multi.val([val + "|" + text]).trigger("change");
-        });
-
-        $("#btn-refreshbilltoken").click(function () {
-            reload_billtoken();
-        });
-
-        $("#form-submit-billtoken").submit(function () {
-            $('div.block1').block();
-            var name = $("#name").val();
-            var merchantuid = $("#merchantuid").val();
-            var daterange = $("#daterange").val();
-            var usernoti = $("#usernoti").val();
-            var editnotiusers = $("#editnotiusers").val();
-            $.ajax({
-                type: "POST",
-                url: "<?php echo base_url('service/savebilltoken'); ?>",
-                data: {'daterange': daterange, 'merchantuid': merchantuid, 'name': name, 'merchantid': <?= $merchant->id ?>, 'token': '<?= $token ?>', 'usernoti': usernoti, 'editnotiusers': editnotiusers},
-                dataType: "json",
-                success: function (data) {
-
-                    $('div.block1').unblock();
-                    if (data.result != null) {
-                        reload_billtoken();
-                        $.magnificPopup.close();
-                    }
-
-                    return false;
-
-                },
-                error: function (XMLHttpRequest) {
-                    $('div.block1').unblock();
-                    return false;
-                }
-            });
-
-            return false;
-        });
-
-        reload_billtoken();
-    });
-
-    function reload_billtoken() {
-        $('div.block1').block();
-        $.ajax({
-            type: "POST",
-            url: "<?php echo base_url('service/getallbilltokenhtml'); ?>",
-            data: {'merchantid': '<?= $merchant->id ?>'},
-            dataType: "html",
-            success: function (data) {
-                if (data == "") {
-
-                    $("#billtokenhead").hide();
-                    $("#billtokengraph").hide();
-
-                }
-                $('div.block1').unblock();
-                $('#billtokenlist').html(data);
-                $('tbody.selected tr').first().trigger('click');
-                return false;
-
-            },
-            error: function (XMLHttpRequest) {
-                $('div.block1').unblock();
-                return false;
-            }
-        });
-
-
-    }
-
-    function getbilldata(token) {
-        $("#billink").html('perdbill.co/' + '<b>' + token + '</b> ');
-        $("#billinkhd").html('<?= base_url() ?>' + token);
-
-        $.ajax({
-            type: "POST",
-            url: "<?php echo base_url('service/getmerchantbilldata'); ?>",
-            data: {'token': token},
-            dataType: "json",
-            success: function (data) {
-                $("#activetoken").val(data.result.token);
-                if (data != null) {
-                    var arr = [];
-                    $("#billtokenname").html(data.result.name);
-                    $("#activetokenid").val(data.result.id);
-                    var totalbill = 0;
-                    $.each(data.result2, function (index, value) {
-                        totalbill += parseInt(value.row2);
-                        arr.push([parseInt(value.row1 + "000"), value.row2, value.row3]);
-                    });
-                    $("#billtotal").html("จำนวน " + totalbill + " บิล");
-
-                    var html = "";
-                    $.each(data.result3, function (index, value) {
-                        html += value.merchantlinename + " ,";
-
-                    });
-                    html = html.substring(0, html.length - 1);
-                    $("#billusernotification").html(html);
-
-
-                    potbarchart(arr);
-                }
-
-
-            },
-            error: function (XMLHttpRequest) {
-                $('div.block1').unblock();
-                return false;
-            }
-        });
-
-
-    }
-
-    function potbarchart(data) {
-        var barOptions = {
-            series: {
-                bars: {
-                    show: true,
-                    barWidth: 43200000
-                }
-            },
-            xaxis: {
-                mode: "time",
-                timeformat: "%d/%m/%Y",
-                minTickSize: [1, "day"]
-            },
-            grid: {
-                hoverable: true
-            },
-            legend: {
-                show: false
-            },
-            colors: ["#fb9678"],
-            grid: {
-                color: "#AFAFAF",
-                hoverable: true,
-                borderWidth: 0,
-                backgroundColor: '#FFF'
-            },
-            tooltip: true,
-            tooltipOpts: {
-                content: "วันที่: %x, จำนวนบิล: %y",
-                defaultTheme: false
-            }
-        };
-        var barData = {
-            label: "bar",
-            color: "#fb9678",
-            data: data
-        };
-        $.plot($("#flot-bar-chart"), [barData], barOptions);
-    }
-
-
-    function copyToClipboard(elementId) {
-
-
-        var aux = document.createElement("input");
-        aux.setAttribute("value", document.getElementById(elementId).innerHTML);
-        document.body.appendChild(aux);
-        aux.select();
-        document.execCommand("copy");
-
-        document.body.removeChild(aux);
-
-    }
+                                                                function copylink(x) {
+                                                                    $("#animationlink").removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                                                        $(this).removeClass();
+                                                                    });
+                                                                }
+
+
+                                                                function copyuidlink(id, x) {
+                                                                    id.removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                                                                        $(this).removeClass();
+                                                                    });
+                                                                }
+
+                                                                function todmy(datetime) {
+                                                                    var d = datetime;
+                                                                    d = d.substr(0, 10).split("-");
+                                                                    d = d[2] + "/" + d[1] + "/" + d[0];
+                                                                    return d;
+                                                                }
+                                                                //Flot Bar Chart
+
+                                                                $(function () {
+                                                                    // For select 2
+                                                                    var $Multi = $(".select2").select2();
+
+
+
+                                                                    $("#checkAll").click(function () {
+                                                                        $('input:checkbox').not(this).prop('checked', this.checked);
+                                                                    });
+
+
+                                                                    // Daterange picker
+                                                                    $('.input-daterange-datepicker').daterangepicker({
+                                                                        buttonClasses: ['btn', 'btn-sm'],
+                                                                        locale: {
+                                                                            format: 'DD/MM/YYYY'
+                                                                        },
+                                                                        minDate: '<?= date('d/m/Y') ?>',
+                                                                        applyClass: 'btn-danger',
+                                                                        cancelClass: 'btn-inverse'
+                                                                    });
+
+                                                                    $('.btn-genbill').click(function () {
+                                                                        $("#name").val("");
+                                                                        $("#editnotiusers").val("");
+                                                                        $("#id").val("");
+                                                                        $("#merchantuid").removeAttr("disabled");
+                                                                        var val = $("#merchantuid option:first").val();
+                                                                        var text = $("#merchantuid option:first").text();
+                                                                        $Multi.val([val + "|" + text]).trigger("change");
+                                                                        $.magnificPopup.open({items: {src: '#form-submit-billtoken'}, type: 'inline'}, 0);
+                                                                    });
+
+
+                                                                    $('#copyanim').click(function (e) {
+                                                                        e.preventDefault();
+                                                                        var anim = "bounce";
+                                                                        copylink(anim);
+                                                                        copyToClipboard("billinkhd");
+                                                                    });
+
+
+
+
+
+
+                                                                    $("tbody.selected").on("click", "tr", function () {
+                                                                        $(this).addClass('selected').siblings().removeClass("selected");
+                                                                        getbilldata($(this).attr("id"));
+                                                                    });
+
+                                                                    $(".btn-createadminlink").click(function () {
+                                                                        $.magnificPopup.open({items: {src: '#form-submit-createadminlink'}, type: 'inline'}, 0);
+                                                                    });
+
+
+                                                                    $("#billtokenremove").click(function () {
+                                                                        swal({
+                                                                            title: "Are you sure?",
+                                                                            type: "warning",
+                                                                            showCancelButton: true,
+                                                                            confirmButtonColor: "#DD6B55",
+                                                                            confirmButtonText: "Yes",
+                                                                            cancelButtonText: "No",
+                                                                            closeOnConfirm: false,
+                                                                            closeOnCancel: false
+                                                                        }, function (isConfirm) {
+                                                                            if (isConfirm) {
+
+                                                                                $.ajax({
+                                                                                    type: "POST",
+                                                                                    url: "<?php echo base_url('service/deletebilltoken'); ?>",
+                                                                                    data: {'id': $("#activetokenid").val()},
+                                                                                    dataType: "json",
+                                                                                    success: function (data) {
+
+                                                                                        $('div.block1').unblock();
+
+                                                                                        reload_billtoken();
+                                                                                        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+
+
+                                                                                    },
+                                                                                    error: function (XMLHttpRequest) {
+
+                                                                                        $('div.block1').unblock();
+
+                                                                                    }
+                                                                                });
+
+                                                                            } else {
+                                                                                swal("Cancelled", "", "error");
+                                                                            }
+                                                                        });
+                                                                    });
+
+                                                                    $("#billtokenedit").click(function () {
+                                                                        $('div.block1').block();
+
+                                                                        $.ajax({
+                                                                            type: "POST",
+                                                                            url: "<?php echo base_url('service/getbilltoken'); ?>",
+                                                                            data: {'token': $("#activetoken").val()},
+                                                                            dataType: "json",
+                                                                            success: function (data) {
+                                                                                $('div.block1').unblock();
+
+                                                                                if (data.result != null) {
+                                                                                    $("#name").val(data.result.name);
+                                                                                    $("#merchantuid").val(data.result.uid);
+
+                                                                                    var from = todmy(data.result.datefrom);
+                                                                                    var to = todmy(data.result.dateto);
+                                                                                    $('.input-daterange-datepicker').daterangepicker({
+                                                                                        locale: {
+                                                                                            format: 'DD/MM/YYYY'
+                                                                                        },
+                                                                                        startDate: from,
+                                                                                        endDate: to
+                                                                                    });
+
+                                                                                    var selectednoti = [];
+                                                                                    $.each(data.result2, function (index, value) {
+                                                                                        selectednoti.push(value.lineuid + "|" + value.merchantlinename);
+                                                                                    });
+
+                                                                                    $Multi.val(selectednoti).trigger("change");
+                                                                                    $("#editnotiusers").val(data.result.id);
+                                                                                    $("#merchantuid").prop('disabled', 'disabled');
+
+                                                                                    $.magnificPopup.open({items: {src: '#form-submit-billtoken'}, type: 'inline'}, 0);
+                                                                                }
+
+                                                                                return false;
+
+                                                                            },
+                                                                            error: function (XMLHttpRequest) {
+                                                                                console.log(XMLHttpRequest);
+                                                                                $('div.block1').unblock();
+                                                                                return false;
+                                                                            }
+                                                                        });
+
+
+
+                                                                    });
+
+                                                                    $("#merchantuid").change(function () {
+                                                                        var val = $(this).val();
+                                                                        var text = $(this).find(":selected").text();
+                                                                        $Multi.val([val + "|" + text]).trigger("change");
+                                                                    });
+
+                                                                    $("#btn-refreshbilltoken").click(function () {
+                                                                        reload_billtoken();
+                                                                    });
+
+                                                                    $("#form-submit-billtoken").submit(function () {
+                                                                        $('div.block1').block();
+                                                                        var name = $("#name").val();
+                                                                        var merchantuid = $("#merchantuid").val();
+                                                                        var daterange = $("#daterange").val();
+                                                                        var usernoti = $("#usernoti").val();
+                                                                        var editnotiusers = $("#editnotiusers").val();
+                                                                        $.ajax({
+                                                                            type: "POST",
+                                                                            url: "<?php echo base_url('service/savebilltoken'); ?>",
+                                                                            data: {'daterange': daterange, 'merchantuid': merchantuid, 'name': name, 'merchantid': <?= $merchant->id ?>, 'token': '<?= $token ?>', 'usernoti': usernoti, 'editnotiusers': editnotiusers},
+                                                                            dataType: "json",
+                                                                            success: function (data) {
+
+                                                                                $('div.block1').unblock();
+                                                                                if (data.result != null) {
+                                                                                    reload_billtoken();
+                                                                                    $.magnificPopup.close();
+                                                                                }
+
+                                                                                return false;
+
+                                                                            },
+                                                                            error: function (XMLHttpRequest) {
+                                                                                $('div.block1').unblock();
+                                                                                return false;
+                                                                            }
+                                                                        });
+
+                                                                        return false;
+                                                                    });
+
+                                                                    $("#form-submit-createadminlink").submit(function () {
+
+                                                                        $('div.block2').block();
+                                                                        var adminname = $("#adminname").val();
+                                                                        var adminemail = $("#adminemail").val();
+                                                                        var admintel = $("#admintel").val();
+                                                                        $.ajax({
+                                                                            type: "POST",
+                                                                            url: "<?php echo base_url('service/saveadminuid'); ?>",
+                                                                            data: {'adminname': adminname, 'adminemail': adminemail, 'admintel': admintel, 'merchantid': <?= $merchant->id ?>, 'token': '<?= $token ?>'},
+                                                                            dataType: "json",
+                                                                            success: function (data) {
+
+                                                                                $('div.block2').unblock();
+                                                                                if (data.result != null) {
+                                                                                    $.magnificPopup.close();
+                                                                                    location.reload();
+                                                                                }
+
+                                                                                return false;
+
+                                                                            },
+                                                                            error: function (XMLHttpRequest) {
+                                                                                $('div.block2').unblock();
+                                                                                return false;
+                                                                            }
+                                                                        });
+
+                                                                        return false;
+
+
+                                                                    });
+
+                                                                    reload_billtoken();
+                                                                });
+
+
+                                                                function copyuid(e, uid) {
+                                                                    e.preventDefault();
+                                                                    var anim = "bounce";
+                                                                    copyuidlink($("#" + uid), anim);
+                                                                    copyToClipboard(uid);
+                                                                }
+
+
+                                                                function reload_billtoken() {
+                                                                    $('div.block1').block();
+                                                                    $.ajax({
+                                                                        type: "POST",
+                                                                        url: "<?php echo base_url('service/getallbilltokenhtml'); ?>",
+                                                                        data: {'merchantid': '<?= $merchant->id ?>'},
+                                                                        dataType: "html",
+                                                                        success: function (data) {
+                                                                            if (data == "") {
+
+                                                                                $("#billtokenhead").hide();
+                                                                                $("#billtokengraph").hide();
+
+                                                                            }
+                                                                            $('div.block1').unblock();
+                                                                            $('#billtokenlist').html(data);
+                                                                            $('tbody.selected tr').first().trigger('click');
+                                                                            return false;
+
+                                                                        },
+                                                                        error: function (XMLHttpRequest) {
+                                                                            $('div.block1').unblock();
+                                                                            return false;
+                                                                        }
+                                                                    });
+
+
+                                                                }
+
+                                                                function getbilldata(token) {
+                                                                    $("#billink").html('perdbill.co/' + '<b>' + token + '</b> ');
+                                                                    $("#billinkhd").html('<?= base_url() ?>' + token);
+
+                                                                    $.ajax({
+                                                                        type: "POST",
+                                                                        url: "<?php echo base_url('service/getmerchantbilldata'); ?>",
+                                                                        data: {'token': token},
+                                                                        dataType: "json",
+                                                                        success: function (data) {
+                                                                            $("#activetoken").val(data.result.token);
+                                                                            if (data != null) {
+                                                                                var arr = [];
+                                                                                $("#billtokenname").html(data.result.name);
+                                                                                $("#activetokenid").val(data.result.id);
+                                                                                var totalbill = 0;
+                                                                                $.each(data.result2, function (index, value) {
+                                                                                    totalbill += parseInt(value.row2);
+                                                                                    arr.push([parseInt(value.row1 + "000"), value.row2, value.row3]);
+                                                                                });
+                                                                                $("#billtotal").html("จำนวน " + totalbill + " บิล");
+
+                                                                                var html = "";
+                                                                                $.each(data.result3, function (index, value) {
+                                                                                    html += value.merchantlinename + " ,";
+
+                                                                                });
+                                                                                html = html.substring(0, html.length - 1);
+                                                                                $("#billusernotification").html(html);
+
+
+                                                                                potbarchart(arr);
+                                                                            }
+
+
+                                                                        },
+                                                                        error: function (XMLHttpRequest) {
+                                                                            $('div.block1').unblock();
+                                                                            return false;
+                                                                        }
+                                                                    });
+
+
+                                                                }
+
+                                                                function potbarchart(data) {
+                                                                    var barOptions = {
+                                                                        series: {
+                                                                            bars: {
+                                                                                show: true,
+                                                                                barWidth: 43200000
+                                                                            }
+                                                                        },
+                                                                        xaxis: {
+                                                                            mode: "time",
+                                                                            timeformat: "%d/%m/%Y",
+                                                                            minTickSize: [1, "day"]
+                                                                        },
+                                                                        grid: {
+                                                                            hoverable: true
+                                                                        },
+                                                                        legend: {
+                                                                            show: false
+                                                                        },
+                                                                        colors: ["#fb9678"],
+                                                                        grid: {
+                                                                            color: "#AFAFAF",
+                                                                            hoverable: true,
+                                                                            borderWidth: 0,
+                                                                            backgroundColor: '#FFF'
+                                                                        },
+                                                                        tooltip: true,
+                                                                        tooltipOpts: {
+                                                                            content: "วันที่: %x, จำนวนบิล: %y",
+                                                                            defaultTheme: false
+                                                                        }
+                                                                    };
+                                                                    var barData = {
+                                                                        label: "bar",
+                                                                        color: "#fb9678",
+                                                                        data: data
+                                                                    };
+                                                                    $.plot($("#flot-bar-chart"), [barData], barOptions);
+                                                                }
+
+                                                                function copyToClipboard(elementId) {
+
+
+                                                                    var aux = document.createElement("input");
+                                                                    aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+                                                                    document.body.appendChild(aux);
+                                                                    aux.select();
+                                                                    document.execCommand("copy");
+
+                                                                    document.body.removeChild(aux);
+
+                                                                }
+
+                                                                function deleteadminuid(id) {
+                                                                    swal({
+                                                                        title: "Are you sure?",
+                                                                        type: "warning",
+                                                                        showCancelButton: true,
+                                                                        confirmButtonColor: "#DD6B55",
+                                                                        confirmButtonText: "Yes",
+                                                                        cancelButtonText: "No",
+                                                                        closeOnConfirm: false,
+                                                                        closeOnCancel: false
+                                                                    }, function (isConfirm) {
+                                                                        if (isConfirm) {
+
+                                                                            $.ajax({
+                                                                                type: "POST",
+                                                                                url: "<?php echo base_url('service/deletemerchantlineuid'); ?>",
+                                                                                data: {'id': id},
+                                                                                dataType: "json",
+                                                                                success: function (data) {
+
+                                                                                    swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                                                                                    location.reload();
+
+                                                                                },
+                                                                                error: function (XMLHttpRequest) {
+                                                                                }
+                                                                            });
+
+                                                                        } else {
+                                                                            swal("Cancelled", "", "error");
+                                                                        }
+                                                                    });
+                                                                }
 </script>
 
 </body>

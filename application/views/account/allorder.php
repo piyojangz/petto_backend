@@ -114,6 +114,7 @@
                                                     <th  style="min-width:140px;">รายละเอียดการโอน</th>
                                                     <th style="min-width:150px;">ชื่อ</th>
                                                     <th style="min-width:150px;">ที่อยู่จัดส่ง</th>
+                                                      <th>รายการสั่ง</th> 
                                                     <th>สถานะ</th> 
                                                 </tr>
                                             </thead>
@@ -131,6 +132,7 @@
                                                         <td><?= $item->paymentinfo ?></td>
                                                         <td><?= $item->fullname ?></td>
                                                         <td><?= $item->billingaddress ?></td>
+                                                          <td><?= $item->orderitems ?></td>
                                                         <td>
                                                             <?= $obj->getorderstatus($item->status,$item->closestatus); ?> 
                                                         </td> 

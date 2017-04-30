@@ -33,6 +33,22 @@ class Service extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function deletemerchantlineuid() {
+        $id = $this->input->post('id');
+
+        $input = array(
+            'id' => $id,
+            'status' => 0,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+
+        $data = $this->set->merchantlineuidbyid($input);
+
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
     public function deletebilltoken() {
         $id = $this->input->post('id');
 
@@ -59,7 +75,7 @@ class Service extends CI_Controller {
 
     public function getmerchantbilldata() {
         $token = $this->input->post('token');
-        $cond = array('token' => $token,'status' => '1');
+        $cond = array('token' => $token, 'status' => '1');
         $billtoken = $this->get->billtoken($cond)->row();
         $data["result"] = $billtoken;
         $data["result2"] = $this->getordersumbibilltoken($billtoken->token);
@@ -70,7 +86,7 @@ class Service extends CI_Controller {
 
     public function getallbilltokenhtml() {
         $merchantid = $this->input->post('merchantid');
-        $cond = array('merchantid' => $merchantid,'status' => '1');
+        $cond = array('merchantid' => $merchantid, 'status' => '1');
         $result = $this->get->billtoken($cond)->result();
         $html = "";
 
@@ -92,6 +108,30 @@ class Service extends CI_Controller {
         }
 
         echo $html;
+    }
+
+    public function saveadminuid() {
+        $token = $this->input->post('token');
+        $merchantid = $this->input->post('merchantid');
+        $adminname = $this->input->post('adminname');
+        $adminemail = $this->input->post('adminemail');
+        $admintel = $this->input->post('admintel');
+        $invitetoken = "Regis" . $this->common->getToken(8);
+
+        $input = array(
+            'token' => $token,
+            'name' => $adminname,
+            'email' => $adminemail,
+            'tel' => $admintel,
+            'status' => 1,
+            'invitetoken' => $invitetoken,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+
+
+        $data['result'] = $this->put->merchantlineuid($input);
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
     }
 
     public function savebilltoken() {
@@ -140,8 +180,8 @@ class Service extends CI_Controller {
         } else {
             $input = array(
                 'id' => $editnotiusers,
-                'merchantid' => $merchantid, 
-                'name' => $name, 
+                'merchantid' => $merchantid,
+                'name' => $name,
                 'datefrom' => date('Y-m-d H:i:s', $from),
                 'dateto' => date('Y-m-d H:i:s', $to),
                 'status' => 1,

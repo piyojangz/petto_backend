@@ -297,9 +297,15 @@ class Bill extends CI_Controller {
                         break;
                 }
             } else {
+
                 $telno = $command;
+                $registertoken = "";
                 if (preg_match('/^[0-9]{9,10}$/', trim($command))) {
                     $command = "ค้นหา";
+                }
+                if (substr($command, 0, 5) == "Regis") {
+                    $registertoken = $command;
+                    $command = "ลงทะเบียน";
                 }
 
 
@@ -338,6 +344,17 @@ class Bill extends CI_Controller {
                             'type' => 'text',
                             'text' => $msg
                         ];
+                        break;
+                    case "ลงทะเบียน": 
+                        $input = array(
+                            'invitetoken' => $registertoken, 
+                            'lineuid' => $uid,
+                            'updatedate' => date('Y-m-d H:i:s'),
+                        );
+                        if ($this->set->merchantlineuidbyinvitetoken($input)) {
+                            $replymsg = "คุณได้ลงทะเบียนร้านค้าเพื่อรับการแจ้งเตือนเรียบร้อยแล้ว";
+                        }
+
                         break;
                     default:
                         $replymsg = "ขออภัย เราไม่ทราบคำขอของคุณ";

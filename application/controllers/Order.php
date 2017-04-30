@@ -312,7 +312,7 @@ class Order extends CI_Controller {
 
             $v_notificationtousers = $this->get->v_notificationtousers(array('token' => $billtoken))->result();
             foreach ($v_notificationtousers as $item) {
-                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/$item->lineuid");
+                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$billtoken/$item->lineuid");
             }
 
 

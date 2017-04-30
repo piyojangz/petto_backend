@@ -99,9 +99,9 @@ class Account extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
-        $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"]))->result();
+        $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"],"status" => 1))->result();
         $data["paidorder"] = $this->paidorder;
-        $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"]))->result();
+        $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"],"status" => 1))->result();
         $data["dashboarddata"] = $this->get->getdashboarddata($data["merchant"]->id)->row();
 
 
