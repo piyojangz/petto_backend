@@ -110,6 +110,7 @@
                                             <thead>
                                                 <tr> 
                                                     <th colspan="2" style="min-width: 80px; text-align: center;">บิลสั่งซื้อ</th>
+                                                    <th  style="min-width:120px;">timestamp</th>
                                                     <th  style="min-width:80px;">ยอดสั่งซื้อ</th>
                                                     <th  style="min-width:140px;">รายละเอียดการโอน</th>
                                                     <th style="min-width:150px;">ชื่อ</th>
@@ -128,6 +129,7 @@
                                                             </div>
                                                         </td>
                                                         <td><a class="badge badge-info " target="_blank" href="<?= base_url($item->token) ?>"><?= $item->token ?></a></td>
+                                                        <td><?= date("d/M/Y H:i:s",strtotime ($item->createdate)) ?></td>
                                                         <td><?= number_format($item->total) ?></td>
                                                         <td><?= $item->paymentinfo ?></td>
                                                         <td><?= $item->fullname ?></td>
