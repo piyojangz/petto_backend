@@ -64,7 +64,7 @@
                             <h4 class="text-center head-section">Billing Detail</h4>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row">  
                         <div class="col-xs-12">
                             <ul class="nav nav-list">
                                 <li class="nav-header">รายการสินค้า</li>  
@@ -144,7 +144,7 @@
                             </label> 
                         <?php endforeach; ?> 
                         <input type="hidden" id="orderid" value="<?= $order->id ?>" /> 
-                       <?php if ($genstatus == 1): ?>
+                        <?php if ($genstatus == 1): ?>
                             <button type="submit"  class="btn btn-hg btn-block btn-primary">บันทึกรายการ</button>
                         <?php else: ?>
                             <button type="submit"  class="btn btn-hg btn-block btn-primary">แจ้งชำระเงิน</button>
@@ -182,158 +182,158 @@
     <script src="<?= base_url("res/js/application.js") ?>"></script>
 
     <script>
-                                                function openimgmodal(name, image, price) {
-                                                    $("#itemimg").attr("src", image)
-                                                    $("#itemtitle").html(name);
-                                                    $("#itemprice").html(price + "฿");
-                                                    $('#imgModal').modal('show');
-                                                }
-                                                $(document).ready(function () {
-                                                    init();
-                                                    $("input[type=number][name=amount]").change(function () {
-                                                        updateprice();
-                                                    });
-  <?php if ($genstatus == 1): ?>
-                                                        $("input[type=number][name=shippingdiscount]").change(function () {
-                                                            var shippingdiscount = -Math.abs($(this).val());
-                                                            $(this).val(shippingdiscount);
-                                                            $("#shippingdiscounthidden").val(shippingdiscount);
+                                                    function openimgmodal(name, image, price) {
+                                                        $("#itemimg").attr("src", image)
+                                                        $("#itemtitle").html(name);
+                                                        $("#itemprice").html(price + "฿");
+                                                        $('#imgModal').modal('show');
+                                                    }
+                                                    $(document).ready(function () {
+                                                        init();
+                                                        $("input[type=number][name=amount]").change(function () {
                                                             updateprice();
-
                                                         });
+<?php if ($genstatus == 1): ?>
+                                                            $("input[type=number][name=shippingdiscount]").change(function () {
+                                                                var shippingdiscount = -Math.abs($(this).val());
+                                                                $(this).val(shippingdiscount);
+                                                                $("#shippingdiscounthidden").val(shippingdiscount);
+                                                                updateprice();
 
-                                                        $("input[type=number][name=pricediscount]").change(function () {
-                                                            var pricediscount = -Math.abs($(this).val());
-                                                            $("#pricediscounthidden").val(pricediscount);
-                                                            $(this).val(pricediscount);
-                                                            updateprice();
+                                                            });
 
-                                                        });
+                                                            $("input[type=number][name=pricediscount]").change(function () {
+                                                                var pricediscount = -Math.abs($(this).val());
+                                                                $("#pricediscounthidden").val(pricediscount);
+                                                                $(this).val(pricediscount);
+                                                                updateprice();
+
+                                                            });
 <?php endif; ?>
 
-                                                });
+                                                    });
 
-                                                function getshippingrate(merchantid, unit, cb_func) {
-                                                    $.ajax({
-                                                        type: "POST",
-                                                        url: "<?php echo base_url('service/getshippingrate'); ?>",
-                                                        data: {'merchantid': merchantid, 'unit': unit},
-                                                        dataType: "json",
-                                                        success: function (data) {
-                                                            if (data.result != null) {
-                                                                cb_func(data.result.price);
+                                                    function getshippingrate(merchantid, unit, cb_func) {
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            url: "<?php echo base_url('service/getshippingrate'); ?>",
+                                                            data: {'merchantid': merchantid, 'unit': unit},
+                                                            dataType: "json",
+                                                            success: function (data) {
+                                                                if (data.result != null) {
+                                                                    cb_func(data.result.price);
+                                                                } else {
+                                                                    cb_func('0');
+                                                                }
+
+
+                                                            },
+                                                            error: function (XMLHttpRequest) {
+                                                                $(".overlay-loader").hide();
+                                                            }
+                                                        });
+                                                    }
+
+                                                    function updateprice() {
+                                                        $(".overlay-loader").show();
+                                                        var merchantid = '<?= $merchant->id ?>';
+                                                        var total = 0;
+                                                        var unit = 0;
+
+                                                        $('input[type=number][name=amount]').each(function () {
+                                                            if ($(this).val()) {
+                                                                total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
+                                                                unit += parseInt($(this).val());
+                                                            }
+                                                        });
+
+
+
+
+
+                                                        this.getshippingrate(merchantid, unit, function (price) {
+                                                            if (price == 0) {
+                                                                $("#shipingrate").html("ฟรี");
+                                                                $("#shipingratehidden").val(0);
                                                             } else {
-                                                                cb_func('0');
+                                                                $("#shipingrate").html(price + "฿");
+                                                                $("#shipingratehidden").val(price);
                                                             }
 
+                                                            total = total + parseFloat(price);
+                                                            var shippingdiscount = parseFloat($("#shippingdiscounthidden").val() == null ? 0 : $("#shippingdiscounthidden").val());
+                                                            var pricediscount = parseFloat($("#pricediscounthidden").val() == null ? 0 : $("#pricediscounthidden").val());
+                                                            total = total + shippingdiscount;
+                                                            total = total + pricediscount;
 
-                                                        },
-                                                        error: function (XMLHttpRequest) {
+                                                            $("#total").html(numberWithCommas(total) + "฿");
                                                             $(".overlay-loader").hide();
+                                                        });
+
+
+                                                    }
+
+
+                                                    $("#submitform").submit(function () {
+                                                        $(".overlay-loader").show();
+                                                        var total = 0;
+                                                        var shipingrate = $("#shipingratehidden").val();
+                                                        var itemselected = "";
+                                                        var hasitem = 0;
+                                                        $('input[type=number][name=amount]').each(function () {
+                                                            if ($(this).val()) {
+                                                                hasitem += $(this).val();
+                                                                itemselected += $(this).prev().prev().val() + "," + parseFloat($(this).val() == "" ? 0 : $(this).val()) + "," + parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val()) + ";";
+                                                                total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
+                                                            }
+                                                        });
+
+                                                        if (hasitem == 0) {
+                                                            $(".overlay-loader").hide();
+                                                            alert("เลือกสินค้าอย่างน้อย 1 ชิ้น");
+
+                                                            return false;
                                                         }
-                                                    });
-                                                }
+                                                        itemselected = itemselected.slice(0, -1);
+                                                        total = total + parseFloat(shipingrate);
 
-                                                function updateprice() {
-                                                    $(".overlay-loader").show();
-                                                    var merchantid = '<?= $merchant->id ?>';
-                                                    var total = 0;
-                                                    var unit = 0;
-
-                                                    $('input[type=number][name=amount]').each(function () {
-                                                        if ($(this).val()) {
-                                                            total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
-                                                            unit += parseInt($(this).val());
-                                                        }
-                                                    });
-
-
-
-
-
-                                                    this.getshippingrate(merchantid, unit, function (price) {
-                                                        if (price == 0) {
-                                                            $("#shipingrate").html("ฟรี");
-                                                            $("#shipingratehidden").val(0);
-                                                        } else {
-                                                            $("#shipingrate").html(price + "฿");
-                                                            $("#shipingratehidden").val(price);
-                                                        }
-
-                                                        total = total + parseFloat(price);
+                                                        var paymenttype = $('input[name=paymenttype]:checked', '#submitform').val()
+                                                        var shipingratehidden = $("#shipingratehidden").val();
                                                         var shippingdiscount = parseFloat($("#shippingdiscounthidden").val() == null ? 0 : $("#shippingdiscounthidden").val());
                                                         var pricediscount = parseFloat($("#pricediscounthidden").val() == null ? 0 : $("#pricediscounthidden").val());
+                                                        var mnbillstatus = '<?= $genstatus ?>';
+
                                                         total = total + shippingdiscount;
                                                         total = total + pricediscount;
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            url: "<?php echo base_url('service/submitorder'); ?>",
+                                                            data: {'itemselected': itemselected, 'total': total, 'paymenttype': paymenttype, 'orderid': $("#orderid").val(), 'ordertoken': '<?= $ordertoken ?>', 'shipingrate': shipingratehidden
+                                                                , 'shippingdiscount': shippingdiscount, 'pricediscount': pricediscount, 'mnbillstatus': mnbillstatus},
+                                                            dataType: "json",
+                                                            success: function (data) {
+                                                                if (data.result != null) {
+                                                                    location.href = "<?= base_url("shipinginfo/$ordertoken") ?>";
+                                                                }
+                                                                $(".overlay-loader").hide();
+                                                            },
+                                                            error: function (XMLHttpRequest) {
+                                                                $(".overlay-loader").hide();
+                                                            }
+                                                        });
 
-                                                        $("#total").html(numberWithCommas(total) + "฿");
-                                                        $(".overlay-loader").hide();
-                                                    });
-
-
-                                                }
-
-
-                                                $("#submitform").submit(function () {
-                                                    $(".overlay-loader").show();
-                                                    var total = 0;
-                                                    var shipingrate = $("#shipingratehidden").val();
-                                                    var itemselected = "";
-                                                    var hasitem = 0;
-                                                    $('input[type=number][name=amount]').each(function () {
-                                                        if ($(this).val()) {
-                                                            hasitem += $(this).val();
-                                                            itemselected += $(this).prev().prev().val() + "," + parseFloat($(this).val() == "" ? 0 : $(this).val()) + "," + parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val()) + ";";
-                                                            total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
-                                                        }
-                                                    });
-
-                                                    if (hasitem == 0) {
-                                                        $(".overlay-loader").hide();
-                                                        alert("เลือกสินค้าอย่างน้อย 1 ชิ้น");
 
                                                         return false;
-                                                    }
-                                                    itemselected = itemselected.slice(0, -1);
-                                                    total = total + parseFloat(shipingrate);
-
-                                                    var paymenttype = $('input[name=paymenttype]:checked', '#submitform').val()
-                                                    var shipingratehidden = $("#shipingratehidden").val();
-                                                    var shippingdiscount = parseFloat($("#shippingdiscounthidden").val() == null ? 0 : $("#shippingdiscounthidden").val());
-                                                    var pricediscount = parseFloat($("#pricediscounthidden").val() == null ? 0 : $("#pricediscounthidden").val());
-                                                    var mnbillstatus = '<?= $genstatus ?>';
-
-                                                    total = total + shippingdiscount;
-                                                    total = total + pricediscount;
-                                                    $.ajax({
-                                                        type: "POST",
-                                                        url: "<?php echo base_url('service/submitorder'); ?>",
-                                                        data: {'itemselected': itemselected, 'total': total, 'paymenttype': paymenttype, 'orderid': $("#orderid").val(), 'ordertoken': '<?= $ordertoken ?>', 'shipingrate': shipingratehidden
-                                                            , 'shippingdiscount': shippingdiscount, 'pricediscount': pricediscount, 'mnbillstatus': mnbillstatus},
-                                                        dataType: "json",
-                                                        success: function (data) {
-                                                            if (data.result != null) {
-                                                                location.href = "<?= base_url("shipinginfo/$ordertoken") ?>";
-                                                            }
-                                                            $(".overlay-loader").hide();
-                                                        },
-                                                        error: function (XMLHttpRequest) {
-                                                            $(".overlay-loader").hide();
-                                                        }
                                                     });
 
 
-                                                    return false;
-                                                });
+                                                    function numberWithCommas(x) {
+                                                        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                                    }
 
-
-                                                function numberWithCommas(x) {
-                                                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                                }
-
-                                                function init() {
-                                                    $(".overlay-loader").hide();
-                                                    updateprice();
-                                                }
+                                                    function init() {
+                                                        $(".overlay-loader").hide();
+                                                        updateprice();
+                                                    }
     </script>
 </html>

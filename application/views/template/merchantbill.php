@@ -14,6 +14,9 @@
 
         <!-- Custom -->
         <link href="<?= base_url("res/css/custom.css") ?>" rel="stylesheet" type="text/css"/>
+
+        <link href="<?= base_url("res/account/plugins/bower_components/owl.carousel/owl.carousel.min.css") ?>" rel="stylesheet" type="text/css" />
+        <link href="<?= base_url("res/account/plugins/bower_components/owl.carousel/owl.theme.default.css") ?>" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <div class="overlay-loader">
@@ -64,10 +67,27 @@
                             <h4 class="text-center head-section">Billing Detail</h4>
                         </div>
                     </div>
+                    <!-- .row -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="owl-demo2" class="owl-carousel owl-theme" style="margin-top:15px;">
+                                <?php foreach ($items as $item): ?>
+                                    <div class="item"><img src="<?= $item->image ?>"  >
+                                        <p class="itemname" style="font-size:11px;     height: 40px;line-height: 14px; font-weight:500;padding-top: 10px;text-align: center;"><?= $item->name ?></p> <p class="itemprice" style="text-align:center;"><?= number_format($item->price, 2, '.', ','); ?>฿</p>                                    
+                                        <div class="col-xs-12 "> 
+                                            <input type="hidden" value="<?= $item->id ?>"/>
+                                            <input type="hidden" value="<?= $item->price ?>"/>
+                                            <input style="width:100%;" type="number" name="amount" min="0" class="input-sm itemamount" value=""  placeholder="0" autocomplete="off" />
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?> 
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-xs-12">
                             <ul class="nav nav-list">
-                                <li class="nav-header">รายการสินค้า</li>  
+<!--                                <li class="nav-header">รายการสินค้า</li>  
                                 <?php foreach ($items as $item): ?>
                                     <li> 
                                         <div class="row">
@@ -83,7 +103,7 @@
                                         </div>
                                     </li>
                                 <?php endforeach; ?> 
-                                <li class="divider"></li>
+                                <li class="divider"></li>-->
                                 <li class="nav-header">สรุปยอด</li>
                                 <li>
                                     <a href="#fakelink">
@@ -279,189 +299,215 @@
     <script type="text/javascript" src="<?= base_url("res/dist/js/vendor/jquery.min.js") ?>"></script> 
     <script src="<?= base_url("res/dist/js/flat-ui-pro.min.js") ?>"></script>
     <script src="<?= base_url("res/js/application.js") ?>"></script>
-
+    <!-- jQuery for carousel -->
+    <script src="<?= base_url("res/account/plugins/bower_components/owl.carousel/owl.carousel.min.js") ?>"></script> 
     <script>
-                                                var datepickerSelector = $('#txtpaiddate');
-                                                datepickerSelector.datepicker({
-                                                    showOtherMonths: true,
-                                                    selectOtherMonths: true,
-                                                    dateFormat: 'dd/mm/yy',
-                                                    yearRange: '-1:+1'
-                                                }).prev('.input-group-btn').on('click', function (e) {
-                                                    e && e.preventDefault();
-                                                    datepickerSelector.focus();
-                                                });
-                                                $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
-                                                        return offset;
-                                                    }});
-                                                // Now let's align datepicker with the prepend button
-                                                datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
+                                                    var datepickerSelector = $('#txtpaiddate');
+                                                    datepickerSelector.datepicker({
+                                                        showOtherMonths: true,
+                                                        selectOtherMonths: true,
+                                                        dateFormat: 'dd/mm/yy',
+                                                        yearRange: '-1:+1'
+                                                    }).prev('.input-group-btn').on('click', function (e) {
+                                                        e && e.preventDefault();
+                                                        datepickerSelector.focus();
+                                                    });
+                                                    $.extend($.datepicker, {_checkOffset: function (inst, offset, isFixed) {
+                                                            return offset;
+                                                        }});
+                                                    // Now let's align datepicker with the prepend button
+                                                    datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
 
 
 
-                                                function openimgmodal(name, image, price) {
-                                                    $("#itemimg").attr("src", image)
-                                                    $("#itemtitle").html(name);
-                                                    $("#itemprice").html(price + "฿");
-                                                    $('#imgModal').modal('show');
-                                                }
-                                                $(document).ready(function () {
-                                                    init();
-                                                    $("#txtprovince").change(function () {
-                                                        $(".overlay-loader").show();
+                                                    function openimgmodal(name, image, price) {
+                                                        $("#itemimg").attr("src", image)
+                                                        $("#itemtitle").html(name);
+                                                        $("#itemprice").html(price + "฿");
+                                                        $('#imgModal').modal('show');
+                                                    }
+                                                    $(document).ready(function () {
+                                                        init();
+                                                        $("#txtprovince").change(function () {
+                                                            $(".overlay-loader").show();
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "<?php echo base_url('service/getaumphure'); ?>",
+                                                                data: {'provinceid': $(this).val()},
+                                                                dataType: "json",
+                                                                success: function (data) {
+                                                                    var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
+                                                                    $.each(data.result, function (index, value) {
+                                                                        html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+                                                                    });
+                                                                    $("#txtaumpure").html(html);
+                                                                    html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                                                                    $("#txttumbol").html(html);
+                                                                    $(".overlay-loader").hide();
+                                                                },
+                                                                error: function (XMLHttpRequest) {
+                                                                    $(".overlay-loader").hide();
+                                                                }
+                                                            });
+                                                        });
+                                                        $("#txtaumpure").change(function () {
+                                                            $(".overlay-loader").show();
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "<?php echo base_url('service/gettumbol'); ?>",
+                                                                data: {'aumpureid': $(this).val()},
+                                                                dataType: "json",
+                                                                success: function (data) {
+                                                                    var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
+                                                                    $.each(data.result, function (index, value) {
+                                                                        html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+                                                                    });
+                                                                    $("#txttumbol").html(html);
+                                                                    $(".overlay-loader").hide();
+                                                                },
+                                                                error: function (XMLHttpRequest) {
+                                                                    $(".overlay-loader").hide();
+                                                                }
+                                                            });
+                                                        });
+
+
+                                                        $("input[type=number][name=amount]").change(function () {
+                                                            updateprice();
+                                                        });
+
+
+                                                        $('#owl-demo2').owlCarousel({
+                                                            margin: 20,
+                                                            nav: true,
+                                                            autoplay: false,
+                                                            responsive: {
+                                                                0: {
+                                                                    items: 2
+                                                                },
+                                                                480: {
+                                                                    items: 3
+                                                                },
+                                                                700: {
+                                                                    items: 5
+                                                                },
+                                                                1000: {
+                                                                    items: 5
+                                                                },
+                                                                1100: {
+                                                                    items: 5
+                                                                }
+                                                            }
+                                                        });
+
+
+
+                                                    });
+
+                                                    function getshippingrate(merchantid, unit, cb_func) {
                                                         $.ajax({
                                                             type: "POST",
-                                                            url: "<?php echo base_url('service/getaumphure'); ?>",
-                                                            data: {'provinceid': $(this).val()},
+                                                            url: "<?php echo base_url('service/getshippingrate'); ?>",
+                                                            data: {'merchantid': merchantid, 'unit': unit},
                                                             dataType: "json",
                                                             success: function (data) {
-                                                                var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
-                                                                $.each(data.result, function (index, value) {
-                                                                    html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
-                                                                });
-                                                                $("#txtaumpure").html(html);
-                                                                html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-                                                                $("#txttumbol").html(html);
-                                                                $(".overlay-loader").hide();
+                                                                if (data.result != null) {
+                                                                    cb_func(data.result.price);
+                                                                } else {
+                                                                    cb_func('0');
+                                                                }
+
+
                                                             },
                                                             error: function (XMLHttpRequest) {
                                                                 $(".overlay-loader").hide();
                                                             }
                                                         });
-                                                    });
-                                                    $("#txtaumpure").change(function () {
-                                                        $(".overlay-loader").show();
-                                                        $.ajax({
-                                                            type: "POST",
-                                                            url: "<?php echo base_url('service/gettumbol'); ?>",
-                                                            data: {'aumpureid': $(this).val()},
-                                                            dataType: "json",
-                                                            success: function (data) {
-                                                                var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
-                                                                $.each(data.result, function (index, value) {
-                                                                    html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
-                                                                });
-                                                                $("#txttumbol").html(html);
-                                                                $(".overlay-loader").hide();
-                                                            },
-                                                            error: function (XMLHttpRequest) {
-                                                                $(".overlay-loader").hide();
-                                                            }
-                                                        });
-                                                    });
-
-
-                                                    $("input[type=number][name=amount]").change(function () {
-                                                        updateprice();
-                                                    });
-
-
-                                                });
-
-                                                function getshippingrate(merchantid, unit, cb_func) {
-                                                    $.ajax({
-                                                        type: "POST",
-                                                        url: "<?php echo base_url('service/getshippingrate'); ?>",
-                                                        data: {'merchantid': merchantid, 'unit': unit},
-                                                        dataType: "json",
-                                                        success: function (data) {
-                                                            if (data.result != null) {
-                                                                cb_func(data.result.price);
-                                                            } else {
-                                                                cb_func('0');
-                                                            }
-
-
-                                                        },
-                                                        error: function (XMLHttpRequest) {
-                                                            $(".overlay-loader").hide();
-                                                        }
-                                                    });
-                                                }
-
-                                                function updateprice() {
-                                                    $(".overlay-loader").show();
-                                                    var merchantid = '<?= $merchant->id ?>';
-                                                    var total = 0;
-                                                    var unit = 0;
-                                                    var productselect = "";
-
-                                                    $('input[type=number][name=amount]').each(function () {
-                                                        if ($(this).val()) {
-                                                            total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
-                                                            unit += parseInt($(this).val());
-
-                                                            var id = $(this).prev().prev().val();
-                                                            var price = $(this).prev().val();
-                                                            var amount = $(this).val();
-                                                            productselect += id + "|" + price + "|" + amount + ";"
-                                                        }
-                                                    });
- 
-                                                    $("#itemselectedhd").val(productselect);
-
-
-
-                                                    this.getshippingrate(merchantid, unit, function (price) {
-                                                        if (price == 0) {
-                                                            $("#shipingrate").html("ฟรี");
-                                                            $("#shipingratehidden").val(0);
-                                                        } else {
-                                                            $("#shipingrate").html(price + "฿");
-                                                            $("#shipingratehidden").val(price);
-                                                        }
-
-                                                        total = total + parseFloat(price);
-
-                                                        $("#shippinghd").val(price);
-                                                        $("#totalhd").val(total);
-
-                                                        var shippingdiscount = parseFloat($("#shippingdiscounthidden").val() == null ? 0 : $("#shippingdiscounthidden").val());
-                                                        var pricediscount = parseFloat($("#pricediscounthidden").val() == null ? 0 : $("#pricediscounthidden").val());
-                                                        total = total + shippingdiscount;
-                                                        total = total + pricediscount;
-
-                                                        $("#total").html(numberWithCommas(total) + "฿");
-
-
-                                                        $(".overlay-loader").hide();
-                                                    });
-
-
-                                                }
-
-
-                                                $(".checkamount").click(function () {
-
-                                                    var total = 0;
-                                                    var shipingrate = $("#shipingratehidden").val();
-                                                    var itemselected = "";
-                                                    var hasitem = 0;
-                                                    $('input[type=number][name=amount]').each(function () {
-                                                        if ($(this).val()) {
-                                                            hasitem += $(this).val();
-                                                            itemselected += $(this).prev().prev().val() + "," + parseFloat($(this).val() == "" ? 0 : $(this).val()) + "," + parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val()) + ";";
-                                                            total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
-                                                        }
-                                                    });
-
-                                                    if (hasitem == 0) {
-                                                        alert("เลือกสินค้าอย่างน้อย 1 ชิ้น");
-                                                        $(".itemamount").first().focus();
-                                                        return false;
                                                     }
 
-                                                    return true;
-                                                });
+                                                    function updateprice() {
+                                                        $(".overlay-loader").show();
+                                                        var merchantid = '<?= $merchant->id ?>';
+                                                        var total = 0;
+                                                        var unit = 0;
+                                                        var productselect = "";
+
+                                                        $('input[type=number][name=amount]').each(function () {
+                                                            if ($(this).val()) {
+                                                                total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
+                                                                unit += parseInt($(this).val());
+
+                                                                var id = $(this).prev().prev().val();
+                                                                var price = $(this).prev().val();
+                                                                var amount = $(this).val();
+                                                                productselect += id + "|" + price + "|" + amount + ";"
+                                                            }
+                                                        });
+
+                                                        $("#itemselectedhd").val(productselect);
 
 
-                                                function numberWithCommas(x) {
-                                                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                                }
 
-                                                function init() {
-                                                    $(".overlay-loader").hide();
-                                                    updateprice();
-                                                }
+                                                        this.getshippingrate(merchantid, unit, function (price) {
+                                                            if (price == 0) {
+                                                                $("#shipingrate").html("ฟรี");
+                                                                $("#shipingratehidden").val(0);
+                                                            } else {
+                                                                $("#shipingrate").html(price + "฿");
+                                                                $("#shipingratehidden").val(price);
+                                                            }
+
+                                                            total = total + parseFloat(price);
+
+                                                            $("#shippinghd").val(price);
+                                                            $("#totalhd").val(total);
+
+                                                            var shippingdiscount = parseFloat($("#shippingdiscounthidden").val() == null ? 0 : $("#shippingdiscounthidden").val());
+                                                            var pricediscount = parseFloat($("#pricediscounthidden").val() == null ? 0 : $("#pricediscounthidden").val());
+                                                            total = total + shippingdiscount;
+                                                            total = total + pricediscount;
+
+                                                            $("#total").html(numberWithCommas(total) + "฿");
+
+
+                                                            $(".overlay-loader").hide();
+                                                        });
+
+
+                                                    }
+
+
+                                                    $(".checkamount").click(function () {
+
+                                                        var total = 0;
+                                                        var shipingrate = $("#shipingratehidden").val();
+                                                        var itemselected = "";
+                                                        var hasitem = 0;
+                                                        $('input[type=number][name=amount]').each(function () {
+                                                            if ($(this).val()) {
+                                                                hasitem += $(this).val();
+                                                                itemselected += $(this).prev().prev().val() + "," + parseFloat($(this).val() == "" ? 0 : $(this).val()) + "," + parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val()) + ";";
+                                                                total += parseFloat($(this).prev().val()) * parseFloat($(this).val() == "" ? 0 : $(this).val());
+                                                            }
+                                                        });
+
+                                                        if (hasitem == 0) {
+                                                            alert("เลือกสินค้าอย่างน้อย 1 ชิ้น");
+                                                            $(".itemamount").first().focus();
+                                                            return false;
+                                                        }
+
+                                                        return true;
+                                                    });
+
+
+                                                    function numberWithCommas(x) {
+                                                        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                                    }
+
+                                                    function init() {
+                                                        $(".overlay-loader").hide();
+                                                        updateprice();
+                                                    }
     </script>
 </html>
