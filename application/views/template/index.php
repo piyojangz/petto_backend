@@ -119,7 +119,8 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <p>กับบริการแบบใหม่ ตอบสนองความต้องการในยุคที่การค้าขายบนไซเชียลเน็ตเวิร์คกำลังมาแรง แค่มีไลน์ก็ขายของได้แล้ว.</p>
+                <p>กับบริการแบบใหม่ ตอบสนองความต้องการในยุคที่การค้าขายบนไซเชียลเน็ตเวิร์คกำลังมาแรง
+                    แค่มีไลน์ก็ขายของได้แล้ว.</p>
             </div>
         </div>
     </div>
@@ -145,15 +146,15 @@
                         <br/>รอรับการยืนยัน
                     </li>
                 </ul>
-                <div class="animated-images">
+                <div class="animated-images hidden-md">
                     <div class="image-wrapper left" data-id="1">
-                        <img src="<?=base_url("res/img/exam3.png")?>"/>
+                        <img src="<?= base_url("res/img/exam3.png") ?>"/>
                     </div>
                     <div class="image-wrapper center" data-id="2">
-                        <img src="<?=base_url("res/img/exam1.png")?>"/>
+                        <img src="<?= base_url("res/img/exam1.png") ?>"/>
                     </div>
                     <div class="image-wrapper right" data-id="3">
-                        <img src="<?=base_url("res/img/exam2.png")?>"/>
+                        <img src="<?= base_url("res/img/exam2.png") ?>"/>
                     </div>
                 </div>
             </div>
@@ -170,10 +171,64 @@
             </div>
             <div class="col-lg-10">
                 <div class="quote">
-                    <div class="text">ปกตินั่งตอบลูกค้า นั่งรับออเดอร์ลูกค้าจำนวนมาก ไม่มีคนช่วยก็แย่แล้ว ไหนจะต้องมานั่งเช็คยอดเงินลูกค้าอีก , พอมาทดสอบใช้ @perdbill ดูแล้วรู้สึกรักเลยค่ะ สามารถตรวจสอบข้อมูลได้ง่ายขึ้น และยังทำทุกอย่างด้วยไลน์ทั้งหมดได้อีกด้วย
+                    <div class="text">ปกตินั่งตอบลูกค้า นั่งรับออเดอร์ลูกค้าจำนวนมาก ไม่มีคนช่วยก็แย่แล้ว
+                        ไหนจะต้องมานั่งเช็คยอดเงินลูกค้าอีก , พอมาทดสอบใช้ @perdbill ดูแล้วรู้สึกรักเลยค่ะ
+                        สามารถตรวจสอบข้อมูลได้ง่ายขึ้น และยังทำทุกอย่างด้วยไลน์ทั้งหมดได้อีกด้วย
                     </div>
                     <div class="signature">Peijang Kyo</div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="package text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>รายละเอียดแพ็กเกจ</h4>
+                <table class="package table table-responsive">
+                    <thead>
+                    <tr>
+                        <th width="15%"></th>
+                        <th width="25%"></th>
+                        <th width="60%">ใช้ฟรีไม่มีค่าใช้จ่าย</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="text-left" rowspan="2">Line @perdbill</td>
+                        <td class="text-left">การใช้คำสั่งผ่านไลน์</td>
+                        <td><i class="fa fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">การแจ้งเตือนผ่านไลน์</td>
+                        <td><i class="fa fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left lc-lp-spec-black">จำกัด</td>
+                        <td class="text-left">จำนวนผู้ค้า</td>
+                        <td>ไม่จำกัด</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left lc-lp-spec-black">ฟังก์ชันอื่นๆ</td>
+                        <td class="text-left">ฟังก์ชันต่างๆ ของ @perdbill</td>
+                        <td>เร็วๆนี้</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left lc-lp-spec-black">ออพชัน</td>
+                        <td class="text-left">ช่องทางการรับชำระเงิน</td>
+                        <td>เร็วๆนี้</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+            เพิ่มเราเป็นเพื่อนเลย!
+                <br/>
+                <a href="https://line.me/R/ti/p/%40hkw0659s"><img height="36" border="0" alt="เพิ่มเพื่อน" src="https://scdn.line-apps.com/n/line_add_friends/btn/en.png"></a>
+                <hr>
             </div>
         </div>
     </div>
