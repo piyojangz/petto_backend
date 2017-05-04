@@ -45,11 +45,12 @@
     <section id="wrapper" class="new-login-register" style="overflow-y: scroll;">
         <div class="lg-info-panel">
             <div class="inner-panel">
-                <a href="<?= base_url() ?>" class="p-20 di"><img src="<?= base_url("res/account/plugins/images/admin-logo.png") ?>"></a>
+                <a href="<?= base_url() ?>" class="p-20 di"><img src="<?= base_url("res/account/plugins/images/admin-logo.png")  ?>" style="width: 50px;">  </a>
                 <div class="lg-content">
                     <h2>Perdbill - เปิดบิล</h2>
                     <p class="text-muted">บริการเปิดบิลผ่าน LINE BOT ง่ายต่อการขายของออนไลน์ สะดวกต่อนักขายมืออาชีพ</p>
-                    <a href="<?= base_url("register") ?>" class="btn btn-rounded btn-danger p-l-20 p-r-20">ต้องการสมัครสามาชิก?</a>
+                    <a href="<?= base_url("register") ?>" class="btn btn-rounded   p-l-20 p-r-20 btn-success" style="background: #21bf64;
+    border: 1px solid #1db15c;">ต้องการสมัครสามาชิก?</a>
                 </div>
             </div>
         </div>
