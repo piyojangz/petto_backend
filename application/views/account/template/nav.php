@@ -4,10 +4,14 @@
             <!-- Logo -->
             <a class="logo" href="<?= base_url("account/$token/dashboard") ?>">
                 <!-- Logo icon image, you can use font-icon also --><b>
-                    <!--This is dark logo icon--><img src="<?= base_url("res/account/plugins/images/admin-logo.png") ?>" alt="home" class="dark-logo" /><!--This is light logo icon--><img src="<?= base_url("res/account/plugins/images/admin-logo-dark.png") ?>" alt="home" class="light-logo" />
+                    <!--This is dark logo icon--><img src="<?= base_url("res/account/plugins/images/admin-logo.png") ?>" style="width: 50px;" alt="home" class="dark-logo" /><!--This is light logo icon--><img src="<?= base_url("res/account/plugins/images/admin-logo-dark.png") ?>" alt="home" class="light-logo" style="width: 50px;" />
                 </b>
-                <!-- Logo text image you can use text also --><span class="hidden-xs">
-                    <!--This is dark logo text--><img src="<?= base_url("res/account/plugins/images/admin-text.png") ?>" alt="home" class="dark-logo" /><!--This is light logo text--><img src="<?= base_url("res/account/plugins/images/admin-text-dark.png") ?>" alt="home" class="light-logo" />
+                <!-- Logo text image you can use text also --><span class="hidden-xs" style="color: #2ebd68;
+    font-weight: 500;
+    font-size: 1em;">
+                    <!--This is dark logo text-->Perdbill<small style="font-size: 1em;
+    font-weight: 400;
+    color: #2ebd68;">Admin</small><!--This is light logo text-->
                 </span> </a>
         </div>
         <!-- /Logo -->
