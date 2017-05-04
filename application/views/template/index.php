@@ -33,12 +33,12 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                 </button>
-                <a href="#" class="logo"><img src="<?= base_url("res/img/web-logo.png") ?>"
+                <a href="<?=base_url()?>" class="logo"><img src="<?= base_url("res/img/web-logo.png") ?>"
                                               style="width: 50px;"/> PERDBILL </a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav main">
-                    <li><a href="#">หน้าหลัก</a></li>
+                    <li><a href="<?=base_url()?>">หน้าหลัก</a></li>
                     <li><a href="#about">วิธีใช้งาน</a></li>
                     <li><a href="#contact">ราคา</a></li>
                     <li><a href="#contact">ติดต่อเรา</a></li>
