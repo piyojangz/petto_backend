@@ -46,7 +46,10 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function billtoken($cond) {
+    function billtoken($cond,$limit = "") {
+        if($limit != ""){
+            $this->db->limit($limit);
+        }
         $this->db->select('*');
         $this->db->from('billtoken');
         $this->db->order_by("createdate", "desc");
