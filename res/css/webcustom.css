@@ -10,7 +10,9 @@ body.nopadding {
 body.nopadding.grey {
     background: #efefef;
 }
-
+.feature-ss ul{
+    padding: 0px;
+}
 .navbar-default {
     background-color: #ffffff;
     border-bottom: 1px solid #ecf0f1;
@@ -63,6 +65,7 @@ body.nopadding.grey {
 
 .feature-ss {
     background: #fff;
+    overflow: hidden;
 }
 
 .feature-ss p {
@@ -446,3 +449,132 @@ a.logo {
     }
 }
 
+@media (max-width: 980px) {
+    .header-index {
+        background-size: 160%;
+        padding-top: 20px;
+    }
+}
+@media (max-width: 760px) {
+    .header-index {
+        background-size: 260%;
+        padding-top: 20px;
+    }
+    .step-wrapper {
+        border-radius: 15px;
+        margin-top: 0px;
+        padding: 20px;
+    }
+    .heading-wrapper {
+        padding-top: 0px;
+        text-shadow: 1px 1px 1px #000;
+    }
+    .navbar .container > .navbar-header, .navbar .container-fluid > .navbar-header, .navbar .container > .navbar-collapse, .navbar .container-fluid > .navbar-collapse {
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    .navbar-header {
+        border-right: 0px;
+        padding-right: 0px;
+    }
+    .navbar-nav > li > a {
+        color: #fff;
+        text-shadow: 3px 1px 3px rgba(0, 0, 0, 0.85);
+    }
+    .feature h4 {
+        color: #21bf64;
+        font-size: .7em;
+        line-height: 1.2em;
+        padding-bottom: 30px;
+    }
+    .feature-ss ul li {
+        list-style: none;
+        display: inline-block;
+        font-size: .5em;
+        padding: 5px;
+        color: #999;
+        text-align: center;
+        width: 100px;
+        line-height: 2em;
+        cursor: pointer;
+    }
+
+    .user-quote img{
+        width: 60px !important;
+    }
+    .user-quote .text {
+        font-weight: 100;
+        font-size: .7em;
+    }
+    .user-quote .quote {
+        position: relative;
+        display: inline-block;
+        margin-left: 20px;
+        padding-left: 30px;
+        font-size: 18px;
+        line-height: 24px;
+        text-align: left;
+        vertical-align: top;
+    }
+    .user-quote .quote::before {
+        content: '';
+        position: absolute;
+        top: 4px;
+        left: 6px;
+        display: inline-block;
+        width: 13px;
+        height: 14px;
+        background: url(../img/icon-quote.png) no-repeat;
+        background-size: 100%;
+    }
+
+
+    .feature-ss .image-wrapper {
+        top: 0;
+        left: 0;
+        width: 270px;
+        height: 220px;
+        background: #fff;
+        box-shadow: 0 4px 13px 1px rgba(0, 0, 0, 0.22);
+    }
+
+    .feature-ss .animated-images {
+        position: relative;
+        left: -150px;
+        display: inline-block;
+        width: 100%;
+        height: 518px;
+        margin-bottom: 137px;
+        max-width: 940px;
+    }
+
+
+    .feature-ss .animated-images img{
+        width: 100% !important;
+    }
+    .feature-ss .image-wrapper.center {
+        left: 58%;
+        z-index: 10;
+    }
+
+}
+@media (max-width: 480px) {
+    .feature-ss .animated-images {
+        position: relative;
+        left: -160px;
+        display: inline-block;
+        width: 100%;
+        height: 110px;
+        margin-bottom: 137px;
+        max-width: 320px;
+    }
+}
+
+@media (max-width: 480px) {
+    .feature-ss ul li i {
+        font-size: 1.5em;
+    }
+    .feature-ss ul li {
+        width: 90px;
+    }
+}

@@ -92,27 +92,27 @@
 <div class="container">
     <div class="feature text-center">
         <div class="row">
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-xs-6">
                 <i class="fa fa-dashboard fa-3x"></i>
                 <h4>ระบบจัดการง่าย ไม่ซับซ้อน</h4>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-xs-6">
                 <i class="fa fa-bell-o fa-3x"></i>
                 <h4>รับการแจ้งเตือนผ่าน LINE</h4>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-xs-6">
                 <i class="fa fa-code fa-3x"></i>
                 <h4>ทำงานสะดวกรวดเร็วด้วย LINE BOT API</h4>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-xs-6">
                 <i class="fa fa-link fa-3x"></i>
                 <h4>ส่งออเดอร์ให้ลูกค้าด้วย shorten link</h4>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-xs-6">
                 <i class="fa fa-line-chart fa-3x"></i>
                 <h4>การวัดผลและสถิติย้อนหลัง</h4>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-xs-6">
                 <i class="fa fa-group fa-3x"></i>
                 <h4>รองรับผู้ขายแบบ dropship</h4>
             </div>
@@ -165,11 +165,11 @@
 <div class="user-quote text-center">
     <div class="container">
         <div class="row">
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-xs-2">
                 <img class="img img-circle" style="width: 100px;"
                      src="https://scontent.fbkk2-4.fna.fbcdn.net/v/t1.0-1/p160x160/17952758_1555347854489212_4415242171106257259_n.jpg?_nc_eui2=v1%3AAeH4NDNjr-4phwJ9DRcqDe3MxwarffmSNGPBuX5aLJWmJaTd8yMco4Dt5hRbIWu10oxqPouO6cEHy64NqqZrskZeodm0TwgVPkPIDcxzxkNPNA&oh=32d276da3af66a261179e5202a8fff95&oe=59743C69"/>
             </div>
-            <div class="col-lg-10">
+            <div class="col-lg-10 col-xs-10">
                 <div class="quote">
                     <div class="text">ปกตินั่งตอบลูกค้า นั่งรับออเดอร์ลูกค้าจำนวนมาก ไม่มีคนช่วยก็แย่แล้ว
                         ไหนจะต้องมานั่งเช็คยอดเงินลูกค้าอีก , พอมาทดสอบใช้ @perdbill ดูแล้วรู้สึกรักเลยค่ะ
