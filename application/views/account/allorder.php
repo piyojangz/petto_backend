@@ -129,7 +129,7 @@
                                                             </div>
                                                         </td>
                                                         <td><a class="badge badge-info " target="_blank" href="<?= base_url($item->token) ?>"><?= $item->token ?></a></td>
-                                                        <td><?= date("d/M/Y H:i:s",strtotime ($item->createdate)) ?></td>
+                                                        <td><?= date("d/M/Y H:i:s",strtotime ($item->submitdate)) ?></td>
                                                         <td><?= number_format($item->total) ?></td>
                                                         <td><?= $item->paymentinfo ?></td>
                                                         <td><?= $item->fullname ?></td>

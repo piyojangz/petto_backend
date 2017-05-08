@@ -467,6 +467,7 @@ class Service extends CI_Controller
             'shippingdiscount' => $shippingdiscount,
             'pricediscount' => $pricediscount,
             'mnbillstatus' => $mnbillstatus,
+            'submitdate' => date('Y-m-d H:i:s'),
             'updatedate' => date('Y-m-d H:i:s'),
         );
         $this->set->order($input);

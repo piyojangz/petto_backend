@@ -191,6 +191,7 @@ class Order extends CI_Controller
                 'slipimage' => $imagepath,
                 'paymentmethodid' => $paymenttype,
                 'paymentinfo' => $txtpaiddate . ' ' . $txtpaidhour . ':' . $txtpaidmin,
+                'submitdate' => date('Y-m-d H:i:s'),
                 'updatedate' => date('Y-m-d H:i:s'),
             );
             $this->set->order($input);
@@ -306,6 +307,7 @@ class Order extends CI_Controller
                 'slipimage' => $imagepath,
                 'paymentmethodid' => $paymenttype,
                 'paymentinfo' => $txtpaiddate . ' ' . $txtpaidhour . ':' . $txtpaidmin,
+                'submitdate' => date('Y-m-d H:i:s'),
                 'updatedate' => date('Y-m-d H:i:s'),
             );
             $orderid = $this->put->order($input);

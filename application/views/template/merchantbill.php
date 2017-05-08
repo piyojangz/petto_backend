@@ -377,6 +377,29 @@
                                                         });
 
 
+                                                        <?php if(count($items) == 1):?>
+                                                        $('#owl-demo2').owlCarousel({
+                                                            margin: 50,
+                                                            nav: true,
+                                                            autoplay: false,
+                                                            responsive: {
+                                                                0: {
+                                                                    items: 1
+                                                                },
+                                                            }
+                                                        });
+                                                        <?php elseif (count($items) == 2):?>
+                                                        $('#owl-demo2').owlCarousel({
+                                                            margin: 20,
+                                                            nav: true,
+                                                            autoplay: false,
+                                                            responsive: {
+                                                                0: {
+                                                                    items: 2
+                                                                },
+                                                            }
+                                                        });
+                                                        <?php else: ?>
                                                         $('#owl-demo2').owlCarousel({
                                                             margin: 20,
                                                             nav: true,
@@ -388,17 +411,10 @@
                                                                 480: {
                                                                     items: 3
                                                                 },
-                                                                700: {
-                                                                    items: 5
-                                                                },
-                                                                1000: {
-                                                                    items: 5
-                                                                },
-                                                                1100: {
-                                                                    items: 5
-                                                                }
                                                             }
                                                         });
+                                                        <?php endif;?>
+
 
 
 
