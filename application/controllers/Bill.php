@@ -320,6 +320,9 @@ class Bill extends CI_Controller
                     case "สามารถสร้างบิลเพิ่มได้ที่":
 
                         break;
+                    case "ค้นหาได้ด้วยการพิมพ์เบอร์โทรเช่น":
+
+                        break;
                     default:
                         $replymsg = "ขออภัย เราไม่ทราบคำขอของคุณ";
                         break;
