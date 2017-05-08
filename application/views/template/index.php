@@ -13,7 +13,7 @@
     <link href="<?= base_url("res/account/plugins/bower_components/register-steps/steps.css") ?>" rel="stylesheet">
 
     <!-- Custom -->
-    <link href="<?= base_url("res/css/webcustom.css?v=1.0") ?>" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url("res/css/webcustom.css?v=1.1") ?>" rel="stylesheet" type="text/css"/>
 </head>
 <body class="nopadding grey">
 <div class="overlay-loader">
