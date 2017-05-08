@@ -37,14 +37,12 @@
 
     <div class="row" style="margin-top:50px;">
         <div class="col-xs-12 text-center">
-            <h4>การสั่งซื้อสินค้าเสร็จเรียบร้อย</h4>
-            <h5>Thank you!</h5>
-            <small>ลูกค้าสามารถติดตามรายการสั่งได้ที่ลิงค์นี้<br/> <span id="animationlink" class="text-danger"
-                                                                         style="display: inline-block;">perdbill.co/track/<b><?= $ordertoken->token ?></b></span>
+            <h4 class="text-success">การสร้าง Promotion bill สำหรับลูกค้าสำเร็จ</h4>
+            <small>คุณสามารถนำลิงค์นี้ไปให้ลูกค้าสั่งซื้อได้เลย<br/> <span id="animationlink" class="text-danger"
+                                                                           style="display: inline-block;">perdbill.co/<b><?= $ordertoken->token ?></b></span>
                 <button id="copyanim" class="btn btn-small btn-warning" style="padding: 2px;">copy to clipboard</button>
             </small>
-            <span type="hidden" id="billinkhd"
-                  style="display: none;"><?= base_url("track/" . $ordertoken->token) ?></span>
+            <span type="hidden" id="billinkhd" style="display: none;"><?= base_url("$ordertoken->token") ?></span>
         </div>
     </div>
 </div>
@@ -105,6 +103,8 @@
         document.body.removeChild(aux);
 
     }
+
+
 </script>
 
 </html>

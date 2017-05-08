@@ -2,9 +2,11 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Order extends CI_Controller {
+class Order extends CI_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->load->model('Insert_model', 'put');
         $this->load->model('Select_model', 'get');
@@ -14,11 +16,13 @@ class Order extends CI_Controller {
         $this->load->library('common');
     }
 
-    public function Summary($orderid = "") {
+    public function Summary($orderid = "")
+    {
         $this->load->view('template/bill');
     }
 
-    public function paymentsuccess($token = "") {
+    public function paymentsuccess($token = "")
+    {
         $data["ordertoken"] = $this->get->ordertoken(array('token' => $token))->row();
         if ($data["ordertoken"] == null) {
             redirect(base_url());
@@ -32,7 +36,8 @@ class Order extends CI_Controller {
         $this->load->view('template/paymentsuccess', $data);
     }
 
-    public function trackorder($token = "", $merchantuid = "") {
+    public function trackorder($token = "", $merchantuid = "")
+    {
         $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
         if ($ordertoken == null) {
             redirect(base_url());
@@ -51,8 +56,6 @@ class Order extends CI_Controller {
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
 
 
-
-
         $meruid = $this->get->v_merchantlineuid(array('token' => $token, 'lineuid' => $merchantuid))->num_rows();
         $data["canedit"] = $meruid > 0 ? true : false;
 
@@ -60,7 +63,8 @@ class Order extends CI_Controller {
         $this->load->view('template/track', $data);
     }
 
-    public function getpaymentmethoddetail($id) {
+    public function getpaymentmethoddetail($id)
+    {
         $res = "";
         $paymentmethod = $this->get->paymentmethod(array('id' => $id))->row();
         $res .= "ธนาคาร " . $paymentmethod->bankname;
@@ -70,7 +74,8 @@ class Order extends CI_Controller {
         return $res;
     }
 
-    public function getamount($orderdetail, $itemid) {
+    public function getamount($orderdetail, $itemid)
+    {
         foreach ($orderdetail as $item) {
             if ($item->itemid == $itemid) {
                 return $item->amount;
@@ -80,7 +85,24 @@ class Order extends CI_Controller {
         return "0";
     }
 
-    public function payment($token = "") {
+    public function promoinfo($token = "")
+    {
+        $data["ordertoken"] = $this->get->ordertoken(array('token' => $token))->row();
+        if ($data["ordertoken"] == null) {
+            redirect(base_url());
+        }
+
+
+        $data["obj"] = $this;
+        $uid = $data["ordertoken"]->uid;
+        $merchantid = $data["ordertoken"]->merchantid;
+        $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
+        $this->load->view('template/promobillsuccess.php', $data);
+    }
+
+
+    public function payment($token = "")
+    {
         $data["ordertoken"] = $token;
 
         $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
@@ -161,7 +183,6 @@ class Order extends CI_Controller {
 //            }
 
 
-
             $input = array(
                 'id' => $orderid,
                 'custid' => $custid,
@@ -188,7 +209,8 @@ class Order extends CI_Controller {
         $this->load->view('template/payment', $data);
     }
 
-    public function generatebilltoken($merchantid, $merchantuid, $orderid, $billtoken, $billtokenid) {
+    public function generatebilltoken($merchantid, $merchantuid, $orderid, $billtoken, $billtokenid)
+    {
         $uniqid = $this->common->getToken(6);
         $cond = array('token' => $uniqid);
         if ($this->get->ordertoken($cond)->num_rows() > 0) {
@@ -211,7 +233,8 @@ class Order extends CI_Controller {
         return $uniqid;
     }
 
-    public function paymentwithmerchant($token = "") {
+    public function paymentwithmerchant($token = "")
+    {
 
         if ($_POST) {
             // สร้าง ordertoken ก่อน
@@ -316,13 +339,12 @@ class Order extends CI_Controller {
             }
 
 
-
-
             redirect(base_url("/paymentsuccess/$billtoken"));
         }
     }
 
-    public function getfulladdress($txtaddress, $txttumbol, $txtaumpure, $txtprovince, $txtzipcode) {
+    public function getfulladdress($txtaddress, $txttumbol, $txtaumpure, $txtprovince, $txtzipcode)
+    {
         $fulladdr = $txtaddress;
         $fulladdr .= " ตำบล/แขวง " . $this->get->district(array('DISTRICT_ID' => $txttumbol))->row()->DISTRICT_NAME;
         $fulladdr .= " อำเภอ/เขต " . $this->get->amphur(array('AMPHUR_ID' => $txtaumpure))->row()->AMPHUR_NAME;

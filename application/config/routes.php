@@ -80,3 +80,4 @@ $route['account/(:any)/addnewpaymentmethod'] = "account/addnewpaymentmethod/$1";
 $route['account/(:any)/addnewshippingrate'] = "account/addnewshippingrate/$1";
 $route['account/(:any)/updatesetting'] = "account/updatesetting/$1";
 $route['account/(:any)/info'] = "account/info/$1";
+$route['promoinfo/(:any)'] = "order/promoinfo/$1";

@@ -145,16 +145,7 @@
         </div>
 
         <div class="row">
-            <h4 class="text-center head-section payment">Payment Method</h4>
-            <div class="col-xs-12">
-                <?php foreach ($paymentmethod as $index => $item): ?>
-                    <label class="bank" for="checkbox<?= $index ?>">
-                        <input name="paymenttype" type="radio" id="checkbox<?= $index ?>" required value="" ?>
-                        <img src="<?= $item->banklogo ?>" style="width: 30px; height: 30px;">
-                        ธนาคาร <?= $item->bankname ?> ประเภท <?= $item->acctype ?> ชื่อบัญชี <?= $item->accname ?>
-                        เลขที่บัญชี <?= $item->accno ?>
-                    </label>
-                <?php endforeach; ?>
+            <div class="col-xs-12" style="margin-top: 25px;">
                 <input type="hidden" id="orderid" value=""/>
                 <button type="submit" class="btn btn-hg btn-block btn-primary">บันทึกรายการเพื่อขอลิงค์</button>
             </div><!-- /.demo-col -->
@@ -278,7 +269,7 @@
 
     $("#submitform").submit(function () {
 
-       // $(".overlay-loader").show();
+        // $(".overlay-loader").show();
         var total = 0;
         var shipingrate = $("#shipingratehidden").val();
         var itemselected = "";
@@ -295,36 +286,46 @@
             alert("เลือกสินค้าอย่างน้อย 1 ชิ้น");
             return false;
         }
-//        itemselected = itemselected.slice(0, -1);
-//        total = total + parseFloat(shipingrate);
-//
-//        var paymenttype = $('input[name=paymenttype]:checked', '#submitform').val()
-//        var shipingratehidden = $("#shipingratehidden").val();
-//        var shippingdiscount = parseFloat($("#shippingdiscounthidden").val() == null ? 0 : $("#shippingdiscounthidden").val());
-//        var pricediscount = parseFloat($("#pricediscounthidden").val() == null ? 0 : $("#pricediscounthidden").val());
-//        var mnbillstatus = '<?//= $genstatus ?>//';
-//
-//        total = total + shippingdiscount;
-//        total = total + pricediscount;
-        window.history.back();
+        itemselected = itemselected.slice(0, -1);
+        total = total + parseFloat(shipingrate);
 
-//        $.ajax({
-//            type: "POST",
-//            url: "<?php //echo base_url('service/getpromobill'); ?>//",
-//            data: {'itemselected': itemselected, 'total': total, 'paymenttype': paymenttype, 'orderid': $("#orderid").val(), 'ordertoken': '<?//= $ordertoken ?>//', 'shipingrate': shipingratehidden
-//                , 'shippingdiscount': shippingdiscount, 'pricediscount': pricediscount, 'mnbillstatus': mnbillstatus},
-//            dataType: "json",
-//            success: function (data) {
-//                if (data.result != null) {
-//                    location.href = "<?//= base_url("shipinginfo/$ordertoken") ?>//";
-//                }
-//                $(".overlay-loader").hide();
-//            },
-//            error: function (XMLHttpRequest) {
-//                $(".overlay-loader").hide();
-//            }
-//        });
+        var paymenttype = $('input[name=paymenttype]:checked', '#submitform').val()
+        var shipingratehidden = $("#shipingratehidden").val();
+        var shippingdiscount = parseFloat($("#shippingdiscounthidden").val() == null ? 0 : $("#shippingdiscounthidden").val());
+        var pricediscount = parseFloat($("#pricediscounthidden").val() == null ? 0 : $("#pricediscounthidden").val());
+        var mnbillstatus = '<?= $genstatus ?>';
+        var merchanttoken = '<?= $merchant->token ?>';
+        var merchantid = '<?= $merchant->id ?>';
+        var merchantuid = '<?= $uid ?>';
 
+        total = total + shippingdiscount;
+        total = total + pricediscount;
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getpromobill'); ?>",
+            data: {
+                'itemselected': itemselected,
+                'total': total,
+                'paymenttype': paymenttype,
+                'shipingrate': shipingratehidden,
+                'shippingdiscount': shippingdiscount,
+                'pricediscount': pricediscount,
+                'merchanttoken': merchanttoken,
+                'merchantuid': merchantuid,
+                'merchantid': merchantid
+            },
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.result != null) {
+                    location.href = "<?= base_url("promoinfo/") ?>" + data.result;
+                }
+                $(".overlay-loader").hide();
+            },
+            error: function (XMLHttpRequest) {
+                $(".overlay-loader").hide();
+            }
+        });
 
 
         return false;
