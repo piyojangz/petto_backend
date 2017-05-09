@@ -39,6 +39,9 @@ class Account extends CI_Controller {
         }
     }
 
+    public function user($token = "") {
+        echo $token;
+    }
     public function setting($acctoken = "") {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
