@@ -51,6 +51,9 @@ body.nopadding.grey {
 .feature i {
     color: #7d7c7c;
 }
+.feature .i{
+    height: 130px;
+}
 
 .feature h4 {
     color: #21bf64;

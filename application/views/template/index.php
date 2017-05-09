@@ -13,7 +13,7 @@
     <link href="<?= base_url("res/account/plugins/bower_components/register-steps/steps.css") ?>" rel="stylesheet">
 
     <!-- Custom -->
-    <link href="<?= base_url("res/css/webcustom.css?v=1.1") ?>" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url("res/css/webcustom.css?v=1.2") ?>" rel="stylesheet" type="text/css"/>
 </head>
 <body class="nopadding grey">
 <div class="overlay-loader">
@@ -92,27 +92,27 @@
 <div class="container">
     <div class="feature text-center">
         <div class="row">
-            <div class="col-lg-2 col-xs-6">
+            <div class="col-lg-2 col-xs-6 i">
                 <i class="fa fa-dashboard fa-3x"></i>
                 <h4>ระบบจัดการง่าย ไม่ซับซ้อน</h4>
             </div>
-            <div class="col-lg-2 col-xs-6">
+            <div class="col-lg-2 col-xs-6 i">
                 <i class="fa fa-bell-o fa-3x"></i>
                 <h4>รับการแจ้งเตือนผ่าน LINE</h4>
             </div>
-            <div class="col-lg-2 col-xs-6">
+            <div class="col-lg-2 col-xs-6 i">
                 <i class="fa fa-code fa-3x"></i>
                 <h4>ทำงานสะดวกรวดเร็วด้วย LINE BOT API</h4>
             </div>
-            <div class="col-lg-2 col-xs-6">
+            <div class="col-lg-2 col-xs-6 i">
                 <i class="fa fa-link fa-3x"></i>
                 <h4>ส่งออเดอร์ให้ลูกค้าด้วย shorten link</h4>
             </div>
-            <div class="col-lg-2 col-xs-6">
+            <div class="col-lg-2 col-xs-6 i">
                 <i class="fa fa-line-chart fa-3x"></i>
                 <h4>การวัดผลและสถิติย้อนหลัง</h4>
             </div>
-            <div class="col-lg-2 col-xs-6">
+            <div class="col-lg-2 col-xs-6 i">
                 <i class="fa fa-group fa-3x"></i>
                 <h4>รองรับผู้ขายแบบ dropship</h4>
             </div>

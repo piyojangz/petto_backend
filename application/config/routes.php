@@ -50,35 +50,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   | Examples:	my-controller/index	-> my_controller/index
   |		my-controller/my-method	-> my_controller/my_method
  */
-$route['default_controller'] = 'home';
-$route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+if (preg_match('/.+\.perdbill\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+
+    $route['default_controller'] = 'Web';
+
+} else {
+    $route['default_controller'] = 'home';
+    $route['404_override'] = '';
+    $route['translate_uri_dashes'] = FALSE;
 
 
-$route['logout'] = "logout/index/";
-$route['register'] = "register/index/";
-$route['login'] = "login/index/";
-$route['(:any)'] = "bill/index/$1";
-$route['shipinginfo/(:any)'] = "order/payment/$1";
-$route['track/(:any)'] = "order/trackorder/$1";
-$route['track/(:any)/(:any)'] = "order/trackorder/$1/$2";
-$route['paymentsuccess/(:any)'] = "order/paymentsuccess/$1";
-$route['pro/(:any)/(:any)'] = "bill/pro/$1/$2";
+    $route['logout'] = "logout/index/";
+    $route['register'] = "register/index/";
+    $route['login'] = "login/index/";
+    $route['(:any)'] = "bill/index/$1";
+    $route['shipinginfo/(:any)'] = "order/payment/$1";
+    $route['track/(:any)'] = "order/trackorder/$1";
+    $route['track/(:any)/(:any)'] = "order/trackorder/$1/$2";
+    $route['paymentsuccess/(:any)'] = "order/paymentsuccess/$1";
+    $route['pro/(:any)/(:any)'] = "bill/pro/$1/$2";
 
-$route['account'] = "account/index/";
-$route['account/(:any)'] = "account/index/$1";
-$route['account/(:any)/dashboard'] = "account/dashboard/$1";
-$route['account/(:any)/products'] = "account/products/$1";
-$route['account/(:any)/setting'] = "account/setting/$1";
-$route['account/(:any)/customer'] = "account/customer/$1";
-$route['account/(:any)/order/all'] = "account/orderall/$1";
-$route['account/(:any)/paymentmethod'] = "account/paymentmethod/$1";
-$route['account/(:any)/shippingrate'] = "account/shippingrate/$1";
-$route['account/(:any)/base64_to_jpeg'] = "account/base64_to_jpeg";
-$route['account/(:any)/addnewproduct'] = "account/addnewproduct/$1";
-$route['account/(:any)/addnewpaymentmethod'] = "account/addnewpaymentmethod/$1";
-$route['account/(:any)/addnewshippingrate'] = "account/addnewshippingrate/$1";
-$route['account/(:any)/updatesetting'] = "account/updatesetting/$1";
-$route['account/(:any)/info'] = "account/info/$1";
-$route['promoinfo/(:any)'] = "order/promoinfo/$1";
-$route['account/user/(:any)'] = "account/user/$1";
+    $route['account'] = "account/index/";
+    $route['account/(:any)'] = "account/index/$1";
+    $route['account/(:any)/dashboard'] = "account/dashboard/$1";
+    $route['account/(:any)/products'] = "account/products/$1";
+    $route['account/(:any)/setting'] = "account/setting/$1";
+    $route['account/(:any)/customer'] = "account/customer/$1";
+    $route['account/(:any)/order/all'] = "account/orderall/$1";
+    $route['account/(:any)/paymentmethod'] = "account/paymentmethod/$1";
+    $route['account/(:any)/shippingrate'] = "account/shippingrate/$1";
+    $route['account/(:any)/base64_to_jpeg'] = "account/base64_to_jpeg";
+    $route['account/(:any)/addnewproduct'] = "account/addnewproduct/$1";
+    $route['account/(:any)/addnewpaymentmethod'] = "account/addnewpaymentmethod/$1";
+    $route['account/(:any)/addnewshippingrate'] = "account/addnewshippingrate/$1";
+    $route['account/(:any)/updatesetting'] = "account/updatesetting/$1";
+    $route['account/(:any)/info'] = "account/info/$1";
+    $route['promoinfo/(:any)'] = "order/promoinfo/$1";
+}
+
