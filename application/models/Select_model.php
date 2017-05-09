@@ -270,6 +270,7 @@ from ordertoken a
 join `order` b
 on a.orderid = b.id
 where a.billtoken = '$billtoken'
+and b.closestatus = 0 
 and createdate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
 GROUP BY DATE(b.createdate)
 limit 0,30");
