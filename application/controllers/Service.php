@@ -514,4 +514,22 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function cancelpayment()
+    {
+        $orderid = $this->input->post('orderid');
+        $ordertoken = $this->get->ordertoken(array('orderid' => $orderid))->row();
+        $input = array(
+            'id' => $orderid,
+            'closestatus' => 1,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+        $data['result'] = false;
+        if ($this->set->order($input)) {
+            $data['result'] = true;
+        }
+        //$this->lineapi->pushmsg($ordertoken->uid, "สถานะของคุณถูกเปลี่ยนแล้ว https://perdbill.co/track/$ordertoken->token");
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
 }

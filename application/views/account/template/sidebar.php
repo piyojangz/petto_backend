@@ -27,7 +27,7 @@
             </li>
             <li> <a href="javascript:;" ><i class="ti-receipt fa-fw"></i> <span class="hide-menu">ออเดอร์<span class="fa arrow"></span></span></a>
                 <ul class="nav nav-second-level">
-                    <li><a href="<?= base_url("account/$token/order/all") ?>"><i class="fa-fw">O</i><span class="hide-menu">รายการสั่งซื้อ</span></a></li> 
+                    <li><a href="<?= base_url("account/$token/order/all") ?>"><i class="fa fa-bookmark-o fa-fw"></i><span class="hide-menu">รายการสั่งซื้อ</span></a></li>
                 </ul>
             </li>
         </ul>

@@ -11,6 +11,7 @@ class Order extends CI_Controller
         $this->load->model('Insert_model', 'put');
         $this->load->model('Select_model', 'get');
         $this->load->model('Update_model', 'set');
+        $this->load->model('Email', 'mail');
         $this->load->library('upload');
         $this->load->library('lineapi');
         $this->load->library('common');
@@ -152,6 +153,7 @@ class Order extends CI_Controller
 
             $txtfullname = $this->input->post("txtfullname");
             $txttel = $this->input->post("txttel");
+            $txtemail = $this->input->post("txtemail");
             $txtaddress = $this->input->post("txtaddress");
             $txtprovince = $this->input->post("txtprovince");
             $txtaumpure = $this->input->post("txtaumpure");
@@ -165,6 +167,7 @@ class Order extends CI_Controller
             $input = array(
                 'fullname' => $txtfullname,
                 'tel' => $txttel,
+                'email' => $txtemail,
                 'provinceid' => $txtprovince,
                 'tumbolid' => $txttumbol,
                 'aumpureid' => $txtaumpure,
@@ -270,6 +273,7 @@ class Order extends CI_Controller
             // new
 
             $txtfullname = $this->input->post("txtfullname");
+            $txtemail = $this->input->post("txtemail");
             $txttel = $this->input->post("txttel");
             $txtaddress = $this->input->post("txtaddress");
             $txtprovince = $this->input->post("txtprovince");
@@ -287,6 +291,7 @@ class Order extends CI_Controller
             $input = array(
                 'fullname' => $txtfullname,
                 'tel' => $txttel,
+                'email' => $txtemail,
                 'provinceid' => $txtprovince,
                 'tumbolid' => $txttumbol,
                 'aumpureid' => $txtaumpure,
@@ -313,7 +318,7 @@ class Order extends CI_Controller
             $orderid = $this->put->order($input);
 
             //สร้าง ordertoken
-            $billtoken = $this->generatebilltoken($billtoken->merchantid, $billtoken->uid, $orderid, $billtoken->token, $billtoken->id);
+            $token = $this->generatebilltoken($billtoken->merchantid, $billtoken->uid, $orderid, $billtoken->token, $billtoken->id);
 
 
             // loop เพื่อเพิ่มรายการสินค้า
@@ -335,14 +340,65 @@ class Order extends CI_Controller
                 $this->put->orderdetail($input);
             }
 
-            $v_notificationtousers = $this->get->v_notificationtousers(array('token' => $billtoken))->result();
+            $v_notificationtousers = $this->get->v_notificationtousers(array('token' => $token))->result();
             foreach ($v_notificationtousers as $item) {
-                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$billtoken/$item->lineuid");
+                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/$item->lineuid");
             }
 
+            $this->sendinfotouser($txtfullname, $token, $txtemail, $billtoken->merchantid);
 
-            redirect(base_url("/paymentsuccess/$billtoken"));
+            redirect(base_url("/paymentsuccess/$token"));
         }
+    }
+
+    public function sendinfotouser($txtfullname, $billtoken, $email, $merchantid)
+    {
+        $merchant = $this->get->merchant(array("id" => $merchantid))->row();
+        $subject = "Receipt for Your Ordered to $merchant->name";
+        $msg = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\"  jstcache=\"0\">
+<head>
+<meta name=\"viewport\" content=\"width=device-width\" />
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />
+<title>Perdbill.co order info</title>
+</head>
+<body style=\"margin:0px; background: #f8f8f8; \"  jstcache=\"0\">
+<div  jstcache=\"0\" width=\"100%\" style=\"background: #f8f8f8; padding: 0px 0px; font-family:arial; line-height:28px; height:100%;  width: 100%; color: #514d6a;\">
+  <div  jstcache=\"0\" style=\"padding:50px 0;  margin: 0px auto; font-size: 14px\">
+    <table  jstcache=\"0\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%; margin-bottom: 20px\">
+      <tbody  jstcache=\"0\">
+        <tr  jstcache=\"0\" >
+          <td  jstcache=\"0\"  style=\"vertical-align: top; padding-bottom:30px;\" align=\"center\"><a href=\"javascript:void(0)\" target=\"_blank\"><img src=\"$merchant->image\"   style=\"border:none;border-radius: 50%;\"></a> </td>
+        </tr>
+      </tbody>
+    </table>
+    <div  jstcache=\"0\" style=\"padding: 40px; background: #fff;\">
+      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\">
+        <tbody  jstcache=\"0\">
+          <tr  jstcache=\"0\">
+            <td  jstcache=\"0\" ><b>Dear  $txtfullname,</b>
+              <p   jstcache=\"0\" >ขอบคุณที่อุดหนุนสินค้าที่ร้านเรา ลูกค้าสามารถติดตามสถานะสินค้าได้ที่ <br/><a href=\"https://perdbill.co/track/$billtoken\" style=\"background-color: #fb4;letter-spacing: .05em;
+    border-radius: 60px;
+    padding: 4px 12px 3px;
+    font-weight: 500;text-decoration: none;color: #fff\">https://perdbill.co/track/$billtoken</a></p>
+
+              <p  jstcache=\"0\"  style=\"margin-top: 50px;\">   <hr style=\"    border: 1px #f1f1f1 solid;\"/>This email just send Information, Please do not reply.</p>
+              <b  jstcache=\"0\"  >- Thanks $merchant->name</b> </td>
+          </tr  jstcache=\"0\">
+        </tbody>
+      </table>
+    </div>
+    <div  jstcache=\"0\" style=\"text-align: center; font-size: 12px; color: #b2b2b5; margin-top: 20px\">
+      <p  jstcache=\"0\"> Powered by Perdbill.co <br>
+        <a href=\"https://perdbill.co/\" style=\"color: #b2b2b5; text-decoration: underline;\">สนใจเปิดร้านค้า</a> </p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+";
+        $this->mail->sendinfo($msg, $email, $subject);
+
     }
 
     public function getfulladdress($txtaddress, $txttumbol, $txtaumpure, $txtprovince, $txtzipcode)

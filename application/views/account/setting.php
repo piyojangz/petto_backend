@@ -102,7 +102,7 @@
                                             <div class="form-group">
                                                 <label class="col-md-12">ชื่อร้าน</label>
                                                 <div class="col-md-12">
-                                                    <input type="text" name="name" class="form-control form-control-line" value="<?= $merchant->lineid ?>"> </div>
+                                                    <input type="text" name="name" class="form-control form-control-line" value="<?= $merchant->name ?>"> </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-md-12">อีเมลล์</label>

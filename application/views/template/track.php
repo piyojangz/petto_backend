@@ -149,7 +149,9 @@
                 <li class="nav-header">ข้อมูลผู้สั่ง</li>
                 <li class="active">
                     <p style="font-size: 14px;width: 100%;"><?= $custdetail->fullname ?> <br/><i
-                                class="fa fa-phone-square"></i> <?= $custdetail->tel ?></p>
+                                class="fa fa-phone-square"></i> <?= $custdetail->tel ?>
+                        <br/><i  class="fa fa-envelope-open"></i> <?= $custdetail->email ?></p>
+
                     <div class="clearfix"></div>
 
                 </li>
@@ -166,9 +168,16 @@
                     <li class="nav-header">ยืนยันการชำระเงิน</li>
                     <li class="active">
                         <div class="row">
-                            <div class="col-xs-12 text-center" style="margin-top: 20px;">
+                            <div class="col-xs-6 text-center" style="margin-top: 20px;">
+                                <button class="btn btn-embossed btn-danger"
+                                        id="btncancel" <?= $order->status >= "2" || $order->closestatus == "1" ? 'disabled' : '' ?> >
+                                    คลิกเพื่อยกเลิก
+                                </button>
+                                </select>
+                            </div>
+                            <div class="col-xs-6 text-center" style="margin-top: 20px;">
                                 <button class="btn btn-embossed btn-primary"
-                                        id="btnconfirmpaid" <?= $order->status == "2" ? 'disabled' : '' ?> >
+                                        id="btnconfirmpaid" <?= $order->status >= "2" || $order->closestatus == "1" ? 'disabled' : '' ?> >
                                     คลิกเพื่อยืนยัน
                                 </button>
                                 </select>
@@ -182,28 +191,30 @@
     </div>
     <div class="row">
         <div class="col-xs-12 text-center" style="margin-top: 50px;">
-            <?php if ($order->status == "1"): ?>
-                <h7 id="headpaid"><i class="fa fa-warning"></i> กำลังรอตรวจสอบยอดเงิน...</h7>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-warning" style="width: 70%;"></div>
-                </div>
-            <?php elseif ($order->status == "2"): ?>
-                <h7><i class="fa fa-check-circle"></i> ยืนยันการชำระเงินแล้ว...</h7>
-                <div class="progress">
-                    <div class="progress-bar" style="width: 100%;"></div>
-                </div>
-
-            <?php elseif ($order->status == "3"): ?>
-                <h7><i class="fa fa-send-o"></i> จัดส่งแล้ว...</h7>
-                <div class="progress">
-                    <div class="progress-bar progress-bar-warning" style="width: 100%;"></div>
-                </div>
-
-            <?php elseif ($order->status == "4"): ?>
-                <h7><i class="fa fa-close"></i> ออเดอร์ถูกปิดแล้ว...</h7>
+            <?php if ($order->closestatus == "1"): ?>
+                <h7><i class="fa fa-close"></i> ออเดอร์ถูกยกเลิก...</h7>
                 <div class="progress">
                     <div class="progress-bar  progress-bar-danger" style="width: 100%;"></div>
                 </div>
+            <?php else: ?>
+
+                <?php if ($order->status == "1"): ?>
+                    <h7 id="headpaid"><i class="fa fa-warning"></i> กำลังรอตรวจสอบยอดเงิน...</h7>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" style="width: 70%;"></div>
+                    </div>
+                <?php elseif ($order->status == "2"): ?>
+                    <h7><i class="fa fa-check-circle"></i> ยืนยันการชำระเงินแล้ว...</h7>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: 100%;"></div>
+                    </div>
+
+                <?php elseif ($order->status == "3"): ?>
+                    <h7><i class="fa fa-send-o"></i> จัดส่งแล้ว...</h7>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning" style="width: 100%;"></div>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>
@@ -246,6 +257,39 @@
     }
     $(document).ready(function () {
         init();
+
+
+        $("#btncancel").click(function () {
+
+            if (confirm('คุณต้องการยกเลิกใช่หรือไม่?')) {
+                $(".overlay-loader").show();
+                var orderid = "<?= $order->id ?>";
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('service/cancelpayment'); ?>",
+                    data: {'orderid': orderid},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data) {
+                            $(".progress-bar").removeClass("progress-bar-warning");
+                            $(".progress-bar").addClass("progress-bar-danger");
+                            $(".progress-bar").css({width: "100%"});
+                            $("#headpaid").html("<i class=\"fa fa-check-circle\"></i> ยกเลิกรายการแล้ว...");
+                            $("#btncancel").attr("disabled", "disabled");
+                            $("#btnconfirmpaid").attr("disabled", "disabled");
+
+                        }
+                        $(".overlay-loader").hide();
+                    },
+                    error: function (XMLHttpRequest) {
+                        $(".overlay-loader").hide();
+                    }
+                });
+
+            }
+        });
+
+
         $("#btnconfirmpaid").click(function () {
 
             if (confirm('คุณต้องการยืนยันใช่หรือไม่?')) {
@@ -261,8 +305,8 @@
                             $(".progress-bar").removeClass("progress-bar-warning");
                             $(".progress-bar").css({width: "100%"});
                             $("#headpaid").html("<i class=\"fa fa-check-circle\"></i> ยืนยันการชำระเงินแล้ว...");
+                            $("#btncancel").attr("disabled", "disabled");
                             $("#btnconfirmpaid").attr("disabled", "disabled");
-
                         }
                         $(".overlay-loader").hide();
                     },

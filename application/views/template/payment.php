@@ -142,15 +142,15 @@
                                 </div>
                             </div>
 
-                            <!--                            <div class="form-group">
-                                                            <div class="input-group">
-                                                                <input class="form-control" id="appendedInputButton-03" type="email" placeholder="อีเมลล์">
-                                                                <div class="input-group-btn">
-                                                                    <button class="btn btn-default" type="button"><i class="fa fa-envelope-open-o" aria-hidden="true"></i></button> 
-                                                                </div>
-                                                            </div>
-                                                        </div>-->
-
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input class="form-control" id="txtemail" name="txtemail" type="email" placeholder="อีเมลล์" autocomplete="off">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" type="button"><i class="fa fa-envelope-open-o"
+                                                                                         aria-hidden="true"></i></button>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <div class="input">
