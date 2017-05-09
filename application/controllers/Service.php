@@ -362,6 +362,7 @@ class Service extends CI_Controller
         $html = "";
         foreach ($data['result'] as $item) {
             $statuslabel = $this->getorderstatuslabel($item->status, $item->closestatus);
+            $submitdate = date("d/M/Y H:i:s", strtotime($item->submitdate));
             $html .= "<tr>";
             $html .= "<td>";
             $html .= "<div class=\"checkbox checkbox-success checkbox-order \">";
@@ -370,10 +371,13 @@ class Service extends CI_Controller
             $html .= "</div>";
             $html .= "</td>";
             $html .= "<td><a class=\"badge badge-info \" target=\"_blank\" href=\"" . base_url($item->token) . "\">$item->token</a></td>";
+            $html .= "<td> $submitdate</td>";
             $html .= "<td>" . number_format($item->total) . "</td>";
             $html .= "<td>$item->paymentinfo</td>";
             $html .= "<td>$item->fullname</td>";
             $html .= "<td>$item->billingaddress</td>";
+            $html .= "<td>$item->orderitems</td>";
+            $html .= "<td>$item->sumamount</td>";
             $html .= "<td>$statuslabel</td> ";
             $html .= "</tr>";
         }

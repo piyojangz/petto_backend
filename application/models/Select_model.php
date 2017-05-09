@@ -103,7 +103,7 @@ class Select_model extends CI_Model {
         if ($in != null) {
             $this->db->where_in('status', $in);
         }
-        $this->db->select('DATE_FORMAT(submitdate,\'%d/%m/%Y %H:%i:%s\')   as `วัน/เวลาที่ส่งข้อมูล`,fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total จำนวนเงินโอน, paymentinfo เวลาโอน, accno เลขบัญชี, bankname ธนาคาร , orderitems รายการสินค้า');
+        $this->db->select('DATE_FORMAT(submitdate,\'%d/%m/%Y\')   as `วันที่ส่งข้อมูล`,DATE_FORMAT(submitdate,\'%H:%i:%s\')   as `เวลาที่ส่งข้อมูล`,fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total จำนวนเงินโอน, paymentinfo เวลาโอน, accno เลขบัญชี, bankname ธนาคาร , orderitems รายการสินค้า , 	sumamount ยอดสั่งรวม/ชิ้น' );
         $this->db->from('v_order');
         $this->db->where($cond);
         $query = $this->db->get();
