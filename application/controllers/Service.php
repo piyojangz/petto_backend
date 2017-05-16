@@ -336,10 +336,10 @@ class Service extends CI_Controller
             if ($status == "4") {
                 $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => "1"), null, null);
             } else {
-                $result = $this->get->orderexcel(array("merchantid" => $merchantid), null, array($status));
+                $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), null, array($status));
             }
         } else {
-            $result = $this->get->orderexcel(array("merchantid" => $merchantid), array("0", "3"), null);
+            $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), array("0", "3"), null);
         }
         $date = date('YmdHis');
         $this->excel->to_excel($result, 'order-excel' . $date);

@@ -87,5 +87,9 @@ if (preg_match('/.+\.perdbill\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
     $route['account/(:any)/info'] = "account/info/$1";
     $route['promoinfo/(:any)'] = "order/promoinfo/$1";
     $route['sendinfotouser/(:any)/(:any)/(:any)/(:any)'] = "order/sendinfotouser/$1/$2/$3/$4";
+
+    /* test */
+
+    $route['web/(:any)'] = "web/test/$1";
 }
 

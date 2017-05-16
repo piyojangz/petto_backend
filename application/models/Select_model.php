@@ -1,8 +1,10 @@
 <?php
 
-class Select_model extends CI_Model {
+class Select_model extends CI_Model
+{
 
-    function customerdetail($cond) {
+    function customerdetail($cond)
+    {
         $this->db->select('*');
         $this->db->from('customer');
         $this->db->where($cond);
@@ -10,7 +12,8 @@ class Select_model extends CI_Model {
         return $query->row();
     }
 
-    function billnotificationusers($cond) {
+    function billnotificationusers($cond)
+    {
         $this->db->select('*');
         $this->db->from('billnotificationusers');
         $this->db->where($cond);
@@ -18,7 +21,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function shippingrate($merchatid, $unit) {
+    function shippingrate($merchatid, $unit)
+    {
         $this->db->select('*');
         $this->db->from('shippingrate');
         $this->db->where('merchantid', $merchatid);
@@ -29,7 +33,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function shippingrateconfig($cond) {
+    function shippingrateconfig($cond)
+    {
         $this->db->select('*');
         $this->db->from('shippingrate');
         $this->db->order_by("unit", "asc");
@@ -38,7 +43,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function lineuid($cond) {
+    function lineuid($cond)
+    {
         $this->db->select('lineuid');
         $this->db->from('merchantlineuid');
         $this->db->where($cond);
@@ -46,8 +52,9 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function billtoken($cond,$limit = "") {
-        if($limit != ""){
+    function billtoken($cond, $limit = "")
+    {
+        if ($limit != "") {
             $this->db->limit($limit);
         }
         $this->db->select('*');
@@ -58,7 +65,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function v_merchantlineuid($cond) {
+    function v_merchantlineuid($cond)
+    {
         $this->db->select('lineuid');
         $this->db->from('v_merchantlineuid');
         $this->db->where($cond);
@@ -66,7 +74,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function v_adminsummary($cond) {
+    function v_adminsummary($cond)
+    {
         $this->db->select('*');
         $this->db->from('v_adminsummary');
         $this->db->where($cond);
@@ -74,7 +83,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function v_notificationtousers($cond) {
+    function v_notificationtousers($cond)
+    {
         $this->db->select('*');
         $this->db->from('v_notificationtousers');
         $this->db->where($cond);
@@ -82,7 +92,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function v_order($cond, $notin = null, $in = null) {
+    function v_order($cond, $notin = null, $in = null)
+    {
         if ($notin != null) {
             $this->db->where_not_in('status', $notin);
         }
@@ -96,21 +107,23 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function orderexcel($cond, $notin = null, $in = null) {
+    function orderexcel($cond, $notin = null, $in = null)
+    {
         if ($notin != null) {
             $this->db->where_not_in('status', $notin);
         }
         if ($in != null) {
             $this->db->where_in('status', $in);
         }
-        $this->db->select('DATE_FORMAT(submitdate,\'%d/%m/%Y\')   as `วันที่ส่งข้อมูล`,DATE_FORMAT(submitdate,\'%H:%i:%s\')   as `เวลาที่ส่งข้อมูล`,fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total จำนวนเงินโอน, paymentinfo เวลาโอน, accno เลขบัญชี, bankname ธนาคาร , orderitems รายการสินค้า , 	sumamount ยอดสั่งรวม/ชิ้น' );
+        $this->db->select('DATE_FORMAT(submitdate,\'%d/%m/%Y\')   as `วันที่ส่งข้อมูล`,DATE_FORMAT(submitdate,\'%H:%i:%s\')   as `เวลาที่ส่งข้อมูล`,fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total จำนวนเงินโอน, paymentinfo เวลาโอน, accno เลขบัญชี, bankname ธนาคาร , orderitems รายการสินค้า , 	sumamount ยอดสั่งรวม/ชิ้น');
         $this->db->from('v_order');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
     }
 
-    function paymentmethod($cond) {
+    function paymentmethod($cond)
+    {
         $this->db->select('*');
         $this->db->from('paymentmethod');
         $this->db->where($cond);
@@ -118,7 +131,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function bank($cond) {
+    function bank($cond)
+    {
         $this->db->select('*');
         $this->db->from('bank');
         $this->db->where($cond);
@@ -126,7 +140,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function province($cond) {
+    function province($cond)
+    {
         $this->db->select('*');
         $this->db->from('province');
         $this->db->order_by('PROVINCE_NAME', 'asc');
@@ -135,7 +150,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function amphur($cond) {
+    function amphur($cond)
+    {
         $this->db->select('*');
         $this->db->from('amphur');
         $this->db->where($cond);
@@ -143,7 +159,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function district($cond) {
+    function district($cond)
+    {
         $this->db->select('*');
         $this->db->from('district');
         $this->db->where($cond);
@@ -151,7 +168,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function customer($cond) {
+    function customer($cond)
+    {
         $this->db->select('*');
         $this->db->from('customer');
         $this->db->where($cond);
@@ -159,7 +177,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function items($cond) {
+    function items($cond)
+    {
         $this->db->select('*');
         $this->db->from('items');
         $this->db->where($cond);
@@ -167,7 +186,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function merchant($cond) {
+    function merchant($cond)
+    {
         $this->db->select('*');
         $this->db->from('merchant');
         $this->db->where($cond);
@@ -175,7 +195,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function v_serchorderbytelandmerchantuid($tel, $lineuid) {
+    function v_serchorderbytelandmerchantuid($tel, $lineuid)
+    {
         $this->db->select('*');
         $this->db->where('tel', $tel);
         $this->db->where('lineuid', $lineuid);
@@ -187,7 +208,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function merchantin($tokens) {
+    function merchantin($tokens)
+    {
         $this->db->select('*');
         $this->db->where_in('token', $tokens);
         $this->db->from('merchant');
@@ -195,7 +217,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function v_merchantuid($cond) {
+    function v_merchantuid($cond)
+    {
         $this->db->select('*');
         $this->db->from('v_merchantuid');
         $this->db->where($cond);
@@ -203,7 +226,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function merchantlineuid($cond) {
+    function merchantlineuid($cond)
+    {
         $this->db->select('*');
         $this->db->from('merchantlineuid');
         $this->db->where($cond);
@@ -211,7 +235,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function ordertoken($cond) {
+    function ordertoken($cond)
+    {
         $this->db->select('*');
         $this->db->from('ordertoken');
         $this->db->where($cond);
@@ -219,7 +244,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function order($cond) {
+    function order($cond)
+    {
         $this->db->select('*');
         $this->db->from('order');
         $this->db->where($cond);
@@ -227,7 +253,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function orderids($uid) {
+    function orderids($uid)
+    {
         $this->db->select('orderid');
         $this->db->from('ordertoken');
         $this->db->where_in("uid", $uid);
@@ -235,7 +262,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function orderin_statusopen($orderids) {
+    function orderin_statusopen($orderids)
+    {
         $this->db->select('*');
         $this->db->from('order');
         $this->db->where("status", 1);
@@ -244,7 +272,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function orderdetail($cond) {
+    function orderdetail($cond)
+    {
         $this->db->select('*');
         $this->db->from('orderdetail');
         $this->db->where($cond);
@@ -252,7 +281,8 @@ class Select_model extends CI_Model {
         return $query;
     }
 
-    function getcustomerlist($merchantid) {
+    function getcustomerlist($merchantid)
+    {
         $query = $this->db->query("SELECT tb.*,(SELECT tk.token from customer c 
 inner join `order` o  
 on c.id = o.custid
@@ -264,7 +294,8 @@ where tb.merchantid = $merchantid");
         return $query->result();
     }
 
-    function getordersumbybilltoken($billtoken) {
+    function getordersumbybilltoken($billtoken)
+    {
         $query = $this->db->query("select   unix_timestamp(b.createdate) as row1,COUNT(a.id) as row2,SUM(b.total) as row3
 from ordertoken a
 join `order` b
@@ -278,7 +309,8 @@ limit 0,30");
         return $query;
     }
 
-    function getdashboarddata($merchantid) {
+    function getdashboarddata($merchantid)
+    {
         $query = $this->db->query("SELECT 
 (select count(id)  from  `order` where merchantid = $merchantid and closestatus = 0) as bills
 , (select count(id)  from  `order` where status in (2,3) and merchantid = $merchantid and closestatus = 0) as paid
