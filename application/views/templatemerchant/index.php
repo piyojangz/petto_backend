@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
     <title><?= $merchant->title ?></title>
     <meta name="description" content="<?= $merchant->description ?>">
     <link href="<?= base_url("res/css/font-awesome.min.css") ?>" rel="stylesheet" type="text/css"/>
@@ -12,7 +12,7 @@
 
     <link href="<?= base_url("res/account/css/style.css") ?>" rel="stylesheet">
     <!-- Custom -->
-    <link href="<?= base_url("res/css/merchantwebcustom.css") ?>" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url("res/css/merchantwebcustom.css?ver=1.2") ?>" rel="stylesheet" type="text/css"/>
 
     <!-- animation CSS -->
     <link href="<?= base_url("res/account/css/animate.css") ?>" rel="stylesheet">
@@ -21,7 +21,7 @@
 </head>
 <body class="nopadding grey">
 
-<header class="header-perdbill" style=" ">
+<header class="header-perdbill hidden-xs hidden-md" style=" ">
     <div class="container">
         <a href="<?= base_url() ?>" class="logo-perdbill"><img src="<?= base_url("res/img/web-logo.png") ?>"
                                                                style="width: 50px;"/> </a>
@@ -35,7 +35,7 @@
 </header>
 <div class="container">
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-3 col-md-3 col-sm-4">
             <div class="logo">
                 <img src="<?= $merchant->image ?>"/>
                 <h1><?= $merchant->name ?></h1>
@@ -55,10 +55,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-9 col-md-9 col-sm-8">
             <div class="row">
-                <div class="header-index" style="    background: url(<?= $merchant->imagecover ?>);
-                        }">
+                <div class="header-index" >
+                    <img src="<?= $merchant->imagecover ?>" />
 
                 </div>
                 <div class="row">
@@ -77,14 +77,14 @@
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($items as $item): ?>
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
                                         <div class="white-box">
                                             <div class="el-card-item">
                                                 <div class="el-card-avatar el-overlay-1"
                                                      style="width:100%;overflow: hidden">
                                                     <img
                                                             src="<?= $item->image ?>"/>
-                                                    <div class="el-overlay">
+                                                    <div class="el-overlay   hidden-xs">
                                                         <ul class="el-info">
                                                             <li>
                                                                 <a class="btn default btn-outline image-popup-vertical-fit"
@@ -149,7 +149,7 @@
     </div>
 </div> <!-- /bottom-menu-inverse -->
 </div>
-<div id="billing">
+<div id="billing" class="hidden-xs hidden-md">
     <div class="billing toogleoff">
         <div class="overlay-loader">
             <div class="bg"></div>
