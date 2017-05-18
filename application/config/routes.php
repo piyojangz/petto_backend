@@ -75,6 +75,7 @@ if (preg_match('/.+\.perdbill\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
     $route['account/(:any)/dashboard'] = "account/dashboard/$1";
     $route['account/(:any)/products'] = "account/products/$1";
     $route['account/(:any)/setting'] = "account/setting/$1";
+    $route['account/(:any)/setting_home'] = "account/setting_home/$1";
     $route['account/(:any)/customer'] = "account/customer/$1";
     $route['account/(:any)/order/all'] = "account/orderall/$1";
     $route['account/(:any)/paymentmethod'] = "account/paymentmethod/$1";
@@ -84,6 +85,9 @@ if (preg_match('/.+\.perdbill\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
     $route['account/(:any)/addnewpaymentmethod'] = "account/addnewpaymentmethod/$1";
     $route['account/(:any)/addnewshippingrate'] = "account/addnewshippingrate/$1";
     $route['account/(:any)/updatesetting'] = "account/updatesetting/$1";
+    $route['account/(:any)/updatehomesetting'] = "account/updatehomesetting/$1";
+
+
     $route['account/(:any)/info'] = "account/info/$1";
     $route['promoinfo/(:any)'] = "order/promoinfo/$1";
     $route['sendinfotouser/(:any)/(:any)/(:any)/(:any)'] = "order/sendinfotouser/$1/$2/$3/$4";

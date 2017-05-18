@@ -30,6 +30,12 @@
                     <li><a href="<?= base_url("account/$token/order/all") ?>"><i class="fa fa-bookmark-o fa-fw"></i><span class="hide-menu">รายการสั่งซื้อ</span></a></li>
                 </ul>
             </li>
+            <li> <a href="javascript:;" ><i class="ti-paint-bucket fa-fw"></i> <span class="hide-menu">ตั้งค่าเว็บไซต์ <span class="badge badge-danger">new</span> <span class="fa arrow"></span></span></a>
+                <ul class="nav nav-second-level">
+                    <li><a href="<?= base_url("account/$token/setting") ?>"><i class="fa fa-pencil fa-fw"></i><span class="hide-menu">ข้อมูลทั่วไป</span></a></li>
+                    <li><a href="<?= base_url("account/$token/setting_home") ?>"><i class="fa fa-home fa-fw"></i><span class="hide-menu">หน้าหลัก</span></a></li>
+                </ul>
+            </li>
         </ul>
     </div>
 </div>

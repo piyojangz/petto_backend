@@ -2,9 +2,11 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Account extends CI_Controller {
+class Account extends CI_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->load->model('Insert_model', 'put');
         $this->load->model('Select_model', 'get');
@@ -31,7 +33,8 @@ class Account extends CI_Controller {
         }
     }
 
-    public function index($acctoken = "") {
+    public function index($acctoken = "")
+    {
         if (!$this->user->is_login()) {
             redirect('/');
         } else {
@@ -39,10 +42,13 @@ class Account extends CI_Controller {
         }
     }
 
-    public function user($token = "") {
+    public function user($token = "")
+    {
         echo $token;
     }
-    public function setting($acctoken = "") {
+
+    public function setting($acctoken = "")
+    {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -53,7 +59,20 @@ class Account extends CI_Controller {
         $this->load->view('account/setting', $data);
     }
 
-    public function info($acctoken = "") {
+    public function setting_home($acctoken = "")
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+        $this->load->view('account/settinghome', $data);
+    }
+
+    public function info($acctoken = "")
+    {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -64,15 +83,19 @@ class Account extends CI_Controller {
         $this->load->view('account/info', $data);
     }
 
-    public function updatesetting($acctoken = "") {
+    public function updatesetting($acctoken = "")
+    {
         if ($_POST) {
             $image = "";
             $data["user"] = $this->user->get_account_cookie();
             $imageData = $this->input->post("imageData");
             $name = $this->input->post("name");
             $tel = $this->input->post("tel");
+            $title = $this->input->post("title");
             $detail = $this->input->post("detail");
             $lineid = $this->input->post("lineid");
+            $lineaddurl = $this->input->post("lineaddurl");
+
 
             if (!empty($imageData)) {
                 $image = $this->base64_to_jpeg_acc($imageData, $data["user"]["token"]);
@@ -83,6 +106,8 @@ class Account extends CI_Controller {
             $input = array(
                 'token' => $data["user"]["token"],
                 'tel' => $tel,
+                'title' => $title,
+                'lineaddurl' => $lineaddurl,
                 'name' => $name,
                 'description    ' => $detail,
                 'lineid' => $lineid,
@@ -97,14 +122,46 @@ class Account extends CI_Controller {
         }
     }
 
-    public function dashboard($acctoken = "") {
+
+    public function updatehomesetting($acctoken = "")
+    {
+        if ($_POST) {
+            $image = "";
+            $data["user"] = $this->user->get_account_cookie();
+            $imageData = $this->input->post("imageData");
+            $billtoken = $this->input->post("billtoken");
+            $textcustom = $this->input->post("inputcustomtext");
+
+            if (!empty($imageData)) {
+                $image = $this->base64_to_jpeg_acc($imageData, $data["user"]["token"]);
+                $image = base_url("public/upload/acc/$acctoken/") . $image["upload_data"]["file_name"];
+            }
+
+
+            $input = array(
+                'token' => $data["user"]["token"],
+                'textcustom' => $textcustom,
+                'billtoken' => $billtoken,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            if ($image != "") {
+                $input["imagecover"] = $image;
+            }
+            if ($this->set->merchant($input)) {
+                redirect(base_url("account/$acctoken/setting_home"));
+            }
+        }
+    }
+
+    public function dashboard($acctoken = "")
+    {
         $data["daterange"] = date('d/m/Y') . " - " . date('d/m/Y', strtotime(date('Y-m-d') . ' + 30 days'));
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
-        $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"],"status" => 1))->result();
+        $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"], "status" => 1))->result();
         $data["paidorder"] = $this->paidorder;
-        $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"],"status" => 1))->result();
+        $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"], "status" => 1))->result();
         $data["dashboarddata"] = $this->get->getdashboarddata($data["merchant"]->id)->row();
 
 
@@ -115,7 +172,8 @@ class Account extends CI_Controller {
         $this->load->view('account/index', $data);
     }
 
-    public function customer($acctoken = "") {
+    public function customer($acctoken = "")
+    {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -129,7 +187,8 @@ class Account extends CI_Controller {
         $this->load->view('account/customer', $data);
     }
 
-    public function orderall($acctoken = "") {
+    public function orderall($acctoken = "")
+    {
         $data["user"] = $this->user->get_account_cookie();
         $data["obj"] = $this;
         $data["token"] = $data["user"] ['token'];
@@ -146,7 +205,8 @@ class Account extends CI_Controller {
         $this->load->view('account/allorder', $data);
     }
 
-    public function getorderstatus($status) {
+    public function getorderstatus($status)
+    {
 
         switch ($status) {
             case "1":
@@ -168,7 +228,8 @@ class Account extends CI_Controller {
         // <div class="label label-table label-success">Paid</div>
     }
 
-    public function products($acctoken = "") {
+    public function products($acctoken = "")
+    {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -181,7 +242,8 @@ class Account extends CI_Controller {
         $this->load->view('account/products', $data);
     }
 
-    public function updateproduct($id, $acctoken = "", $isdelete = "false") {
+    public function updateproduct($id, $acctoken = "", $isdelete = "false")
+    {
         if ($isdelete == "true") {
             $input = array(
                 'id' => $id,
@@ -194,7 +256,8 @@ class Account extends CI_Controller {
         }
     }
 
-    public function addnewpaymentmethod($acctoken = "") {
+    public function addnewpaymentmethod($acctoken = "")
+    {
         if ($_POST) {
             if (!$this->user->is_login()) {
                 redirect('/');
@@ -246,7 +309,8 @@ class Account extends CI_Controller {
         }
     }
 
-    public function updatepaymentmethod($id, $acctoken = "", $isdelete = "false") {
+    public function updatepaymentmethod($id, $acctoken = "", $isdelete = "false")
+    {
         if ($isdelete == "true") {
             $input = array(
                 'id' => $id,
@@ -259,7 +323,8 @@ class Account extends CI_Controller {
         }
     }
 
-    public function addnewproduct($acctoken = "") {
+    public function addnewproduct($acctoken = "")
+    {
         if ($_POST) {
             $id = $this->input->post("id");
             $imageData = $this->input->post("imageData");
@@ -301,7 +366,8 @@ class Account extends CI_Controller {
         }
     }
 
-    function base64_to_jpeg_acc($data, $acctoken) {
+    function base64_to_jpeg_acc($data, $acctoken)
+    {
         $temp_file_path = tempnam(sys_get_temp_dir(), 'tempimage'); // might not work on some systems, specify your temp path if system temp dir is not writeable
         file_put_contents($temp_file_path, base64_decode($data));
         $image_info = getimagesize($temp_file_path);
@@ -336,7 +402,8 @@ class Account extends CI_Controller {
         }
     }
 
-    function base64_to_jpeg($data, $acctoken) {
+    function base64_to_jpeg($data, $acctoken)
+    {
         $temp_file_path = tempnam(sys_get_temp_dir(), 'tempimage'); // might not work on some systems, specify your temp path if system temp dir is not writeable
         file_put_contents($temp_file_path, base64_decode($data));
         $image_info = getimagesize($temp_file_path);
@@ -371,7 +438,8 @@ class Account extends CI_Controller {
         }
     }
 
-    public function paymentmethod($acctoken = "") {
+    public function paymentmethod($acctoken = "")
+    {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -385,7 +453,8 @@ class Account extends CI_Controller {
         $this->load->view('account/moneyaccount', $data);
     }
 
-    public function shippingrate($acctoken = "") {
+    public function shippingrate($acctoken = "")
+    {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -399,7 +468,8 @@ class Account extends CI_Controller {
         $this->load->view('account/shippingrate', $data);
     }
 
-    public function deleteshippingrate($id, $acctoken = "", $isdelete = "false") {
+    public function deleteshippingrate($id, $acctoken = "", $isdelete = "false")
+    {
         if ($isdelete == "true") {
             if ($this->set->delete_shippingrate($id)) {
                 redirect(base_url("account/$acctoken/shippingrate"));
@@ -407,7 +477,8 @@ class Account extends CI_Controller {
         }
     }
 
-    public function addnewshippingrate($acctoken = "") {
+    public function addnewshippingrate($acctoken = "")
+    {
         if ($_POST) {
             if (!$this->user->is_login()) {
                 redirect('/');

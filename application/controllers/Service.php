@@ -219,6 +219,23 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+
+    public function updateitemtobill()
+    {
+        $itemid = $this->input->post('itemid');
+        $data['result'] = $itemid;
+
+
+
+
+
+
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
     public function savebilltoken()
     {
         $token = $this->input->post('token');

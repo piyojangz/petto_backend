@@ -33,6 +33,9 @@
     <link href="<?= base_url("res/account/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css") ?>" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="<?= base_url("res/account/css/style.css") ?>" rel="stylesheet">
+    <!-- summernotes CSS -->
+    <link href="<?= base_url("res/account/plugins/bower_components/summernote/dist/summernote.css") ?>" rel="stylesheet" />
+
     <!-- color CSS -->
     <link href="<?= base_url("res/account/css/colors/default.css") ?>" id="theme" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

@@ -91,8 +91,10 @@
                                 <form class="form-horizontal" method="post"
                                       action="<?= base_url("account/$token/updatesetting") ?>" id="form-submit">
 
+
+
                                     <div class="form-group">
-                                        <label class="col-md-12">รูปภาพ</label>
+                                        <label class="col-md-12">โลโก้</label>
                                         <div class="col-md-12">
 
                                             <div class="image-editor">
@@ -119,6 +121,19 @@
                                                    value="<?= $merchant->name ?>"></div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-md-12">Title</label>
+                                        <div class="col-md-12">
+                                            <input type="text" name="title" id="title"
+                                                   class="form-control form-control-line"
+                                                   value="<?= $merchant->title ?>"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-12">รายละเอียด (Meta description)</label>
+                                        <div class="col-md-12">
+                                            <input type="text" name="detail" class="form-control form-control-line"
+                                                   value="<?= $merchant->description ?>"></div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="col-md-12">อีเมลล์</label>
                                         <div class="col-md-12">
                                             <input disabled type="text" name="email"
@@ -131,12 +146,7 @@
                                             <input type="text" name="tel" class="form-control form-control-line"
                                                    value="<?= $merchant->tel ?>"></div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-12">รายละเอียด</label>
-                                        <div class="col-md-12">
-                                            <input type="text" name="detail" class="form-control form-control-line"
-                                                   value="<?= $merchant->description ?>"></div>
-                                    </div>
+
                                     <div class="form-group">
                                         <label class="col-md-12">LINEID</label>
                                         <div class="col-md-12">
@@ -150,7 +160,14 @@
                                                    value="<?= $token ?>"></div>
                                     </div>
 
-                                    <button class="btn btn-block btn-info">บันทึก</button>
+                                    <div class="form-group">
+                                        <label class="col-md-12">ลิงค์สำหรับ Add Line <a href="https://www.youtube.com/watch?v=53uNH4jgndU" target="_blank"><i class="fa fa-external-link-square"></i> ดูวิธีที่นี่</a>   <img src="<?=base_url("res/img/btn-line-example.png")?>" style="height: 40px;"/> </label>
+                                        <div class="col-md-12">
+                                            <input type="text" name="lineaddurl"   class="form-control form-control-line"
+                                                   value="<?=  $merchant->lineaddurl ?>"></div>
+                                    </div>
+
+                                    <button class="btn btn-block btn-outline btn-rounded btn-primary">บันทึก</button>
                                 </form>
                             </div>
                         </div>

@@ -267,19 +267,22 @@ table.package thead tr th {
     background: #08823a;
     color: #fff;
 }
-.amounttool{
+
+.amounttool {
     width: 25px;
     position: absolute;
-    top:0;
+    top: 4px;
     right: 0;
 }
-.amounttool button{
+
+.amounttool button {
     width: 100%;
     font-size: 10px;
     border: 0px;
 }
+
 .btnperbill {
-    background:#415b76;
+    background: #415b76;
     width: 175px;
     padding: 10px;
     border-radius: 5px;
@@ -413,7 +416,7 @@ table.package thead tr th {
 }
 
 .overlay-loader {
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100%;
     z-index: 999;
@@ -493,20 +496,23 @@ table.package thead tr th {
     margin-bottom: 30px;
     height: 315px;
 }
-.billing{
+
+.billing {
     position: fixed;
     top: 65px;
     right: 0;
     width: 350px;
     background: #fff;
 }
-.billing h3{
+
+.billing h3 {
     font-size: 15px;
     color: #2b2b2b;
     font-weight: 700;
     position: relative;
     text-align: center;
 }
+
 .billing h3:before {
     content: '';
     border: 1px solid #2C3E50;
@@ -516,6 +522,7 @@ table.package thead tr th {
     top: 50%;
     left: 40px;
 }
+
 .billing h3:after {
     content: '';
     border: 1px solid #2C3E50;
@@ -532,7 +539,8 @@ table.package thead tr th {
     font-weight: 500;
     text-shadow: none;
 }
-.billing h4{
+
+.billing h4 {
     font-size: 14px;
     color: #aeb6bf;
     padding: 0px;
@@ -540,22 +548,28 @@ table.package thead tr th {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-top: 14px;
 }
 
-.billing .items{
+.billing .items {
+    height: 60px;
     margin-bottom: 10px;
     padding-bottom: 10px;
     border-bottom: 1px #f5f5f5 solid;
 }
-.billing .items.summary{
+
+.billing .items.summary {
     color: #526476;
     background-color: #edeff1;
     padding-top: 10px;
     border-radius: 5px;
+    height: 40px;
 }
-.billing h4 img{
+
+.billing h4 img {
     margin-right: 5px;
 }
+
 .badge {
     padding: 0 8px;
     font-size: 13px;
@@ -564,8 +578,9 @@ table.package thead tr th {
     color: #fff;
     background-color: #d8dce0;
     border-radius: 4px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
+
 a.logo {
     color: #fff;
     font-size: 1.2em;
@@ -608,6 +623,33 @@ a.logo {
 
 .el-element-overlay .el-card-item .el-card-content {
     min-height: 80px;
+}
+
+.billpanel {
+    position: relative;
+    border: 1px #efefef solid;
+    border-right: 0px;
+    margin-bottom: 0px !important;
+}
+
+.billing.toogleoff{
+    right: -340px;
+}
+
+.billpanel .btn-toogle {
+    background: #fff;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    left: -38px;
+    top: 36%;
+    border-radius: 35px;
+    color: #23cb6a;
+    text-shadow: 1px 0px 0px #21bf64;
+    padding: 22px;
+    box-shadow: -4px 0px 0px #efefef;
+    cursor: pointer;
+    padding-left: 16px;
 }
 
 #eliteregister li {
