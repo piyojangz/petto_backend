@@ -50,11 +50,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   | Examples:	my-controller/index	-> my_controller/index
   |		my-controller/my-method	-> my_controller/my_method
  */
+
+
 if (preg_match('/.+\.perdbill\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
-
     $route['default_controller'] = 'Web';
-
-} else {
+}
+elseif (preg_match('/.+\.(zoaish|aaa)\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+    $route['default_controller'] = 'Web/mapdomain';
+}
+else {
     $route['default_controller'] = 'home';
     $route['404_override'] = '';
     $route['translate_uri_dashes'] = FALSE;

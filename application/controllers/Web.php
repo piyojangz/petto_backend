@@ -29,7 +29,7 @@ class Web extends CI_Controller
             redirect(base_url());
         }
 
-        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id,"status"=>1))->result();
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
 
         $this->load->view('templatemerchant/index', $data);
 
@@ -42,9 +42,26 @@ class Web extends CI_Controller
             redirect(base_url());
         }
 
-        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id,"status"=>1))->result();
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
 
         $this->load->view('templatemerchant/index', $data);
+    }
+
+
+    public function mapdomain()
+    {
+        if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+        }
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view('templatemerchant/index', $data);
+
     }
 
 }
