@@ -163,7 +163,39 @@ class Account extends CI_Controller
         $data["paidorder"] = $this->paidorder;
         $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"], "status" => 1))->result();
         $data["dashboarddata"] = $this->get->getdashboarddata($data["merchant"]->id)->row();
+        if ($_POST) {
+            if (isset($_POST["btnupdateamount"])) {
+                $isstockenable = $this->input->post("isstockenable") == 'on' ? 1 : 0;
+                $updateitemamount = $this->input->post("updateitemamount");
+                $billtokenid = $this->input->post("billtokenid");
 
+                $input = array("id" => $billtokenid,
+                    "isstockenable" => $isstockenable,
+                    "updatedate" => date('Y-m-d H:i:s'),);
+                $this->set->billtoken($input);
+
+
+                $items = explode("|", $updateitemamount);
+                foreach ($items as $item) {
+                    $var = explode(";", $item);
+                    $id = $var[0];
+                    $amount = $var[1];
+
+                    $input = array("billtokenid" => $billtokenid,
+                        "amount" => $amount,
+                        "itemid" => $id,
+                        "merchantid" => $data["merchant"]->id,);
+
+                    if ($amount != 0) {
+                        $this->put->billtokenstock($input);
+                    }
+
+                }
+
+            }
+            $mtoken = $data["merchant"]->token;
+            redirect(base_url("account/$mtoken/dashboard"));
+        }
 
         if (!$this->user->is_login()) {
             redirect('/');

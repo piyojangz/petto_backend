@@ -225,14 +225,34 @@ class Service extends CI_Controller
         $itemid = $this->input->post('itemid');
         $data['result'] = $itemid;
 
-
-
-
-
-
-
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
+    }
+
+    public function getbillitiemswithstock()
+    {
+        $token = $this->input->post('token');
+        $billtoken = $this->get->billtoken(array("token" => $token))->row();
+        $items = $this->get->itemswithstock(array("a.merchantid" => $billtoken->merchantid, "a.status" => '1'), $billtoken->id)->result();
+        $html = "";
+        foreach ($items as $index => $item) {
+            $i = $index + 1;
+            $stock = $item->itemstock == null ? 0 : $item->itemstock;
+            $html .= "<tr>
+                                                    <td class=\"text-center\">$i</td>
+                                                    <td><span class=\"font-medium\">$item->name</td>
+                                                    <td>$stock</td>
+
+                                                    <td>
+                                                        <a href=\"#\" id=\"stockamount$item->id\" name=\"stockamount\"
+                                                           data-type=\"text\" data-pk=\"1\" data-title=\"Enter amount\"
+                                                           data-itemid=\"$item->id\"
+                                                           style=\"display: block; text-align: center;\"></a>
+                                                    </td>
+                                                </tr>";
+        }
+
+        echo $html;
     }
 
 

@@ -19,6 +19,17 @@ class Insert_model extends CI_Model {
         endif;
     }
 
+
+    function billtokenstock($input) {
+        if ($this->db->insert('billtokenstock', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
+
+
     function billnotificationusers($input) {
         if ($this->db->insert('billnotificationusers', $input)):
             $insert_id = $this->db->insert_id();

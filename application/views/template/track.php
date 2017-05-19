@@ -127,6 +127,10 @@
                 <li class="divider"></li>
                 <li class="nav-header">ข้อมูลการชำระเงิน</li>
                 <li class="active">
+                    <p style="font-size: 14px;width: 100%;">ยอดเงินที่โอน <span class=" badge badge-success" style="background: #449d44;"><?= number_format($order->paymentamount) ?></span></p>
+                    <div class="clearfix"></div>
+                </li>
+                <li class="active">
                     <p style="font-size: 14px;width: 100%;">เวลา <?= $order->paymentinfo ?></p>
                     <div class="clearfix"></div>
                 </li>

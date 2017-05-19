@@ -177,6 +177,17 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function itemswithstock($cond, $billtokenid)
+    {
+        $this->db->select('a.*,sum(b.amount) as itemstock');
+        $this->db->from('items a');
+        $this->db->join("billtokenstock b", " a.id = b.itemid and  b.billtokenid = $billtokenid","left");
+        $this->db->where($cond);
+        $this->db->group_by("a.id");
+        $query = $this->db->get();
+        return $query;
+    }
+
     function items($cond)
     {
         $this->db->select('*');
@@ -283,27 +294,27 @@ class Select_model extends CI_Model
 
     function getcustomerlist($merchantid)
     {
-        $query = $this->db->query("SELECT tb.*,(SELECT tk.token from customer c 
+        $query = $this->db->query("SELECT tb .*,(SELECT tk . token from customer c
 inner join `order` o  
-on c.id = o.custid
+on c . id = o . custid
 inner join ordertoken tk 
-on tk.orderid = o.id
-WHERE c.tel = tb.customertel order by o.id desc limit 1) as lastestordertoken from (SELECT a.* FROM `v_serchorderbytelandmerchantuid` a     group by a.customertel)  tb
-where tb.merchantid = $merchantid");
+on tk . orderid = o . id
+WHERE c . tel = tb . customertel order by o . id desc limit 1) as lastestordertoken from(SELECT a .* FROM `v_serchorderbytelandmerchantuid` a     group by a . customertel)  tb
+where tb . merchantid = $merchantid");
 
         return $query->result();
     }
 
     function getordersumbybilltoken($billtoken)
     {
-        $query = $this->db->query("select   unix_timestamp(b.createdate) as row1,COUNT(a.id) as row2,SUM(b.total) as row3
+        $query = $this->db->query("select   unix_timestamp(b . createdate) as row1,COUNT(a . id) as row2,SUM(b . total) as row3
 from ordertoken a
 join `order` b
-on a.orderid = b.id
-where a.billtoken = '$billtoken'
-and b.closestatus = 0 
-and createdate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
-GROUP BY DATE(b.createdate)
+on a . orderid = b . id
+where a . billtoken = '$billtoken'
+    and b . closestatus = 0
+    and createdate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+GROUP BY DATE(b . createdate)
 limit 0,30");
 
         return $query;
@@ -311,11 +322,11 @@ limit 0,30");
 
     function getdashboarddata($merchantid)
     {
-        $query = $this->db->query("SELECT 
-(select count(id)  from  `order` where merchantid = $merchantid and closestatus = 0) as bills
-, (select count(id)  from  `order` where status in (2,3) and merchantid = $merchantid and closestatus = 0) as paid
-, (select count(id)  from  `order` where status in (1) and merchantid = $merchantid and closestatus = 0) as unpaid
-, (select sum(total)  from  `order` where status in (2,3) and  MONTH(updatedate) = MONTH(CURRENT_DATE())  and merchantid = $merchantid and closestatus = 0) as monthlytotal
+        $query = $this->db->query("SELECT
+    (select count(id)  from  `order` where merchantid = $merchantid and closestatus = 0) as bills
+, (select count(id)  from  `order` where status in(2, 3) and merchantid = $merchantid and closestatus = 0) as paid
+, (select count(id)  from  `order` where status in(1) and merchantid = $merchantid and closestatus = 0) as unpaid
+, (select sum(total)  from  `order` where status in(2, 3) and MONTH(updatedate) = MONTH(CURRENT_DATE()) and merchantid = $merchantid and closestatus = 0) as monthlytotal
 FROM `dual`");
 
         return $query;

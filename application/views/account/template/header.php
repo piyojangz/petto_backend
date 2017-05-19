@@ -35,7 +35,9 @@
     <link href="<?= base_url("res/account/css/style.css") ?>" rel="stylesheet">
     <!-- summernotes CSS -->
     <link href="<?= base_url("res/account/plugins/bower_components/summernote/dist/summernote.css") ?>" rel="stylesheet" />
-
+    <!-- xeditable css -->
+    <link href="<?= base_url("res/account/plugins/bower_components/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css") ?>" rel="stylesheet" />
+    <link href="<?= base_url("res/account/plugins/bower_components/switchery/dist/switchery.min.css") ?>" rel="stylesheet" />
     <!-- color CSS -->
     <link href="<?= base_url("res/account/css/colors/default.css") ?>" id="theme" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

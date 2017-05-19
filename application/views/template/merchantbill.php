@@ -95,20 +95,20 @@
                     <ul class="nav nav-list">
                         <!--                                <li class="nav-header">รายการสินค้า</li>
                                 <?php foreach ($items as $item): ?>
-                                    <li> 
+                                    <li>
                                         <div class="row">
-                                            <div class="col-xs-8"> 
+                                            <div class="col-xs-8">
                                                 <img src="<?= $item->image ?>" style="width:40px;" class="img img-thumbnail" />
                                                 <span class="itemname"><a href="javascript:;" onclick="openimgmodal('<?= $item->name ?>', '<?= $item->image ?>', '<?= number_format($item->price, 2, '.', ','); ?>')"><?= $item->name ?><i class="fa fa-external-link-square" style="    font-size: .7em;  padding-left: 4px;"></i></a></span> <br/>  <span class="itemprice"><?= number_format($item->price, 2, '.', ','); ?>฿</span>
                                             </div>
-                                            <div class="col-xs-4"> 
+                                            <div class="col-xs-4">
                                                 <input type="hidden" value="<?= $item->id ?>"/>
                                                 <input type="hidden" value="<?= $item->price ?>"/>
                                                 <input type="number" name="amount" min="0" class="form-control input-sm itemamount" value=""  placeholder="0" autocomplete="off" />
                                             </div>
                                         </div>
                                     </li>
-                                <?php endforeach; ?> 
+                                <?php endforeach; ?>
                                 <li class="divider"></li>-->
                         <li class="nav-header">สรุปยอด</li>
                         <li>
@@ -164,7 +164,8 @@
 
             <div class="form-group">
                 <div class="input-group">
-                    <input class="form-control"  id="txtemail" name="txtemail" type="email" placeholder="อีเมลล์" autocomplete="off">
+                    <input class="form-control" id="txtemail" name="txtemail" type="email" placeholder="อีเมลล์"
+                           autocomplete="off">
                     <div class="input-group-btn">
                         <button class="btn btn-default" type="button"><i class="fa fa-envelope-open-o"
                                                                          aria-hidden="true"></i></button>
@@ -208,6 +209,19 @@
                 </div>
             </div>
             <div class="form-group">
+                จำนวนเงินที่โอน <span style="color: red;font-size: 12px;">*กรุณาชำระเงินก่อนระบุ</span>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="input">
+                                <input type="number" class="form-control" value="" id="txtpaidamount"
+                                       name="txtpaidamount" required/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
                 รูปถ่าย/สลิป
                 <div class="fileinput fileinput-new" data-provides="fileinput">
                     <div class="fileinput-preview thumbnail" data-trigger="fileinput"
@@ -240,8 +254,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <div class="form-group">
                 เวลาชำระเงิน <span style="color: red;font-size: 12px;">*กรุณาชำระเงินก่อนระบุ</span>
@@ -277,7 +289,7 @@
                 <div class="col-xs-12">
                     <?php foreach ($paymentmethod as $index => $item): ?>
                         <label class="bank" for="checkbox<?= $index ?>">
-                            <input name="paymenttype" type="radio" id="checkbox<?= $index ?>" required
+                            <input  name="paymenttype" type="radio" id="checkbox<?= $index ?>" required checked
                                    value="<?= $item->id ?>"/>
                             <img src="<?= $item->banklogo ?>" style="width: 30px; height: 30px;">
                             ธนาคาร <?= $item->bankname ?> ประเภท <?= $item->acctype ?> ชื่อบัญชี <?= $item->accname ?>
@@ -533,6 +545,8 @@
             $(".itemamount").first().focus();
             return false;
         }
+
+
 
         return true;
     });

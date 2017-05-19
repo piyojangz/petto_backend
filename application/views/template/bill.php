@@ -138,7 +138,7 @@
                     <div class="col-xs-12">
                         <?php foreach ($paymentmethod as $index => $item): ?>
                             <label class="bank" for="checkbox<?= $index ?>"> 
-                                <input name="paymenttype"  type="radio" id="checkbox<?= $index ?>"  required value="<?= $item->id ?>"  <?= $item->id == $order->paymentmethodid ? 'checked' : '' ?>/>
+                                <input  name="paymenttype"  type="radio" id="checkbox<?= $index ?>"  required value="<?= $item->id ?>"  <?= $item->id == $order->paymentmethodid ? 'checked' : '' ?>/>
                                 <img src="<?= $item->banklogo ?>" style="width: 30px; height: 30px;">
                                 ธนาคาร <?= $item->bankname ?> ประเภท <?= $item->acctype ?> ชื่อบัญชี <?= $item->accname ?> เลขที่บัญชี <?= $item->accno ?>
                             </label> 
