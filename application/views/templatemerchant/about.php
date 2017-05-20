@@ -9,9 +9,18 @@
             </div>
             <div class="menu">
                 <ul>
-                    <li><a href="<?= base_url("web/$merchant->name") ?>">หน้าหลัก</a></li>
-                    <li class="active"><a href="<?= base_url("web/$merchant->name/about") ?>">เกี่ยวกับเรา</a></li>
-                    <li><a href="<?= base_url("web/$merchant->name/contact") ?> ">ติดต่อเรา</a></li>
+                    <li ><a href="
+                    <?= base_url("web/$merchant->name") ?>">หน้าหลัก</a></li>
+                    <li><a href="
+                    <?= base_url("web/$merchant->name/about") ?>">เกี่ยวกับเรา</a></li>
+                    <li  class="active"><a href="
+                   <?= base_url("web/$merchant->name/contact") ?>">ติดต่อเรา</a></li>
+
+                    <!--
+                    <li class="active"><a href="<?= $http.$_SERVER['HTTP_HOST'] ?>">หน้าหลัก</a></li>
+                    <li><a href="<?= $http.$_SERVER['HTTP_HOST'] ?>/about">เกี่ยวกับเรา</a></li>
+                    <li><a href="<?= $http.$_SERVER['HTTP_HOST'] ?>/contact">ติดต่อเรา</a></li>
+                    -->
                 </ul>
             </div>
 

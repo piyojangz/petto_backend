@@ -116,7 +116,7 @@ class Order extends CI_Controller
         $data["orderdetail"] = $this->get->orderdetail(array('orderid' => $orderid))->result();
         $data["items"] = $this->get->items(array('merchantid' => $merchantid))->result();
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
-        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid,'status'=>'1'))->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid, 'status' => '1'))->result();
         $data["customer"] = $this->get->customer(array('uid' => $data["uid"]))->row();
 
 
@@ -287,7 +287,7 @@ class Order extends CI_Controller
             $txtpaiddate = $this->input->post("txtpaiddate");
             $txtpaidhour = $this->input->post("txtpaidhour");
             $txtpaidmin = $this->input->post("txtpaidmin");
-            $paymentamount =  $this->input->post("txtpaidamount");
+            $paymentamount = $this->input->post("txtpaidamount");
 
             $billtoken = $this->get->billtoken(array("token" => $token))->row();
 
@@ -343,6 +343,16 @@ class Order extends CI_Controller
                     'itemid' => $itemid
                 );
                 $this->put->orderdetail($input);
+
+                if ($billtoken->isstockenable == 1) {
+                    $input = array(
+                        'billtokenid' => $billtoken->id,
+                        'amount' => ($amount * -1),
+                        'merchantid' => $billtoken->merchanttoken,
+                        'itemid' => $itemid
+                    );
+                    $this->put->billtokenstock($input);
+                }
             }
 
             $v_notificationtousers = $this->get->v_notificationtousers(array('token' => $token))->result();

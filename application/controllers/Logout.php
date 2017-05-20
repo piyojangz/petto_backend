@@ -2,9 +2,11 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Logout extends CI_Controller {
+class Logout extends CI_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->load->model('Insert_model', 'put');
         $this->load->model('Select_model', 'get');
@@ -16,9 +18,10 @@ class Logout extends CI_Controller {
         $this->load->library('lineapi');
     }
 
-    public function index() {
+    public function index()
+    {
         $this->user->logout();
-        redirect('/');
+        redirect(base_url());
     }
 
 }

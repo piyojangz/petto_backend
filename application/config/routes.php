@@ -54,9 +54,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 if (preg_match('/.+\.perdbill\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
     $route['default_controller'] = 'Web';
+    $route['(:any)'] = "web/subpage/$1";
 }
-elseif (preg_match('/.+\.(zoaish|aaa)\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+elseif (preg_match('/.+\.(zoaish)\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
     $route['default_controller'] = 'Web/mapdomain';
+    $route['(:any)'] = "web/webpage/$1";
 }
 else {
     $route['default_controller'] = 'home';

@@ -23,9 +23,13 @@ class Web extends CI_Controller
     {
         $data["islogin"] = $this->user->is_login();
         $merchantname = explode(".", $_SERVER['HTTP_HOST'])[0];
+        $data['http'] = "http://";
         //echo $merchantname;
 
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -39,6 +43,7 @@ class Web extends CI_Controller
     public function test($merchantname)
     {
         $data["islogin"] = $this->user->is_login();
+        $data['http'] = "http://";
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
@@ -52,13 +57,36 @@ class Web extends CI_Controller
         $this->load->view('templatemerchant/index', $data);
     }
 
+    public function subpage($page)
+    {
+        $data["islogin"] = $this->user->is_login();
+        $merchantname = explode(".", $_SERVER['HTTP_HOST'])[0];
+        $data['http'] = "http://";
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view("templatemerchant/$page", $data);
+    }
+
 
     public function mapdomain()
     {
+        $data["islogin"] = $this->user->is_login();
         if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
             $merchantname = "rochubeauty";
         }
+        $data['http'] = "http://";
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -69,6 +97,26 @@ class Web extends CI_Controller
 
     }
 
+    public function webpage($page)
+    {
+        $data["islogin"] = $this->user->is_login();
+        if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+        }
+        $data['http'] = "http://";
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view("templatemerchant/$page", $data);
+    }
+
 
     public function page($merchantname,$page)
     {
@@ -76,6 +124,7 @@ class Web extends CI_Controller
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
