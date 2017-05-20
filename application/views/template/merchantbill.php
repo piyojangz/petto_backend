@@ -222,7 +222,7 @@
                 </div>
             </div>
             <div class="form-group">
-                รูปถ่าย/สลิป
+                รูปถ่าย/สลิป <span style="color: red;font-size: 12px;">*เพื่อความรวดเร็วในการตรวจสอบ</span>
                 <div class="fileinput fileinput-new" data-provides="fileinput">
                     <div class="fileinput-preview thumbnail" data-trigger="fileinput"
                          style="width: 100%; height: 150px;"></div>

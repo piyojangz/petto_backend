@@ -19,7 +19,6 @@ class Bill extends CI_Controller
     public function index($token = "")
     {
         $data["ordertoken"] = $token;
-        $data["billtoken"] = "";
         $billtoken = $this->get->billtoken(array('token' => $token))->row();
         if (count($billtoken) > 0) {
             $merchantid = $billtoken->merchantid;
@@ -32,8 +31,15 @@ class Bill extends CI_Controller
                 $data["obj"] = $this;
                 $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
                 $data["province"] = $this->get->province(array())->result();
-                $data["items"] = $this->get->items(array('merchantid' => $merchantid, 'status' => 1))->result();
-                $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid,'status'=>'1'))->result();
+                if ($billtoken->isstockenable == 1) {
+                    $data["items"] = $this->get->v_itemswithstock(array('billtokenid' => $billtoken->id, 'itemstock > ' => 0), $billtoken->id)->result();
+                } else {
+                    $data["items"] = $this->get->items(array('merchantid' => $merchantid, 'status' => 1))->result();
+                }
+
+
+
+                $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid, 'status' => '1'))->result();
                 $this->load->view('template/merchantbill', $data);
                 return;
             }
@@ -51,9 +57,10 @@ class Bill extends CI_Controller
         $data["genstatus"] = $ordertoken->genstatus;
         $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
         $data["items"] = $this->get->items(array('merchantid' => $merchantid, 'status' => 1))->result();
+
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
         $data["orderdetail"] = $this->get->orderdetail(array('orderid' => $orderid))->result();
-        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid,'status'=>'1'))->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid, 'status' => '1'))->result();
 
         if ($data["order"]->status >= 1) {
             redirect(base_url("/track/$token"));
@@ -77,8 +84,10 @@ class Bill extends CI_Controller
 
         $data["obj"] = $this;
         $data["merchant"] = $this->get->merchant(array('id' => $merchant->id))->row();
-        $data["items"] = $this->get->items(array('merchantid' =>  $merchant->id, 'status' => 1))->result();
-        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' =>  $merchant->id,'status'=>'1'))->result();
+
+
+        $data["items"] = $this->get->items(array('merchantid' => $merchant->id, 'status' => 1))->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchant->id, 'status' => '1'))->result();
 
 
         $this->load->view('template/promobill', $data);

@@ -11,6 +11,7 @@ class Service extends CI_Controller
         $this->load->model('Insert_model', 'put');
         $this->load->model('Select_model', 'get');
         $this->load->model('Update_model', 'set');
+        $this->load->model('User_model', 'user');
         $this->load->library('upload');
         $this->load->library('lineapi');
         $this->load->library('excel');
@@ -238,6 +239,7 @@ class Service extends CI_Controller
         foreach ($items as $index => $item) {
             $i = $index + 1;
             $stock = $item->itemstock == null ? 0 : $item->itemstock;
+            $stock = $stock <= 0 ?"<span class=\"badge badge-danger\" style=\"padding-left: 10px;padding-right: 10px;\">$stock</span>":$stock;
             $html .= "<tr>
                                                     <td class=\"text-center\">$i</td>
                                                     <td><span class=\"font-medium\">$item->name</td>
@@ -255,6 +257,67 @@ class Service extends CI_Controller
         echo $html;
     }
 
+
+    public function updatestock()
+    {
+
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $isstockenable = $this->input->post("isstockenable") == 'on' ? 1 : 0;
+        $updateitemamount = $this->input->post("updateitemamount");
+        $billtokenid = $this->input->post("billtokenid");
+
+        $input = array("id" => $billtokenid,
+            "isstockenable" => $isstockenable,
+            "updatedate" => date('Y-m-d H:i:s'),);
+        $this->set->billtoken($input);
+
+
+        $items = explode("|", $updateitemamount);
+        foreach ($items as $item) {
+            $var = explode(";", $item);
+            $id = $var[0];
+            $amount = $var[1];
+
+            $input = array("billtokenid" => $billtokenid,
+                "amount" => $amount,
+                "itemid" => $id,
+                "merchantid" => $data["merchant"]->id,);
+
+            if ($amount != 0) {
+                $this->put->billtokenstock($input);
+            }
+
+        }
+
+        $this->checkinglowstock($data["merchant"]->id, $billtokenid);
+        $data['result'] = true;
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function checkinglowstock($merchantid, $billtokenid)
+    {
+
+        $billtoken = $this->get->billtoken(array("id" => $billtokenid))->row();
+        $items = $this->get->itemswithstock(array("a.merchantid" => $merchantid, "a.status" => '1'), $billtokenid)->result();
+        $billnotificationusers = $this->get->billnotificationusers(array('billtokenid' => $billtokenid))->result();
+
+        if ($billtoken->isstockenable == "1") {
+            foreach ($items as $item) {
+                if ($item->itemstock <= 0) {
+                    $stock = $item->itemstock == null ? 0 : $item->itemstock;
+                    foreach ($billnotificationusers as $user) {
+                        $this->lineapi->pushmsg($user->lineuid, "STOCK($billtoken->token) : $item->name มีจำนวนเหลือ $stock");
+                    }
+                }
+
+            }
+
+
+        }
+    }
 
     public function savebilltoken()
     {

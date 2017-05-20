@@ -108,6 +108,7 @@
                                                             class="btn btn-default waves-effect waves-light  dropdown-toggle"
                                                             data-toggle="dropdown" aria-expanded="false"><i
                                                                 class="fa fa-refresh"></i></button>
+                                                    <span type="hidden" id="billtokenhd" style="display: none;"></span>
                                                 </div>
                                             </th>
                                             <th class="hidden-xs" width="100">
@@ -240,10 +241,11 @@
 
         </div>
 
-        <form method="post"  class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"
+        <form method="post"
+              class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft form-update-stock block1"
               id="form-update-stock">
             <input type="hidden" id="updateitemamount" name="updateitemamount"/>
-            <input type="hidden" id="billtokenid" name="billtokenid" />
+            <input type="hidden" id="billtokenid" name="billtokenid"/>
             <div class="panel panel-default">
                 <div class="panel-heading">เพิ่ม/แก้ไขสินค้าคงคลัง</div>
 
@@ -254,221 +256,280 @@
                                 <input type="checkbox" id="isstockenable" name="isstockenable"/>
                                 <label for="isstockenable">เปิด/ปิดการใช้งาน</label>
                             </div>
+
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="panel panel-info ">
-                                    <div class="panel-body">
-                                        <table class="table table-hover manage-u-table">
-                                            <thead>
-                                            <tr>
-                                                <th style="width: 70px;" class="text-center">#</th>
-                                                <th>ชื่อสินค้า</th>
-                                                <th>สินค้าคงคลัง</th>
-                                                <th>เพิ่ม/ลบ</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="itemstock">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info ">
+                            <div class="panel-body">
+                                <table class="table table-hover manage-u-table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 70px;" class="text-center">#</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>สินค้าคงคลัง</th>
+                                        <th>เพิ่ม/ลบ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="itemstock">
 
-                                            </tbody>
-                                        </table>
+                                    </tbody>
+                                </table>
 
 
-                                        <div class="form-actions">
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
                                             <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="row">
-                                                        <div class="col-md-offset-9 col-md-3">
-                                                            <button type="submit" id="btnupdateamount" name="btnupdateamount"
-                                                                    class="btn btn-success"><i class="fa fa-check"></i>
-                                                                บันทึก/แก้ไขข้อมูล
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                                <div class="col-md-offset-9 col-md-3">
+                                                    <button type="submit" id="btnupdateamount"
+                                                            name="btnupdateamount"
+                                                            class="btn btn-success"><i class="fa fa-check"></i>
+                                                        บันทึก/แก้ไขข้อมูล
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="adminid" name="adminid"/>
-
                                 </div>
                             </div>
+                            <input type="hidden" id="adminid" name="adminid"/>
+
                         </div>
                     </div>
                 </div>
-
             </div>
-        </form>
-        <form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"
-              id="form-submit-billtoken">
-            <div class="panel panel-default">
-                <div class="panel-heading">เพิ่ม / แก้ไข</div>
-                <div class="panel-wrapper collapse in">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="panel panel-info ">
-                                    <div class="panel-body">
-
-                                        <div class="form-body">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ชื่อบิล</label>
-                                                <div class="col-md-9">
-                                                    <input type="text" name="name" id="name" required
-                                                           class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ผู้ขาย</label>
-                                                <div class="col-md-9">
-                                                    <select class="form-control" name="merchantuid" id="merchantuid"
-                                                            required>
-                                                        <?php foreach ($merchants as $item): ?>
-                                                            <option value="<?= $item->lineuid ?>"><?= $item->name ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ช่วงเวลา</label>
-                                                <div class="col-md-9">
-                                                    <input class="form-control input-daterange-datepicker" type="text"
-                                                           name="daterange" id="daterange" value="<?= $daterange ?>"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ส่งการแจ้งเตือนทางไลน์</label>
-                                                <div class="col-md-9">
-                                                    <select class="select2 m-b-10 select2-multiple" multiple="multiple"
-                                                            name="usernoti" id="usernoti" data-placeholder="Choose">
-                                                        <?php foreach ($merchants as $item): ?>
-                                                            <option value="<?= $item->lineuid ?>|<?= $item->name ?>"><?= $item->name ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-actions">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="row">
-                                                        <div class="col-md-offset-9 col-md-3">
-                                                            <button type="submit" id="btnsubmit"
-                                                                    class="btn btn-success"><i class="fa fa-check"></i>
-                                                                บันทึก/แก้ไขข้อมูล
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="id" name="id"/>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </form>
-        <form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"
-              id="form-submit-billtoken">
-            <div class="panel panel-default">
-                <div class="panel-heading">เพิ่ม / แก้ไข</div>
-                <div class="panel-wrapper collapse in">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="panel panel-info ">
-                                    <div class="panel-body">
-
-                                        <div class="form-body">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ชื่อบิล</label>
-                                                <div class="col-md-9">
-                                                    <input type="text" name="name" id="name" required
-                                                           class="form-control">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ผู้ขาย</label>
-                                                <div class="col-md-9">
-                                                    <select class="form-control" name="merchantuid" id="merchantuid"
-                                                            required>
-                                                        <?php foreach ($merchants as $item): ?>
-                                                            <option value="<?= $item->lineuid ?>"><?= $item->name ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ช่วงเวลา</label>
-                                                <div class="col-md-9">
-                                                    <input class="form-control input-daterange-datepicker" type="text"
-                                                           name="daterange" id="daterange" value="<?= $daterange ?>"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ส่งการแจ้งเตือนทางไลน์</label>
-                                                <div class="col-md-9">
-                                                    <select class="select2 m-b-10 select2-multiple" multiple="multiple"
-                                                            name="usernoti" id="usernoti" data-placeholder="Choose">
-                                                        <?php foreach ($merchants as $item): ?>
-                                                            <option value="<?= $item->lineuid ?>|<?= $item->name ?>"><?= $item->name ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-actions">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="row">
-                                                        <div class="col-md-offset-9 col-md-3">
-                                                            <button type="submit" id="btnsubmit"
-                                                                    class="btn btn-success"><i class="fa fa-check"></i>
-                                                                บันทึก/แก้ไขข้อมูล
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="id" name="id"/>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </form>
     </div>
 
-    <input type="hidden" id="activetoken"/>
-    <input type="hidden" id="activetokenid"/>
-    <input type="hidden" id="editnotiusers"/>
+</div>
+</form>
+<form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"
+      id="form-submit-billtoken">
+    <div class="panel panel-default">
+        <div class="panel-heading">เพิ่ม / แก้ไข</div>
+        <div class="panel-wrapper collapse in">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info ">
+                            <div class="panel-body">
+
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ชื่อบิล</label>
+                                        <div class="col-md-9">
+                                            <input type="text" name="name" id="name" required
+                                                   class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ผู้ขาย</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control" name="merchantuid" id="merchantuid"
+                                                    required>
+                                                <?php foreach ($merchants as $item): ?>
+                                                    <option value="<?= $item->lineuid ?>"><?= $item->name ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
 
 
-    </form>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ช่วงเวลา</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control input-daterange-datepicker" type="text"
+                                                   name="daterange" id="daterange" value="<?= $daterange ?>"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ส่งการแจ้งเตือนทางไลน์</label>
+                                        <div class="col-md-9">
+                                            <select class="select2 m-b-10 select2-multiple" multiple="multiple"
+                                                    name="usernoti" id="usernoti" data-placeholder="Choose">
+                                                <?php foreach ($merchants as $item): ?>
+                                                    <option value="<?= $item->lineuid ?>|<?= $item->name ?>"><?= $item->name ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
 
 
-    <!-- /.container-fluid -->
-    <?php $this->load->view('account/template/footer'); ?>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-offset-9 col-md-3">
+                                                    <button type="submit" id="btnsubmit"
+                                                            class="btn btn-success"><i class="fa fa-check"></i>
+                                                        บันทึก/แก้ไขข้อมูล
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="id" name="id"/>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<form   method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"  id="form-submit-createadminlink">
+    <div class="panel panel-default">
+        <div class="panel-heading">เพิ่ม / แก้ไข</div>
+        <div class="panel-wrapper collapse in">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info ">
+                            <div class="panel-body">
+
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ชื่อ</label>
+                                        <div class="col-md-9">
+                                            <input type="text" name="adminname" id="adminname" required class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">อีเมลล์</label>
+                                        <div class="col-md-9">
+                                            <input type="email" name="adminemail" id="adminemail" required class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">เบอร์โทร</label>
+                                        <div class="col-md-9">
+                                            <input type="tel" name="admintel" id="admintel" required class="form-control">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-offset-9 col-md-3">
+                                                    <button type="submit" id="btnadminubmit"  class="btn btn-success"> <i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="adminid" name="adminid" />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+<form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"
+      id="form-submit-billtoken">
+    <div class="panel panel-default">
+        <div class="panel-heading">เพิ่ม / แก้ไข</div>
+        <div class="panel-wrapper collapse in">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info ">
+                            <div class="panel-body">
+
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ชื่อบิล</label>
+                                        <div class="col-md-9">
+                                            <input type="text" name="name" id="name" required
+                                                   class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ผู้ขาย</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control" name="merchantuid" id="merchantuid"
+                                                    required>
+                                                <?php foreach ($merchants as $item): ?>
+                                                    <option value="<?= $item->lineuid ?>"><?= $item->name ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ช่วงเวลา</label>
+                                        <div class="col-md-9">
+                                            <input class="form-control input-daterange-datepicker" type="text"
+                                                   name="daterange" id="daterange" value="<?= $daterange ?>"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">ส่งการแจ้งเตือนทางไลน์</label>
+                                        <div class="col-md-9">
+                                            <select class="select2 m-b-10 select2-multiple" multiple="multiple"
+                                                    name="usernoti" id="usernoti" data-placeholder="Choose">
+                                                <?php foreach ($merchants as $item): ?>
+                                                    <option value="<?= $item->lineuid ?>|<?= $item->name ?>"><?= $item->name ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-offset-9 col-md-3">
+                                                    <button type="submit" id="btnsubmit"
+                                                            class="btn btn-success"><i class="fa fa-check"></i>
+                                                        บันทึก/แก้ไขข้อมูล
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="id" name="id"/>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+</div>
+
+<input type="hidden" id="activetoken"/>
+<input type="hidden" id="activetokenid"/>
+<input type="hidden" id="editnotiusers"/>
+
+
+</form>
+
+
+<!-- /.container-fluid -->
+<?php $this->load->view('account/template/footer'); ?>
 </div>
 <!-- ============================================================== -->
 <!-- End Page Content -->
@@ -533,7 +594,9 @@
         src="<?= base_url("res/account/plugins/bower_components/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.min.js") ?>"></script>
 
 <script src="<?= base_url("res/account/plugins/bower_components/switchery/dist/switchery.min.js") ?>"></script>
-
+<script src="<?= base_url("res/account/plugins/bower_components/toast-master/js/jquery.toast.js") ?>"></script>
+<script src="<?= base_url("res/account/plugins/bower_components/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js") ?>"
+        type="text/javascript"></script>
 <script>
 
     function copylink(x) {
@@ -559,7 +622,9 @@
 
     $(function () {
 
-
+//        $("#tch3_22").TouchSpin({
+//            initval: 0
+//        });
         // For select 2
         var $Multi = $(".select2").select2();
 
@@ -652,23 +717,60 @@
 
 
         $("#form-update-stock").submit(function () {
+            $('.form-update-stock.block1').block();
             var stockamount = $("a[name=stockamount]");
             var rs = "";
             $(stockamount).each(function (index, value) {
-
-
                 var itemid = $(this).attr("data-itemid");
                 var itemamount = $(this).html() == "Empty" ? 0 : $(this).html();
                 rs += itemid + ";" + itemamount + "|";
-
-
             });
-
-
             $("#updateitemamount").val(rs.slice(0, -1));
-            return true;
+
+            setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('service/updatestock'); ?>",
+                    data: $("#form-update-stock").serialize(),
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.result = true) {
+                            $.toast({
+                                heading: 'บันทึกข้อมูลสำเร็จ',
+                                text: 'ระบบจะทำการส่งการแจ้งเตือนกรณีสินค้าคงคลังมีจำนวนเหลือ 0.',
+                                position: 'top-right',
+                                loaderBg: '#ff6849',
+                                icon: 'success',
+                                hideAfter: 3500,
+                                stack: 6
+                            });
+                        }
+                        $('.form-update-stock.block1').unblock();
+                        $.magnificPopup.close();
+                    },
+                    error: function (XMLHttpRequest) {
+                        console.log(XMLHttpRequest.responseText);
+                        $('.form-update-stock.block1').unblock();
+                        $.magnificPopup.close();
+                        $.toast({
+                            heading: 'ไม่สามารถบันทึกข้อมูลได้',
+                            text: XMLHttpRequest.responseText,
+                            position: 'top-right',
+                            loaderBg: '#ff6849',
+                            icon: 'error',
+                            hideAfter: 3500
+
+                        });
+                    }
+                });
+            }, 1000);
+
+
+            return false;
         });
         $("#billupdatestock").click(function () {
+            var token = $("#billtokenhd").val();
+            getbillitemstock(token);
             $.magnificPopup.open({items: {src: '#form-update-stock'}, type: 'inline'}, 0);
         });
 
@@ -855,6 +957,7 @@
     function getbilldata(token) {
         $("#billink").html('perdbill.co/' + '<b>' + token + '</b> ');
         $("#billinkhd").html('<?= base_url() ?>' + token);
+        $("#billtokenhd").val(token);
 
         $.ajax({
             type: "POST",

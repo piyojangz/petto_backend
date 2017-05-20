@@ -33,6 +33,7 @@
                     </ul> 
                 </li> 
             <?php endif; ?>
+            <li><a href="http://<?=$user["name"]?>.perdbill.co" class="waves-effect waves-light"><i class="ti-arrow-top-right"></i> ดูหน้าเว็บ</a></li>
         </ul>
         <ul class="nav navbar-top-links navbar-right pull-right">
             <!--            <li>

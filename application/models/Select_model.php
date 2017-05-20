@@ -177,6 +177,15 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function v_itemswithstock($cond, $billtokenid)
+    {
+        $this->db->select('*');
+        $this->db->from('v_itemswithstock');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function itemswithstock($cond, $billtokenid)
     {
         $this->db->select('a.*,sum(b.amount) as itemstock');

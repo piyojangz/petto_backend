@@ -54,7 +54,7 @@
                 </div>
             </div>
         </div>
-        <div class="new-login-box" style="margin-top: 5%;"> 
+        <div class="new-login-box" style="margin-top: 5%;">
             <div class="white-box">
                 <!-- Alert Info -->
                 <div class="alert alert-warning alert-dismissable" id="passwordnotmath">
@@ -85,9 +85,9 @@
                         สมัครสมาชิกเรียบร้อย <a href="<?= base_url("login") ?>">คลิกที่นี่</a> เพื่อไปหน้าเข้าสู่ระบบ
                     </div>
                 <?php endif; ?>
-                <h3 class="box-title m-b-0" style="font-weight: bold;">สมัครสมาชิก</h3> 
+                <h3 class="box-title m-b-0" style="font-weight: bold;">สมัครสมาชิก</h3>
 
-                <form  class="form-horizontal new-lg-form"  action="" method="post" enctype="multipart/form-data" id="formsubmit"> 
+                <form  class="form-horizontal new-lg-form"  action="" method="post" enctype="multipart/form-data" id="formsubmit">
                     <div class="form-group  m-t-20">
                         <div class="col-xs-12">
                             <label style="font-weight: bold;">อีเมลล์</label>
@@ -103,7 +103,7 @@
                     <div class="form-group  m-t-20">
                         <div class="col-xs-12">
                             <label style="font-weight: bold;">ชื่อร้าน</label>
-                            <input class="form-control" type="name" name="name" required placeholder="ชื่อร้าน">
+                            <input class="form-control" type="name" name="name" id="name" required placeholder="ชื่อร้าน">
                         </div>
                     </div>
                     <div class="form-group">
@@ -138,13 +138,13 @@
 
                     <div class="form-group m-b-0">
                         <div class="col-sm-12 text-center">
-                            <p  class="text-center">มีบัญชีอยู่แล้ว? <a class="text-danger m-l-5" href="<?= base_url("login") ?>" style="font-weight: bold;"> คลิกที่นี่ </a> เพื่อไปหน้าล็อคอิน</p> 
+                            <p  class="text-center">มีบัญชีอยู่แล้ว? <a class="text-danger m-l-5" href="<?= base_url("login") ?>" style="font-weight: bold;"> คลิกที่นี่ </a> เพื่อไปหน้าล็อคอิน</p>
                         </div>
                     </div>
                 </form>
 
             </div>
-        </div>            
+        </div>
 
 
     </section>
@@ -195,6 +195,12 @@
                 }
                 return true;
             });
+
+            $('#name').bind('input', function () {
+                $(this).val(function (_, v) {
+                    return v.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+                });
+            });
         });
 
         function checkPassword(str)
@@ -210,6 +216,8 @@
             $("#termandcond").hide();
             $(".overlay-loader").hide();
         }
+
+
     </script>
 </body>
 </html>
