@@ -71,6 +71,30 @@ class Account extends CI_Controller
         $this->load->view('account/settinghome', $data);
     }
 
+    public function setting_about($acctoken = "")
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+        $this->load->view('account/settingabout', $data);
+    }
+
+    public function setting_contact($acctoken = "")
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+        $this->load->view('account/settingcontact', $data);
+    }
+
     public function info($acctoken = "")
     {
         $data["user"] = $this->user->get_account_cookie();
@@ -149,6 +173,61 @@ class Account extends CI_Controller
             }
             if ($this->set->merchant($input)) {
                 redirect(base_url("account/$acctoken/setting_home"));
+            }
+        }
+    }
+    public function updateaboutsetting($acctoken = "")
+    {
+        if ($_POST) {
+            $image = "";
+            $data["user"] = $this->user->get_account_cookie();
+            $imageData = $this->input->post("imageData");
+            $textcustom = $this->input->post("inputcustomtext");
+
+            if (!empty($imageData)) {
+                $image = $this->base64_to_jpeg_acc($imageData, $data["user"]["token"]);
+                $image = base_url("public/upload/acc/$acctoken/") . $image["upload_data"]["file_name"];
+            }
+
+
+            $input = array(
+                'token' => $data["user"]["token"],
+                'textabout' => $textcustom,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            if ($image != "") {
+                $input["imagecover"] = $image;
+            }
+            if ($this->set->merchant($input)) {
+                redirect(base_url("account/$acctoken/setting_about"));
+            }
+        }
+    }
+
+    public function updatecontactsetting($acctoken = "")
+    {
+        if ($_POST) {
+            $image = "";
+            $data["user"] = $this->user->get_account_cookie();
+            $imageData = $this->input->post("imageData");
+            $textcustom = $this->input->post("inputcustomtext");
+
+            if (!empty($imageData)) {
+                $image = $this->base64_to_jpeg_acc($imageData, $data["user"]["token"]);
+                $image = base_url("public/upload/acc/$acctoken/") . $image["upload_data"]["file_name"];
+            }
+
+
+            $input = array(
+                'token' => $data["user"]["token"],
+                'textcontact' => $textcustom,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            if ($image != "") {
+                $input["imagecover"] = $image;
+            }
+            if ($this->set->merchant($input)) {
+                redirect(base_url("account/$acctoken/setting_contact"));
             }
         }
     }

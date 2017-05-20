@@ -41,6 +41,11 @@
                                     class="hide-menu">ข้อมูลทั่วไป</span></a></li>
                     <li><a href="<?= base_url("account/$token/setting_home") ?>"><i class="fa fa-home fa-fw"></i><span
                                     class="hide-menu">หน้าหลัก</span></a></li>
+                    <li><a href="<?= base_url("account/$token/setting_about") ?>"><i class="fa   fa-fw">A</i><span
+                                    class="hide-menu">เกี่ยวกับเรา</span></a></li>
+                    <li><a href="<?= base_url("account/$token/setting_contact") ?>"><i
+                                    class="fa   fa-fw">C</i><span
+                                    class="hide-menu">ติดต่อเรา</span></a></li>
                 </ul>
             </li>
             <li><a href="javascript:;"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">ออเดอร์<span

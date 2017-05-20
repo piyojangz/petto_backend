@@ -1,5 +1,6 @@
 body {
     padding-top: 70px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body.nopadding {
@@ -256,10 +257,10 @@ table.package thead tr th {
 
 .startusing {
     background: #21bf64;
-    width: 175px;
+    width: 100%;
     padding: 10px;
-    border-radius: 5px;
     display: block;
+    text-align: center;
     color: #fff;
 }
 
@@ -496,16 +497,18 @@ table.package thead tr th {
     background-repeat: no-repeat !important;
     background-size: 100% !important;
 }
-.header-index img{
+
+.header-index img {
     width: 100%;
 }
 
 .billing {
     position: fixed;
-    top: 65px;
+    top: 0px;
     right: 0;
     width: 350px;
     background: #fff;
+    height: 100%;
 }
 
 .billing h3 {
@@ -573,6 +576,41 @@ table.package thead tr th {
     margin-right: 5px;
 }
 
+.page {
+    min-height: 320px;
+}
+
+.page h3 {
+    max-width: 300px;
+    width: 100%;
+    font-size: 1.3em;
+    color: #2b2b2b;
+    font-weight: 700;
+    position: relative;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.page h3:before {
+    content: '';
+    border: 1px solid #2C3E50;
+    width: 50px;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    left: 40px;
+}
+
+.page h3:after {
+    content: '';
+    border: 1px solid #2C3E50;
+    width: 50px;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    right: 40px;
+}
+
 .badge {
     padding: 0 8px;
     font-size: 13px;
@@ -633,19 +671,20 @@ a.logo {
     border: 1px #efefef solid;
     border-right: 0px;
     margin-bottom: 0px !important;
+    z-index: 10;
 }
 
-.billing.toogleoff{
+.billing.toogleoff {
     right: -340px;
 }
 
-.billpanel .btn-toogle {
+#billing .btn-toogle {
     background: #fff;
     width: 70px;
     height: 70px;
     position: absolute;
-    left: -38px;
-    top: 36%;
+    left: -43px;
+    top: 35%;
     border-radius: 35px;
     color: #23cb6a;
     text-shadow: 1px 0px 0px #21bf64;
@@ -653,8 +692,13 @@ a.logo {
     box-shadow: -4px 0px 0px #efefef;
     cursor: pointer;
     padding-left: 16px;
+    z-index: 9;
 }
-
+.btn-submitorder{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
 #eliteregister li {
     list-style-type: none;
     text-shadow: 1px 1px 2px #000;
@@ -674,7 +718,6 @@ a.logo {
     }
 }
 
-
 @media (max-width: 760px) {
 
     .startusing {
@@ -691,6 +734,7 @@ a.logo {
         padding: 10px;
     }
 }
+
 @media (max-width: 420px) {
     .row {
         margin-right: -7px;
@@ -698,6 +742,7 @@ a.logo {
     }
 
 }
+
 @media (max-width: 320px) {
     .head-section {
         width: 300px;
@@ -713,9 +758,6 @@ a.logo {
         margin-bottom: 25px;
         font-size: .8em;
     }
-
-
-
 
 }
 

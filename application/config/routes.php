@@ -80,6 +80,8 @@ else {
     $route['account/(:any)/products'] = "account/products/$1";
     $route['account/(:any)/setting'] = "account/setting/$1";
     $route['account/(:any)/setting_home'] = "account/setting_home/$1";
+    $route['account/(:any)/setting_about'] = "account/setting_about/$1";
+    $route['account/(:any)/setting_contact'] = "account/setting_contact/$1";
     $route['account/(:any)/customer'] = "account/customer/$1";
     $route['account/(:any)/order/all'] = "account/orderall/$1";
     $route['account/(:any)/paymentmethod'] = "account/paymentmethod/$1";
@@ -90,6 +92,10 @@ else {
     $route['account/(:any)/addnewshippingrate'] = "account/addnewshippingrate/$1";
     $route['account/(:any)/updatesetting'] = "account/updatesetting/$1";
     $route['account/(:any)/updatehomesetting'] = "account/updatehomesetting/$1";
+    $route['account/(:any)/updateaboutsetting'] = "account/updateaboutsetting/$1";
+    $route['account/(:any)/updatecontactsetting'] = "account/updatecontactsetting/$1";
+
+
 
 
     $route['account/(:any)/info'] = "account/info/$1";
@@ -99,5 +105,6 @@ else {
     /* test */
 
     $route['web/(:any)'] = "web/test/$1";
+    $route['web/(:any)/(:any)'] = "web/page/$1/$2";
 }
 
