@@ -146,7 +146,7 @@
                 <?php if (isset($article)): ?>
                     <div class="row el-element-overlay m-b-40 block1">
                         <?php foreach ($article as $item): ?>
-                            <div class="col-md-6 col-xs-12">
+                            <div class="col-md-4 col-xs-12">
                                 <div class="white-box">
                                     <div class="el-card-item">
                                         <div class="el-card-avatar el-overlay-1"
