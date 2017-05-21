@@ -20,6 +20,16 @@ class Update_model extends CI_Model {
         endif;
     }
 
+
+    public function article($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('article', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     public function billtoken($input) {
         $this->db->where('id', $input['id']);
         if ($this->db->update('billtoken', $input)):

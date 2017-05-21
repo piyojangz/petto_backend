@@ -127,11 +127,12 @@
                                                 </div>
                                                 <div class="el-card-content">
                                                     <h3 class="box-title text-info"><a
-                                                                href="<?= $http . $_SERVER['HTTP_HOST'] ."/item/$item->id/$item->name" ?>"
+                                                                href="<?= $http . $_SERVER['HTTP_HOST'] . "/item/$item->id/$item->name" ?>"
                                                                 title="<?= $item->name ?>"> <?= $item->name ?></a>
                                                     </h3>
                                                     <small>฿<?= number_format($item->price) ?></small>
-                                                    <br></div>
+                                                    <br>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -142,14 +143,49 @@
                     </div>
 
                 </div>
+                <?php if (isset($article)): ?>
+                    <div class="row el-element-overlay m-b-40 block1">
+                        <?php foreach ($article as $item): ?>
+                            <div class="col-md-6 col-xs-12">
+                                <div class="white-box">
+                                    <div class="el-card-item">
+                                        <div class="el-card-avatar el-overlay-1"
+                                             style="width:100%;overflow: hidden">
+                                            <img src="<?= $item->image ?>" alt="<?= $item->title ?>"
+                                                 class="img"/>
+                                        </div>
+                                        <div class="el-card-content content">
+                                            <h3 class="box-title text-info"><a
+                                                        href="<?= $http . $_SERVER['HTTP_HOST'] . "/post/$item->id/$item->title" ?>"
+                                                        title="<?= $item->title ?>"><?= $item->title ?></a>
+                                            </h3>
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <button onclick="location.href='<?= $http . $_SERVER['HTTP_HOST'] . "/post/$item->id/$item->title" ?>'"
+                                                            class="btn   btn-outline btn-default  "
+                                                            style="margin-top: 15px;">
+                                                        ดูเพิ่มเติม
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        <?php endforeach; ?>
+
+
+                    </div>
+                <?php endif; ?>
             </div>
+
+
         </div>
-
-
     </div>
-</div>
 
 
-<?php $this->load->view('templatemerchant/template/footer'); ?>
+    <?php $this->load->view('templatemerchant/template/footer'); ?>
 
 

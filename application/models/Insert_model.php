@@ -12,6 +12,18 @@ class Insert_model extends CI_Model
         endif;
     }
 
+    function article($input)
+    {
+        if ($this->db->insert('article', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
+
+
+
     function customer($input)
     {
         if ($this->db->insert('customer', $input)):

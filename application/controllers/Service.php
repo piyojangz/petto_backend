@@ -413,6 +413,15 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function getarticle()
+    {
+        $id = $this->input->post('id');
+        $cond = array('id' => $id);
+        $data['result'] = $this->get->article($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
 
     public function removeimagecover()
     {
@@ -424,6 +433,21 @@ class Service extends CI_Controller
         );
 
         $data['result'] = $this->set->imagescover($input);
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+    public function removearticle()
+    {
+        $id = $this->input->post('id');
+        $input = array(
+            'id' => $id,
+            'status' => 0,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+
+        $data['result'] = $this->set->article($input);
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }

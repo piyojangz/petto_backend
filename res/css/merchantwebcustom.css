@@ -669,6 +669,10 @@ a.logo {
     margin-top: 120px;
     padding: 20px;
 }
+.el-element-overlay .el-card-item .el-card-content.content{
+    min-height: 20px;
+    padding:  5px;
+}
 
 .el-element-overlay .el-card-item .el-card-content {
     min-height: 80px;

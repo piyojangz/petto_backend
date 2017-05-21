@@ -99,6 +99,21 @@ class Account extends CI_Controller
         $this->load->view('account/settingabout', $data);
     }
 
+
+    public function setting_post($acctoken = "")
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id,"status"=>"1"))->result();
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+        $this->load->view('account/settingpost', $data);
+    }
+
+
     public function setting_contact($acctoken = "")
     {
         $data["user"] = $this->user->get_account_cookie();
@@ -159,6 +174,47 @@ class Account extends CI_Controller
             if ($this->set->merchant($input)) {
                 redirect(base_url("account/$acctoken/setting"));
             }
+        }
+    }
+
+    public function addarticle($acctoken = "")
+    {
+        if ($_POST) {
+            $image = "";
+            $data["user"] = $this->user->get_account_cookie();
+            $imageData = $this->input->post("imageData");
+            $articleid = $this->input->post("articleid");
+            $title = $this->input->post("title");
+            $inputcustomtext = $this->input->post("inputcustomtext");
+
+
+            if (!empty($imageData)) {
+                $image = $this->base64_to_jpeg_acc($imageData, $data["user"]["token"]);
+                $image = base_url("public/upload/acc/$acctoken/") . $image["upload_data"]["file_name"];
+            }
+
+
+            $input = array(
+                'merchantid' => $data["user"]["id"],
+                'title' => $title,
+                'description' => $inputcustomtext,
+                'status' => 1,
+            );
+            if ($image != "") {
+                $input["image"] = $image;
+            }
+
+            if ($articleid != "") {
+                $input["id"] = $articleid;
+                $input["updatedate"] = date('Y-m-d H:i:s');
+                $this->set->article($input);
+            } else {
+                $input["createdate"] = date('Y-m-d H:i:s');
+                $this->put->article($input);
+            }
+
+
+            redirect(base_url("account/$acctoken/setting_post"));
         }
     }
 

@@ -197,6 +197,18 @@ class Select_model extends CI_Model
     }
 
 
+
+
+    function article($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('article');
+        $this->db->where($cond);
+        $this->db->order_by("id","desc");
+        $query = $this->db->get();
+        return $query;
+    }
+
     function imagescover($cond)
     {
         $this->db->select('*');

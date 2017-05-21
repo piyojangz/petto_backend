@@ -301,7 +301,7 @@
                     data: {'id': id},
                     dataType: "json",
                     success: function (data) {
-                        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                        swal("Deleted!", "Your request has been deleted.", "success");
                         setTimeout(function() {
                             location.reload();
                         }, 1000);

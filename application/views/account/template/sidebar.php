@@ -49,6 +49,9 @@
                     <li><a href="<?= base_url("account/$token/setting_gganalytic") ?>"><i
                                     class="fa   fa-google  fa-fw"></i><span
                                     class="hide-menu">Google Analytic</span></a></li>
+                    <li><a href="<?= base_url("account/$token/setting_post") ?>"><i
+                                    class="fa   fa-pencil  fa-fw"></i><span
+                                    class="hide-menu">โพส</span></a></li>
                 </ul>
             </li>
             <li><a href="javascript:;"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">ออเดอร์<span
