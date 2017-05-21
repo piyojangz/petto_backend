@@ -38,7 +38,6 @@ class Bill extends CI_Controller
                 }
 
 
-
                 $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid, 'status' => '1'))->result();
                 $this->load->view('template/merchantbill', $data);
                 return;
@@ -221,23 +220,26 @@ class Bill extends CI_Controller
 //                    ];
 
 
-                    $data = [
-                        'replyToken' => $replyToken,
-                        'messages' => [$messages],
-                    ];
-                    $post = json_encode($data);
-                    $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . LINETOKEN);
+                    if($messages){
+                        $data = [
+                            'replyToken' => $replyToken,
+                            'messages' => [$messages],
+                        ];
+                        $post = json_encode($data);
+                        $headers = array('Content-Type: application/json', 'Authorization: Bearer ' . LINETOKEN);
 
-                    $ch = curl_init($url);
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-                    $result = curl_exec($ch);
-                    curl_close($ch);
+                        $ch = curl_init($url);
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                        $result = curl_exec($ch);
+                        curl_close($ch);
 
-                    echo $result . "\r\n";
+                        echo $result . "\r\n";
+                    }
+
                 }
             }
         }
@@ -284,11 +286,12 @@ class Bill extends CI_Controller
     {
         $msg = $event['message']['text'];
 
-//        $msg = "เปิดโปร";
+//        $msg = "stock";
 //        $event['source']['userId'] = "U7fbb7c7d7ba6f2642c0eb7026f8da615";
 
         $customtemplate = false;
         $customtemplatepromo = false;
+        $requeststock = false;
         $billtoken = false;
         $messages = array();
         $msgqarr = preg_split("/,|:|\s/", $msg);
@@ -373,7 +376,9 @@ class Bill extends CI_Controller
                         foreach ($merchantlineuid as $item) {
                             array_push($tokens, $item->token);
                         }
+
                         $data["sqlmerchant"] = $this->get->merchantin($tokens);
+
                         if ($data["sqlmerchant"]->num_rows() > 0) {
                             // $billtoken = $this->generatebilltoken($data["sqlmerchant"]->row(), $uid);
                             $customtemplatepromo = true;
@@ -400,6 +405,22 @@ class Bill extends CI_Controller
                             'text' => $msg
                         ];
                         break;
+                    case "stock":
+                        // get all merchant $uid
+                        $tokens = array();
+                        $merchantlineuid = $this->get->merchantlineuid(array('lineuid' => $uid))->result();
+                        foreach ($merchantlineuid as $item) {
+                            array_push($tokens, $item->token);
+                        }
+
+                        $data["sqlmerchant"] = $this->get->merchantin($tokens);
+                        if ($data["sqlmerchant"]->num_rows() > 0) {
+                            //$billtoken = $this->generatebilltoken($data["sqlmerchant"]->row(), $uid);
+                            $requeststock = true;
+                        } else {
+                            $replymsg = "คุณยังไม่เคยลงทะเบียนกับเรา" . $tokens;
+                        }
+                        break;
                     case "ลงทะเบียน":
                         $input = array(
                             'invitetoken' => $registertoken,
@@ -419,6 +440,7 @@ class Bill extends CI_Controller
 
             if ($customtemplate) {
                 $merchants = $data["sqlmerchant"]->result();
+
                 $colums = array();
                 $billcolums = array();
                 if (count($merchants) > 0) {
@@ -517,16 +539,59 @@ class Bill extends CI_Controller
                 } else {
                     $replymsg = "คุณยังไม่เคยลงทะเบียนกับเรา";
                 }
+            } else if ($requeststock) {
+                $merchants = $data["sqlmerchant"]->result();
+                $colums = array();
+                if (count($merchants) > 0) {
+
+                    foreach ($merchants as $item) {
+                        $billcolums = array();
+
+                        $merchantbills = $this->get->billtoken(array("merchantid" => $item->id, "status" => "1", "isstockenable" => "1"), 3)->result();
+                        foreach ($merchantbills as $billitem) {
+                            array_push($billcolums, array("type" => "postback",
+                                "label" => "$billitem->name",
+                                "data" => "getbillstock|$billitem->id|$uid|$billitem->name"));
+                        }
+                        for ($i = count($billcolums); $i < 3; $i++) {
+                            array_push($billcolums, array("type" => "message",
+                                "label" => "-",
+                                "text" => "-"));
+                        }
+
+
+                        $description = $item->description == '' ? '-' : $item->description;
+                        array_push($colums, array(
+                            "thumbnailImageUrl" => "$item->image",
+                            "title" => "ร้านค้า : $item->name",
+                            "text" => "***เลือกรายการเพื่อดูสินค้าคงคลัง***",
+                            'actions' => $billcolums
+                        ));
+
+                    }
+
+                    $messages = array(
+                        'type' => 'template',
+                        "altText" => "คุณได้รับข้อมูลการเช็คสินค้า",
+                        "template" => array(
+                            "type" => "carousel",
+                            "columns" => $colums
+                        )
+                    );
+
+
+                } else {
+                    $replymsg = "คุณยังไม่เคยลงทะเบียนกับเรา";
+                }
             } else if ($customtemplatepromo) {
                 $merchants = $data["sqlmerchant"]->result();
                 $colums = array();
                 if (count($merchants) > 0) {
 
-
                     foreach ($merchants as $item) {
                         $billcolums = array();
 
-                        $description = $item->description == '' ? '-' : $item->description;
+                        $description = "***กรอกส่วนลดเพื่อรับลิ้งค์สำหรับลูกค้า***";
 
 
                         array_push($colums, array(
@@ -542,7 +607,7 @@ class Bill extends CI_Controller
                             )
                         ));
                     }
-
+                    print_r($colums);
                     $messages = array(
                         'type' => 'template',
                         "altText" => "คุณได้รับข้อมูลการสั่งซื้อสินค้า",
@@ -638,6 +703,17 @@ class Bill extends CI_Controller
             ];
 
         }
+        if ($msg[0] == "getbillstock") {
+            $v_itemswithstock = $this->get->v_itemswithstock(array("billtokenid" => $msg[1]))->result();
+            foreach ($v_itemswithstock as $item) {
+                $stock = $item->itemstock == null ? 0 : $item->itemstock;
+                $this->lineapi->pushmsg($msg[2], "STOCK($msg[3]) : $item->name มีจำนวนเหลือ $stock");
+            }
+
+            return false;
+
+        }
+
     }
 
     public function generatebilltoken($merchant, $merchantuid)

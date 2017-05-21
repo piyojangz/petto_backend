@@ -309,7 +309,7 @@ class Service extends CI_Controller
                 if ($item->itemstock <= 0) {
                     $stock = $item->itemstock == null ? 0 : $item->itemstock;
                     foreach ($billnotificationusers as $user) {
-                        $this->lineapi->pushmsg($user->lineuid, "STOCK($billtoken->token) : $item->name มีจำนวนเหลือ $stock");
+                        $this->lineapi->pushmsg($user->lineuid, "STOCK($billtoken->name) : $item->name มีจำนวนเหลือ $stock");
                     }
                 }
 
