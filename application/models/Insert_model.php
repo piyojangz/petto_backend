@@ -1,8 +1,10 @@
 <?php
 
-class Insert_model extends CI_Model {
+class Insert_model extends CI_Model
+{
 
-    function merchant($input) {
+    function merchant($input)
+    {
         if ($this->db->insert('merchant', $input)):
             return true;
         else:
@@ -10,7 +12,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function customer($input) {
+    function customer($input)
+    {
         if ($this->db->insert('customer', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
@@ -19,8 +22,29 @@ class Insert_model extends CI_Model {
         endif;
     }
 
+    function imagescover($input)
+    {
+        if ($this->db->insert('imagescover', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
 
-    function billtokenstock($input) {
+    function googleanalytic($input)
+    {
+        if ($this->db->insert('googleanalytic', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
+
+
+    function billtokenstock($input)
+    {
         if ($this->db->insert('billtokenstock', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
@@ -30,7 +54,8 @@ class Insert_model extends CI_Model {
     }
 
 
-    function billnotificationusers($input) {
+    function billnotificationusers($input)
+    {
         if ($this->db->insert('billnotificationusers', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
@@ -39,7 +64,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function billtoken($input) {
+    function billtoken($input)
+    {
         if ($this->db->insert('billtoken', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
@@ -48,7 +74,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function shippingrate($input) {
+    function shippingrate($input)
+    {
         if ($this->db->insert('shippingrate', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
@@ -57,7 +84,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function paymentmethod($input) {
+    function paymentmethod($input)
+    {
         if ($this->db->insert('paymentmethod', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
@@ -66,7 +94,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function items($input) {
+    function items($input)
+    {
         if ($this->db->insert('items', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
@@ -75,7 +104,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function merchantlineuid($input) {
+    function merchantlineuid($input)
+    {
         if ($this->db->insert('merchantlineuid', $input)):
             return true;
         else:
@@ -83,7 +113,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function orderdetail($input) {
+    function orderdetail($input)
+    {
         if ($this->db->insert('orderdetail', $input)):
             return true;
         else:
@@ -91,7 +122,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function order($input) {
+    function order($input)
+    {
         if ($this->db->insert('order', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
@@ -100,7 +132,8 @@ class Insert_model extends CI_Model {
         endif;
     }
 
-    function ordertoken($input) {
+    function ordertoken($input)
+    {
         if ($this->db->insert('ordertoken', $input)):
             return true;
         else:

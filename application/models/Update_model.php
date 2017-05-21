@@ -38,6 +38,40 @@ class Update_model extends CI_Model {
         endif;
     }
 
+    public function removeimagescover($id) {
+        $this->db->where('id', $id);
+        if ($this->db->delete(' imagescover')):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
+
+
+    public function googleanalytic($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('googleanalytic', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
+
+
+
+    public function imagescover($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('imagescover', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
+
+
     function shippingrate($input) {
         $this->db->where('id', $input['id']);
         if ($this->db->update('shippingrate', $input)):

@@ -46,6 +46,9 @@
                     <li><a href="<?= base_url("account/$token/setting_contact") ?>"><i
                                     class="fa   fa-fw">C</i><span
                                     class="hide-menu">ติดต่อเรา</span></a></li>
+                    <li><a href="<?= base_url("account/$token/setting_gganalytic") ?>"><i
+                                    class="fa   fa-google  fa-fw"></i><span
+                                    class="hide-menu">Google Analytic</span></a></li>
                 </ul>
             </li>
             <li><a href="javascript:;"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">ออเดอร์<span

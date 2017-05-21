@@ -477,7 +477,16 @@ table.package thead tr th {
     max-width: 500px;
     margin: 0 auto;
 }
-
+h3.title{
+    font-weight: bold;
+    text-align: center;
+}
+.white-box img{
+    max-width: 100% !important;
+}
+.el-card-item h3 a{
+    font-weight: bold;
+}
 .register-header-fixed {
     padding: 50px;
     background: #3498db;
@@ -492,7 +501,6 @@ table.package thead tr th {
 
 .header-index {
     background: #fff;
-    padding-top: 10px;
     margin-bottom: 30px;
     background-repeat: no-repeat !important;
     background-size: 100% !important;

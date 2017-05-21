@@ -14,11 +14,15 @@
 
     <link href="<?= base_url("res/account/css/style.css") ?>" rel="stylesheet">
     <!-- Custom -->
-    <link href="<?= base_url("res/css/merchantwebcustom.css?ver=1.2") ?>" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url("res/css/merchantwebcustom.css?ver=1.3") ?>" rel="stylesheet" type="text/css"/>
 
     <!-- animation CSS -->
     <link href="<?= base_url("res/account/css/animate.css") ?>" rel="stylesheet">
 
+    <link href="<?= base_url("res/account/plugins/bower_components/owl.carousel/owl.carousel.min.css") ?>"
+          rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url("res/account/plugins/bower_components/owl.carousel/owl.theme.default.css") ?>"
+          rel="stylesheet" type="text/css"/>
 
 </head>
 <body class="nopadding grey">
@@ -30,7 +34,7 @@
 
         <ul class="nav navbar-nav navbar-right" style="padding-right: 15px;">
             <?php if ($islogin): ?>
-                <li style="background: #585858;"><a style="color: #fff;" href="<?= base_url("account/$merchant->token") ?>">จัดการร้านค้า</a></li>
+                <li style="background: #dad9d9;"><a style="color: #fff;" href="<?= base_url("account/$merchant->token") ?>">จัดการร้านค้า</a></li>
                 <li><a href="<?= base_url("logout") ?>">ออกจากระบบ</a></li>
             <?php else: ?>
                 <li class="text-success"><a href="<?= base_url("login") ?>"><i class="fa fa-lock"></i> เข้าสู่ระบบ</a></li>

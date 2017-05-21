@@ -287,13 +287,20 @@
 </body>
 <!-- Loading Flat UI Pro -->
 <link href="<?= base_url("res/dist/css/flat-ui-merchantpage.css") ?>" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="<?= base_url("res/js/jquery-3.2.0.min.js") ?>"></script>
+<!-- jQuery -->
+<script type="text/javascript" src="<?= base_url("res/dist/js/vendor/jquery.min.js") ?>"></script>
+<!-- jQuery for carousel -->
+<!-- Bootstrap Core JavaScript -->
+<script src="<?= base_url("res/account/bootstrap/dist/js/bootstrap.min.js") ?>"></script>
+<script src="<?= base_url("res/account/plugins/bower_components/owl.carousel/owl.carousel.min.js") ?>"></script>
 <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
 <script src="https://npmcdn.com/bootstrap@4.0.0-alpha.5/dist/js/bootstrap.min.js"></script
 <script type="text/javascript" src="<?= base_url("res/bootstrap/js/bootstrap.min.js") ?>"></script>
 <script src="<?= base_url("res/account/js/jquery.slimscroll.js") ?>"></script>
 <script src="<?= base_url("res/dist/js/flat-ui-pro.min.js") ?>"></script>
 <script src="<?= base_url("res/js/application.js") ?>"></script>
+
+
 <script>
 
     var datepickerSelector = $('#txtpaiddate');
@@ -316,6 +323,9 @@
 
     $(document).ready(function () {
         init();
+
+
+
     });
 
     function billtoogle(istoogle) {
@@ -381,6 +391,8 @@
                     $(".overlay-loader").hide();
                 }
             });
+
+
         });
         $("#txtaumpure").change(function () {
             $(".overlay-loader").show();
@@ -569,5 +581,9 @@
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+</script>
+
+<script>
+    <?=$ggscript->script?>
 </script>
 </html>

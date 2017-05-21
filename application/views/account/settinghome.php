@@ -96,24 +96,35 @@
 
 
                                     <div class="form-group">
-                                        <label class="col-md-12">รูป Cover (735*315)</label>
-                                        <div class="col-md-12">
+                                        <label class="col-md-12">รูป Cover (735*315) <span
+                                                    class="label label-primary m-l-5"><a href="javascript:;"
+                                                                                         class="btn-cover"
+                                                                                         style="color: #fff;"><i
+                                                            class="fa fa-plus"></i> เพิ่ม</a></span></label>
 
-                                            <div class="image-editor" style="margin: 0 auto;
-    width: 735px;">
-                                                <input type="hidden" id="imageData" name="imageData"/>
-                                                <input type="file" class="cropit-image-input" data-max-file-size="2M"
-                                                       accept=".jpg,.png"/>
-                                                <div class="cropit-preview"></div>
-                                                <div class="image-size-label"></div>
-                                                <input type="range" class="cropit-image-zoom-input"
-                                                       style="width:150px;">
-                                                <button class="select-image-btn btn btn-info waves-effect waves-light"
-                                                        type="button"><span class="btn-label"><i
-                                                                class="fa fa-image"></i></span>เลือกรูปภาพ
-                                                </button>
-                                            </div>
+                                        <div class="row">
+                                            <?php foreach ($imagescover as $item): ?>
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading"> <span class="label label-danger m-l-5"> <a
+                                                                        href="javascript:;"
+                                                                        onclick="removecover('<?= $item->id; ?>')"
+                                                                        style="color: #fff;"><i class="fa fa-remove"></i> ลบ</a></span>
+                                                            <span class="label label-primary m-l-5"> <a
+                                                                        href="javascript:;"
+                                                                        onclick="editcover('<?= $item->id; ?>')"
+                                                                        style="color: #fff;"><i class="fa fa-edit"></i> แก้ไข</a></span>
+                                                        </div>
+                                                        <div class="panel-wrapper collapse in">
+                                                            <div class="panel-body">
+                                                                <img src="<?= $item->image; ?>" width="100%"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
                                         </div>
+
                                     </div>
 
                                     <hr/>
@@ -131,7 +142,9 @@
 
                                     <div class="form-group">
                                         <label class="col-md-12"><span class="text-danger">*</span>url bill
-                                            (ผูกกับสินค้าที่หน้าเว็บ) <a href="<?=base_url("account/$token/dashboard")?>" >สร้างรายการบิลที่นี่ <i class="fa fa-external-link-square"></i></a></label>
+                                            (ผูกกับสินค้าที่หน้าเว็บ) <a
+                                                    href="<?= base_url("account/$token/dashboard") ?>">สร้างรายการบิลที่นี่
+                                                <i class="fa fa-external-link-square"></i></a></label>
                                         <div class="col-md-12">
                                             <input type="text" name="billtoken" id="billtoken" required
                                                    class="form-control form-control-line"
@@ -152,6 +165,82 @@
 
 
         </div>
+
+        <form method="post" action="<?= base_url("account/$token/addcover") ?>"
+              class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"
+              id="form-submit-cover" style="    max-width: 800px;">
+            <input type="hidden" id="imagescoverid" name="imagescoverid"/>
+            <div class="panel panel-default">
+                <div class="panel-heading">เพิ่ม / แก้ไข</div>
+                <div class="panel-wrapper collapse in">
+                    <div class="row">
+                        <div class="panel panel-info ">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-body">
+                                        <div class="form-group">
+                                            <label class="col-md-12">Title</label>
+                                            <div class="col-md-12">
+                                                <input type="text" name="title" id="title"
+                                                       class="form-control form-control-line"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">Caption</label>
+                                            <div class="col-md-12">
+                                                <input type="text" name="caption" id="caption"
+                                                       class="form-control form-control-line"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">External link</label>
+                                            <div class="col-md-12">
+                                                <input type="text" name="externallink" id="externallink"
+                                                       class="form-control form-control-line"
+                                                       placeholder="eg. http://www.google.com"></div>
+                                        </div>
+
+                                        <div class="image-editor" style="margin: 0 auto;
+    width: 735px;">
+                                            <input type="hidden" id="imageData" name="imageData"/>
+                                            <input type="file" class="cropit-image-input" data-max-file-size="2M"
+                                                   accept=".jpg,.png"/>
+                                            <div class="cropit-preview"></div>
+                                            <div class="image-size-label"></div>
+                                            <input type="range" class="cropit-image-zoom-input"
+                                                   style="width:100%;">
+                                            <button class="select-image-btn btn btn-info waves-effect waves-light"
+                                                    type="button"><span class="btn-label"><i
+                                                            class="fa fa-image"></i></span>เลือกรูปภาพ
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-offset-9 col-md-3">
+                                                <button type="submit" id="btnaddcover" name="btnaddcover"
+                                                        class="btn btn-success"><i
+                                                            class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="adminid" name="adminid"/>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </form>
         <!-- /.container-fluid -->
         <?php $this->load->view('account/template/footer'); ?>
     </div>
@@ -193,7 +282,78 @@
 
 
 <script>
+    function removecover(id) {
+        swal({
+            title: "Are you sure?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        }, function (isConfirm) {
+            if (isConfirm) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('service/removeimagecover'); ?>",
+                    data: {'id': id},
+                    dataType: "json",
+                    success: function (data) {
+                        swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+
+                    },
+                    error: function (XMLHttpRequest) {
+
+                    }
+                });
+
+            } else {
+                swal("Cancelled", "", "error");
+            }
+        });
+    }
+    function editcover(id) {
+        $("#imagescoverid").val(id);
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getimagecover'); ?>",
+            data: {'id': id},
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.result != null) {
+                    $('.cropit-preview-image').attr("src",data.result.image);
+                    $('#title').val(data.result.title);
+                    $('#caption').val(data.result.caption);
+                    $('#externallink').val(data.result.externallink);
+
+
+                    $.magnificPopup.open({items: {src: '#form-submit-cover'}, type: 'inline'}, 0);
+                }
+
+            },
+            error: function (XMLHttpRequest) {
+                $('div.block1').unblock();
+            }
+        });
+
+
+    }
     $(document).ready(function () {
+
+        $(".btn-cover").click(function () {
+            $("#imagescoverid").val("");
+            $('#title').val("");
+            $('#caption').val("");
+            $('#externallink').val("");
+            $('.cropit-preview-image').attr("src","");
+            $.magnificPopup.open({items: {src: '#form-submit-cover'}, type: 'inline'}, 0);
+        });
 
         $('.summernote').summernote({
             height: 350, // set editor height
@@ -219,7 +379,7 @@
 //                },
         });
 
-        $('.cropit-preview-image').attr("src", '<?= $merchant->imagecover ?>');
+
         $('.rotate-cw').click(function () {
             $('.image-editor').cropit('rotateCW');
         });
@@ -227,15 +387,20 @@
             $('.image-editor').cropit('rotateCCW');
         });
         $('#form-submit').submit(function () {
+
+            var text = $('textarea[name="customtext"]').html($('#customtext').code());
+            $("#inputcustomtext").val(text.val());
+
+            return true;
+        });
+
+
+        $('#form-submit-cover').submit(function () {
             var imageData = $('.image-editor').cropit('export');
 
             if (imageData != null) {
                 $("#imageData").val(imageData.split(",")[1]);
             }
-
-            var text = $('textarea[name="customtext"]').html($('#customtext').code());
-            $("#inputcustomtext").val(text.val());
-            console.log(text.val());
 
             return true;
         });

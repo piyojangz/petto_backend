@@ -186,6 +186,26 @@ class Select_model extends CI_Model
         return $query;
     }
 
+
+    function googleanalytic($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('googleanalytic');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+    function imagescover($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('imagescover');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function itemswithstock($cond, $billtokenid)
     {
         $this->db->select('a.*,sum(b.amount) as itemstock');

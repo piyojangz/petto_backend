@@ -29,7 +29,9 @@ class Web extends CI_Controller
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
-        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -47,7 +49,9 @@ class Web extends CI_Controller
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
-        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -65,7 +69,9 @@ class Web extends CI_Controller
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
-        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -78,15 +84,23 @@ class Web extends CI_Controller
 
     public function mapdomain()
     {
+        $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
         if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
             $merchantname = "rochubeauty";
         }
-        $data['http'] = "http://";
+        if (preg_match('/.+\.rochubeauty\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+            $data['http'] = "https://";
+        }
+
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
-        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -99,15 +113,22 @@ class Web extends CI_Controller
 
     public function webpage($page)
     {
+        $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
         if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
             $merchantname = "rochubeauty";
         }
-        $data['http'] = "http://";
+        if (preg_match('/.+\.rochubeauty\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+            $data['http'] = "https://";
+        }
+
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
-        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -118,13 +139,15 @@ class Web extends CI_Controller
     }
 
 
-    public function page($merchantname,$page)
+    public function page($merchantname, $page)
     {
         $data["islogin"] = $this->user->is_login();
         $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
-        $data["ordertoken"] = substr($data["merchant"]->billtoken,-5);
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -134,5 +157,159 @@ class Web extends CI_Controller
         $this->load->view("templatemerchant/$page", $data);
     }
 
+    public function items($merchantname)
+    {
+        $data['http'] = "http://";
+        $data["islogin"] = $this->user->is_login();
+        if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+        }
+        if (preg_match('/.+\.rochubeauty\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+            $data['http'] = "https://";
+        }
 
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view("templatemerchant/items", $data);
+    }
+
+
+    public function item($merchantname, $itemid, $title = "")
+    {
+        $data['http'] = "http://";
+        $data["islogin"] = $this->user->is_login();
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        $data["item"] = $this->get->items(array("id" => $itemid))->row();
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view("templatemerchant/item", $data);
+    }
+
+
+    public function subitems()
+    {
+        $data["islogin"] = $this->user->is_login();
+        if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+        }
+        if (preg_match('/.+\.rochubeauty\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+            $data['http'] = "https://";
+        }
+        $data['http'] = "http://";
+        $data["islogin"] = $this->user->is_login();
+        $merchantname = explode(".", $_SERVER['HTTP_HOST'])[0];
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view("templatemerchant/items", $data);
+    }
+
+    public function subitem($itemid, $title = "")
+    {
+        $data['http'] = "http://";
+        $data["islogin"] = $this->user->is_login();
+        $merchantname = explode(".", $_SERVER['HTTP_HOST'])[0];
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        $data["item"] = $this->get->items(array("id" => $itemid))->row();
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view("templatemerchant/item", $data);
+    }
+
+
+    public function mapitems()
+    {
+        $data["islogin"] = $this->user->is_login();
+        if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+        }
+        if (preg_match('/.+\.rochubeauty\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+            $data['http'] = "https://";
+        }
+        $data['http'] = "http://";
+        $data["islogin"] = $this->user->is_login();
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view("templatemerchant/items", $data);
+    }
+
+    public function mapitem($itemid, $title = "")
+    {
+        $data['http'] = "http://";
+        $data["islogin"] = $this->user->is_login();
+        if (preg_match('/.+\.zoaish\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+        }
+        if (preg_match('/.+\.rochubeauty\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+            $merchantname = "rochubeauty";
+            $data['http'] = "https://";
+        }
+        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["province"] = $this->get->province(array())->result();
+        $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
+
+        $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
+        $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        $data["item"] = $this->get->items(array("id" => $itemid))->row();
+        if (count($data["merchant"]) == 0) {
+            redirect(base_url());
+        }
+
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+
+        $this->load->view("templatemerchant/item", $data);
+    }
 }

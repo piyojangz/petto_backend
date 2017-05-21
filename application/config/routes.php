@@ -55,10 +55,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 if (preg_match('/.+\.perdbill\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
     $route['default_controller'] = 'Web';
     $route['(:any)'] = "web/subpage/$1";
+    $route['items'] = "web/subitems"; ;
+    $route['item/(:any)/(:any)'] = "web/subitem/$1/$2";
+
 }
-elseif (preg_match('/.+\.(zoaish)\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
+elseif (preg_match('/.+\.(zoaish|rochubeauty)\.(com|co)$/', $_SERVER['HTTP_HOST'])) {
     $route['default_controller'] = 'Web/mapdomain';
     $route['(:any)'] = "web/webpage/$1";
+    $route['items'] = "web/mapitems"; ;
+    $route['item/(:any)/(:any)'] = "web/mapitem/$1/$2";
 }
 else {
     $route['default_controller'] = 'home';
@@ -84,6 +89,7 @@ else {
     $route['account/(:any)/setting_home'] = "account/setting_home/$1";
     $route['account/(:any)/setting_about'] = "account/setting_about/$1";
     $route['account/(:any)/setting_contact'] = "account/setting_contact/$1";
+    $route['account/(:any)/setting_gganalytic'] = "account/setting_gganalytic/$1";
     $route['account/(:any)/customer'] = "account/customer/$1";
     $route['account/(:any)/order/all'] = "account/orderall/$1";
     $route['account/(:any)/paymentmethod'] = "account/paymentmethod/$1";
@@ -96,7 +102,8 @@ else {
     $route['account/(:any)/updatehomesetting'] = "account/updatehomesetting/$1";
     $route['account/(:any)/updateaboutsetting'] = "account/updateaboutsetting/$1";
     $route['account/(:any)/updatecontactsetting'] = "account/updatecontactsetting/$1";
-
+    $route['account/(:any)/updategganalyticsetting'] = "account/updategganalyticsetting/$1";
+    $route['account/(:any)/addcover'] = "account/addcover/$1";
 
 
 
@@ -107,6 +114,8 @@ else {
     /* test */
 
     $route['web/(:any)'] = "web/test/$1";
+    $route['web/(:any)/items'] = "web/items/$1";
     $route['web/(:any)/(:any)'] = "web/page/$1/$2";
+    $route['web/(:any)/item/(:any)/(:any)'] = "web/item/$1/$2/$3";
 }
 

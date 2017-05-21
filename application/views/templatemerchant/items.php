@@ -9,20 +9,18 @@
             </div>
             <div class="menu">
                 <ul>
-                    <!--
-                    <li class="active"><a href="
+                   <!-- <li><a href="
                     <?= base_url("web/$merchant->name") ?>">หน้าหลัก</a></li>
-                    <li><a href="
+                    <li  class="active"><a href="
                     <?= base_url("web/$merchant->name/items") ?>">สินค้า</a></li>
                     <li><a href="
                     <?= base_url("web/$merchant->name/about") ?>">เกี่ยวกับเรา</a></li>
                     <li><a href="
-                   <?= base_url("web/$merchant->name/contact") ?>">ติดต่อเรา</a></li>
-                   -->
+                   <?= base_url("web/$merchant->name/contact") ?>">ติดต่อเรา</a></li>-->
 
-                    <li class="active"><a href="
+                    <li ><a href="
                     <?= $http . $_SERVER['HTTP_HOST'] ?>">หน้าหลัก</a></li>
-                    <li><a href="
+                    <li class="active"><a href="
                     <?= $http . $_SERVER['HTTP_HOST'] ?>/items">สินค้า</a></li>
                     <li><a href="
                     <?= $http . $_SERVER['HTTP_HOST'] ?>/about">เกี่ยวกับเรา</a></li>
@@ -44,53 +42,7 @@
         </div>
         <div class="col-lg-9 col-md-9 col-sm-8">
             <div class="row">
-                <?php if (isset($imagescover)): ?>
-                    <?php if (count($imagescover) > 0): ?>
-                        <div class="header-index">
-                            <!-- START carousel-->
-                            <div id="carousel-example-captions" data-ride="carousel" class="carousel slide">
-                                <ol class="carousel-indicators">
-                                    <?php foreach ($imagescover as $index => $item): ?>
-                                        <li data-target="#carousel-example-captions" data-slide-to="<?= $index ?>"
-                                            class=" <?= $index == 0 ? 'active' : '' ?>"></li>
-                                    <?php endforeach; ?>
 
-                                </ol>
-                                <div role="listbox" class="carousel-inner">
-                                    <?php foreach ($imagescover as $index => $item): ?>
-                                        <div style="cursor: pointer;"
-                                             onclick="location.href='<?= $item->externallink == "" ? 'javascript:;' : $item->externallink ?>'"
-                                             class="item <?= $index == 0 ? 'active' : '' ?>"><img
-                                                    src="<?= $item->image ?>"
-                                                    alt="<?= $item->caption ?>">
-                                            <div class="carousel-caption">
-                                                <h3 class="text-white font-600"><?= $item->title ?></h3>
-                                                <p><?= $item->caption ?></p>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
-
-                                </div>
-                                <a href="#carousel-example-captions" role="button" data-slide="prev"
-                                   class="left carousel-control"> <span aria-hidden="true"
-                                                                        class="fa fa-angle-left"></span>
-                                    <span class="sr-only">Previous</span> </a>
-                                <a href="#carousel-example-captions" role="button" data-slide="next"
-                                   class="right carousel-control"> <span aria-hidden="true"
-                                                                         class="fa fa-angle-right"></span> <span
-                                            class="sr-only">Next</span> </a>
-                            </div>
-                            <!-- END carousel-->
-                        </div>
-                    <?php endif; ?>
-                <?php endif; ?>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="white-box">
-                            <?= $merchant->textcustom; ?>
-                        </div>
-                    </div>
-                </div>
 
 
                 <div class="row">
@@ -108,7 +60,7 @@
                                                 <div class="el-card-avatar el-overlay-1"
                                                      style="width:100%;overflow: hidden">
                                                     <img alt="<?= $item->name ?>"
-                                                         src="<?= $item->image ?>"/>
+                                                            src="<?= $item->image ?>"/>
                                                     <div class="el-overlay   hidden-xs">
                                                         <ul class="el-info">
                                                             <li>
@@ -126,9 +78,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="el-card-content">
-                                                    <h3 class="box-title text-info"><a
-                                                                href="<?= $http . $_SERVER['HTTP_HOST'] ."/item/$item->id/$item->name" ?>"
-                                                                title="<?= $item->name ?>"> <?= $item->name ?></a>
+                                                    <h3 class="box-title text-info"><a href="<?= $http . $_SERVER['HTTP_HOST'] ."/item/$item->id/$item->name" ?>"
+                                                                                       title="<?= $item->name ?>"> <?= $item->name ?></a>
                                                     </h3>
                                                     <small>฿<?= number_format($item->price) ?></small>
                                                     <br></div>

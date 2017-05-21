@@ -404,6 +404,31 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function getimagecover()
+    {
+        $id = $this->input->post('id');
+        $cond = array('id' => $id);
+        $data['result'] = $this->get->imagescover($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+    public function removeimagecover()
+    {
+        $id = $this->input->post('id');
+        $input = array(
+            'id' => $id,
+            'status' => 0,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+
+        $data['result'] = $this->set->imagescover($input);
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
     public function getordersumbibilltoken($billtoken)
     {
         return $this->get->getordersumbybilltoken($billtoken)->result();
