@@ -34,15 +34,15 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                 </button>
-                <a href="<?=base_url()?>" class="logo"><img src="<?= base_url("res/img/web-logo.png") ?>"
-                                              style="width: 50px;"/> PERDBILL </a>
+                <a href="<?= base_url() ?>" class="logo"><img src="<?= base_url("res/img/web-logo.png") ?>"
+                                                              style="width: 50px;"/> PERDBILL </a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav main">
-                    <li><a href="<?=base_url()?>">หน้าหลัก</a></li>
-                    <li><a href="#about">วิธีใช้งาน</a></li>
-                    <li><a href="#contact">ราคา</a></li>
-                    <li><a href="#contact">ติดต่อเรา</a></li>
+                    <li><a href="<?= base_url() ?>">หน้าหลัก</a></li>
+                    <li><a href="javascript:;" id="howto">วิธีใช้งาน</a></li>
+                    <li><a href="javascript:;"  id="price">ราคา</a></li>
+                    <li><a href="javascript:;"  id="contact">ติดต่อเรา</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <?php if ($islogin): ?>
@@ -128,7 +128,7 @@
 
 
 </div>
-<div class="feature-ss text-center">
+<div class="feature-ss text-center" id="divhowto">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -163,6 +163,19 @@
     </div>
 </div>
 
+
+<div class="feature-ss text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>เปิด 1 ได้ถึง 2</h1>
+                <p>ฟรีเว็บสำเร็จรูป รองรับการขายสินค้าผ่านไลน์โดยเฉพาะ</p>
+                <img src="<?=base_url("res/img/device.png")?>" class="img img-responsive" />
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="user-quote text-center">
     <div class="container">
         <div class="row">
@@ -182,7 +195,7 @@
         </div>
     </div>
 </div>
-<div class="package text-center">
+<div class="package text-center" id="divprice">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -207,18 +220,35 @@
                     </tr>
                     <tr>
                         <td class="text-left lc-lp-spec-black">จำกัด</td>
-                        <td class="text-left">จำนวนผู้ค้า</td>
-                        <td>ไม่จำกัด</td>
+                        <td class="text-left">จำนวนผู้ใช้งานภายในร้าน</td>
+                        <td>5</td>
                     </tr>
                     <tr>
-                        <td class="text-left lc-lp-spec-black">ฟังก์ชันอื่นๆ</td>
-                        <td class="text-left">ฟังก์ชันต่างๆ ของ @perdbill</td>
-                        <td>เร็วๆนี้</td>
+                        <td class="text-left lc-lp-spec-black"  rowspan="3">ฟังก์ชันต่างๆ ของ @perdbill</td>
+                        <td class="text-left">เปิดโปร</td>
+                        <td><i class="fa fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">เช็คสต๊อก</td>
+                        <td><i class="fa fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">ค้นหา</td>
+                        <td><i class="fa fa-check text-success"></i>
                     </tr>
                     <tr>
                         <td class="text-left lc-lp-spec-black">ออพชัน</td>
                         <td class="text-left">ช่องทางการรับชำระเงิน</td>
                         <td>เร็วๆนี้</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left lc-lp-spec-black" rowspan="2">เว็บสำเร็จรูป</td>
+                        <td class="text-left">subdomain</td>
+                        <td><i class="fa fa-check text-success"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="text-left">domain ส่วนตัว</td>
+                        <td> 570 บาท / ปี</td>
                     </tr>
                     </tbody>
                 </table>
@@ -226,15 +256,16 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-            เพิ่มเราเป็นเพื่อนเลย!
+                เพิ่มเราเป็นเพื่อนเลย!
                 <br/>
-                <a href="https://line.me/R/ti/p/%40hkw0659s"><img height="36" border="0" alt="เพิ่มเพื่อน" src="https://scdn.line-apps.com/n/line_add_friends/btn/en.png"></a>
+                <a href="https://line.me/R/ti/p/%40hkw0659s"><img height="36" border="0" alt="เพิ่มเพื่อน"
+                                                                  src="https://scdn.line-apps.com/n/line_add_friends/btn/en.png"></a>
                 <hr>
             </div>
         </div>
     </div>
 </div>
-<div class="startnow text-center">
+<div class="startnow text-center" id="divcontact">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -275,6 +306,22 @@
 <script>
     $(document).ready(function () {
         init();
+
+        $("#howto").click(function (){
+            $('html, body').animate({
+                scrollTop: $("#divhowto").offset().top
+            }, 1000);
+        });
+        $("#price").click(function (){
+            $('html, body').animate({
+                scrollTop: $("#divprice").offset().top
+            }, 1000);
+        });
+        $("#contact").click(function (){
+            $('html, body').animate({
+                scrollTop: $("#divcontact").offset().top
+            }, 1000);
+        });
 
 
         $(".feature-ss li, .image-wrapper").click(function () {
