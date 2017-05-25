@@ -250,7 +250,7 @@
                     </tr>
                     <tr>
                         <td class="text-left">domain ส่วนตัว</td>
-                        <td> 570 บาท / ปี</td>
+                        <td> 1,999 บาท / ปี</td>
                     </tr>
                     </tbody>
                 </table>
