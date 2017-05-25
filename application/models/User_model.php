@@ -22,6 +22,7 @@ class User_model extends CI_Model {
 
             $set_cm_account['id'] = $row->id;
             $set_cm_account['name'] = $row->name;
+            $set_cm_account['webname'] = $row->webname;
             $set_cm_account['email'] = $row->email;
             $set_cm_account['description'] = $row->description;
             $set_cm_account['lineid'] = $row->lineid;

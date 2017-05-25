@@ -382,6 +382,9 @@ class Account extends CI_Controller
     {
         $data["daterange"] = date('d/m/Y') . " - " . date('d/m/Y', strtotime(date('Y-m-d') . ' + 30 days'));
         $data["user"] = $this->user->get_account_cookie();
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"], "status" => 1))->result();
@@ -422,9 +425,7 @@ class Account extends CI_Controller
             redirect(base_url("account/$mtoken/dashboard"));
         }
 
-        if (!$this->user->is_login()) {
-            redirect('/');
-        }
+
 
         $this->load->view('account/index', $data);
     }

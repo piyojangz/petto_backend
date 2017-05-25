@@ -217,7 +217,8 @@
                                                         <code><?= $value->invitetoken ?></code></p>
                                                 <?php else: ?>
                                                     <p>นำรหัสนี้ไปให้ <strong><?= $value->name ?></strong>
-                                                        ลงทะเบียนผ่านไลน์ @perdbill <code><span
+                                                        ลงทะเบียนผ่านไลน์ <a href="https://line.me/R/ti/p/%40hkw0659s" target="_blank">@hkw0659s</a>  <br/>
+                                                        <code><span
                                                                     style="display: inline-block;"
                                                                     id="<?= $value->invitetoken ?>"><?= $value->invitetoken ?></span></code></span>
                                                         <button class="btn btn-outline btn-default btn-xs"

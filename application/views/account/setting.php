@@ -116,7 +116,7 @@
                                     <div class="form-group">
                                         <label class="col-md-12">ชื่อร้าน</label>
                                         <div class="col-md-12">
-                                            <input type="text" name="name" id="name"
+                                            <input type="text" name="name" id="name" disabled
                                                    class="form-control form-control-line"
                                                    value="<?= $merchant->name ?>"></div>
                                     </div>
@@ -161,7 +161,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="col-md-12">ลิงค์สำหรับ Add Line <a href="https://www.youtube.com/watch?v=53uNH4jgndU" target="_blank"><i class="fa fa-external-link-square"></i> ดูวิธีที่นี่</a>   <img src="<?=base_url("res/img/btn-line-example.png")?>" style="height: 40px;"/> </label>
+                                        <label class="col-md-12">ลิงค์สำหรับ Add Line <a href="https://www.youtube.com/watch?v=53uNH4jgndU" target="_blank"><i class="fa fa-external-link-square"></i> ดูวิธีที่นี่</a>  </label>
                                         <div class="col-md-12">
                                             <input type="text" name="lineaddurl"   class="form-control form-control-line"
                                                    value="<?=  $merchant->lineaddurl ?>"></div>
@@ -246,11 +246,11 @@
         });
 
 
-        $('#name').bind('input', function () {
-            $(this).val(function (_, v) {
-                return v.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
-            });
-        });
+//        $('#name').bind('input', function () {
+//            $(this).val(function (_, v) {
+//                return v.replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+//            });
+//        });
 
 
     });

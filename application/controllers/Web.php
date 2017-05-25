@@ -26,7 +26,7 @@ class Web extends CI_Controller
         $data['http'] = "http://";
         //echo $merchantname;
 
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -47,7 +47,7 @@ class Web extends CI_Controller
     {
         $data["islogin"] = $this->user->is_login();
         $data['http'] = "http://";
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -68,7 +68,7 @@ class Web extends CI_Controller
         $data["islogin"] = $this->user->is_login();
         $merchantname = explode(".", $_SERVER['HTTP_HOST'])[0];
         $data['http'] = "http://";
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -98,7 +98,7 @@ class Web extends CI_Controller
             $data['http'] = "https://";
         }
 
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -128,7 +128,7 @@ class Web extends CI_Controller
             $data['http'] = "https://";
         }
 
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -147,7 +147,7 @@ class Web extends CI_Controller
     public function page($merchantname, $page)
     {
         $data["islogin"] = $this->user->is_login();
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -166,7 +166,7 @@ class Web extends CI_Controller
     {
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -195,7 +195,7 @@ class Web extends CI_Controller
             $data['http'] = "https://";
         }
 
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -215,7 +215,7 @@ class Web extends CI_Controller
     {
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
 
@@ -246,7 +246,7 @@ class Web extends CI_Controller
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
         $merchantname = explode(".", $_SERVER['HTTP_HOST'])[0];
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -266,7 +266,7 @@ class Web extends CI_Controller
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
         $merchantname = explode(".", $_SERVER['HTTP_HOST'])[0];
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
 
@@ -296,7 +296,7 @@ class Web extends CI_Controller
         }
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -322,7 +322,7 @@ class Web extends CI_Controller
             $merchantname = "rochubeauty";
             $data['http'] = "https://";
         }
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
 
@@ -345,7 +345,7 @@ class Web extends CI_Controller
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
         $merchantname = explode(".", $_SERVER['HTTP_HOST'])[0];
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
@@ -374,7 +374,7 @@ class Web extends CI_Controller
             $data['http'] = "https://";
         }
         $data["islogin"] = $this->user->is_login();
-        $data["merchant"] = $this->get->merchant(array("name" => $merchantname))->row();
+        $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
         $data["province"] = $this->get->province(array())->result();
         $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $data["merchant"]->id, 'status' => '1'))->result();
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);

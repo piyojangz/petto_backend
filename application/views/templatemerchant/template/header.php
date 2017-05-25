@@ -18,7 +18,7 @@
 
     <link href="<?= base_url("res/account/css/style.css") ?>" rel="stylesheet">
     <!-- Custom -->
-    <link href="<?= base_url("res/css/merchantwebcustom.css?ver=1.3") ?>" rel="stylesheet" type="text/css"/>
+    <link href="<?= base_url("res/css/merchantwebcustom.css?ver=1.7") ?>" rel="stylesheet" type="text/css"/>
 
     <!-- animation CSS -->
     <link href="<?= base_url("res/account/css/animate.css") ?>" rel="stylesheet">
@@ -31,7 +31,7 @@
 </head>
 <body class="nopadding grey">
 
-<header class="header-perdbill hidden-xs hidden-md" style=" ">
+<header class="header-perdbill hidden-xs" style=" ">
     <div class="container">
         <a href="<?= base_url() ?>" class="logo-perdbill"><img src="<?= base_url("res/img/web-logo.png") ?>"
                                                                style="width: 50px;"/> </a>

@@ -302,6 +302,18 @@
 
 
 <script>
+    function sticky_relocate() {
+        var window_top = $(window).scrollTop();
+        var div_top = $('#sticky-anchor').offset().top;
+        if (window_top > div_top) {
+            $('#sticky').addClass('stick');
+            $('#sticky-anchor').height($('#sticky').outerHeight());
+        } else {
+            $('#sticky').removeClass('stick');
+            $('#sticky-anchor').height(0);
+        }
+    }
+
 
     var datepickerSelector = $('#txtpaiddate');
     datepickerSelector.datepicker({
@@ -322,16 +334,19 @@
     datepickerSelector.datepicker('widget').css({'margin-left': -datepickerSelector.prev('.input-group-btn').find('.btn').outerWidth() + 3});
 
     $(document).ready(function () {
+        if (!$(".header-perdbill").is(':hidden')) {
+            $(window).scroll(sticky_relocate);
+            sticky_relocate();
+        }
+
+
         init();
-
-
-
     });
+
 
     function billtoogle(istoogle) {
 
         if (istoogle == null) {
-            console.log(istoogle);
             if ($(".billing").hasClass("toogleoff")) {
                 $(".billing").removeClass("toogleoff");
                 $(".fa-arrow-right").removeClass("fa-rotate-180");
@@ -584,6 +599,8 @@
 </script>
 
 <script>
+    <?php if(isset($ggscript)):?>
     <?=$ggscript->script?>
+    <?php endif;?>
 </script>
 </html>

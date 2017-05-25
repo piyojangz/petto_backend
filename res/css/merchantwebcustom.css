@@ -12,6 +12,18 @@ body.nopadding.grey {
     background: #efefef;
 }
 
+#sticky {
+}
+
+#sticky.stick {
+    margin-top: 0 !important;
+    max-width: 215px;
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    background: #efefef;
+}
+
 .feature-ss ul {
     padding: 0px;
 }
@@ -246,9 +258,11 @@ table.package thead tr th {
 
 .logo h1 {
     color: #2C3E50;
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: 500;
     margin: 0px;
+    line-height: 1.2em;
+    padding: 20px 0px 10px 0px;
 }
 
 .logo p {
