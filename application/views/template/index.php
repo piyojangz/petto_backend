@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Perdbill.co บริการเปิดบิลสั่งสินค้าและชำระเงินผ่านไลน์</title>
+    <meta name="description" content="บริการบิลออนไลน์ และเว็บไซต์สำเร็จรูป">
+    <meta name="keywords" content="เว็บสำเร็จรูป,บิลออนไลน์,ขายของผ่านไลน์,ขายของออนไลน์">
     <link href="<?= base_url("res/css/font-awesome.min.css") ?>" rel="stylesheet" type="text/css"/>
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url("res/fav/favicon-16x16.png") ?>">
     <!-- Loading Bootstrap -->
@@ -169,7 +171,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1>เปิด 1 ได้ถึง 2</h1>
-                <p>ฟรีเว็บสำเร็จรูป รองรับการขายสินค้าผ่านไลน์โดยเฉพาะ</p>
+                <p>ฟรีเว็บไซต์สำเร็จรูป รองรับการขายสินค้าผ่านไลน์โดยเฉพาะ</p>
                 <img src="<?=base_url("res/img/device.png")?>" class="img img-responsive" />
             </div>
         </div>
@@ -365,5 +367,15 @@
     function init() {
         $(".overlay-loader").hide();
     }
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-39217117-10', 'auto');
+    ga('send', 'pageview');
+
 </script>
 </html>

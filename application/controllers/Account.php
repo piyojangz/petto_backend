@@ -36,7 +36,7 @@ class Account extends CI_Controller
     public function index($acctoken = "")
     {
         if (!$this->user->is_login()) {
-            redirect('/');
+            redirect(base_url("login"));
         } else {
             redirect(base_url("account/$acctoken/dashboard"));
         }
@@ -383,7 +383,7 @@ class Account extends CI_Controller
         $data["daterange"] = date('d/m/Y') . " - " . date('d/m/Y', strtotime(date('Y-m-d') . ' + 30 days'));
         $data["user"] = $this->user->get_account_cookie();
         if (!$this->user->is_login()) {
-            redirect('/');
+            redirect(base_url("login"));
         }
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();

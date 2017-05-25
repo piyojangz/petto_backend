@@ -155,8 +155,10 @@
                                     <div class="el-card-item">
                                         <div class="el-card-avatar el-overlay-1"
                                              style="width:100%;overflow: hidden">
-                                            <img src="<?= $item->image ?>" alt="<?= $item->title ?>"
-                                                 class="img"/>
+                                            <a href="<?= $http . $_SERVER['HTTP_HOST'] . "/post/$item->id/$item->title" ?>">
+                                                <img src="<?= $item->image ?>" alt="<?= $item->title ?>"
+                                                     class="img"/>
+                                            </a>
                                         </div>
                                         <div class="el-card-content content">
                                             <h3 class="box-title text-info"><a

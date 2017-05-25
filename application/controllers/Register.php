@@ -47,14 +47,14 @@ class Register extends CI_Controller
                 );
                 $this->put->merchant($input);
                 $data["register"] = true;
+                redirect(base_url("login?register=success"));
             }
         }
 
         $cm_account = $this->user->get_account_cookie();
         if ($this->user->is_login()) {
-            redirect('account', 'index');
+            redirect(base_url("account"));
         }
-
 
         $this->load->view('register/index', $data);
     }
