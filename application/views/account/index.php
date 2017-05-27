@@ -44,6 +44,32 @@
             <!-- ============================================================== -->
             <!-- .row -->
             <div class="row">
+                <div class="col-sm-12">
+                    <div class="white-box">
+                        <h3 class="box-title m-b-0">Quick Start Guide</h3>
+
+                            <div class="wizard-steps">
+                                <li style="cursor: pointer;"
+                                    onclick="location.href = '<?= base_url("account/$token/setting") ?>'">
+                                    <h4><span >1</span>ตั้งค่าร้านค้า</h4></li>
+                                <li style="cursor: pointer;"  onclick="addmerchant()">
+                                    <h4><span >2</span>เพิ่มรายชื่อผู้ใช้งาน</h4></li>
+                                <li style="cursor: pointer;" onclick="genbill()">
+                                    <h4><span >3</span>เพิ่มบิล</h4></li>
+                                <li style="cursor: pointer;"  onclick="location.href = '<?= base_url("account/$token/paymentmethod") ?>'">
+                                    <h4><span >4</span>บัญชีธนาคาร</h4></li>
+                                <li style="cursor: pointer;"  onclick="location.href = '<?= base_url("account/$token/shippingrate") ?>'">
+                                    <h4><span >5</span>ค่าจัดส่ง</h4></li>
+                            </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <!-- .row -->
+            <div class="row">
                 <div class="col-lg-3 col-sm-6 col-xs-12">
                     <div class="white-box analytics-info">
                         <h3 class="box-title">บิลทั้งหมด</h3>
@@ -217,7 +243,8 @@
                                                         <code><?= $value->invitetoken ?></code></p>
                                                 <?php else: ?>
                                                     <p>นำรหัสนี้ไปให้ <strong><?= $value->name ?></strong>
-                                                        ลงทะเบียนผ่านไลน์ <a href="https://line.me/R/ti/p/%40hkw0659s" target="_blank">@hkw0659s</a>  <br/>
+                                                        ลงทะเบียนผ่านไลน์ <a href="https://line.me/R/ti/p/%40hkw0659s"
+                                                                             target="_blank">@hkw0659s</a> <br/>
                                                         <code><span
                                                                     style="display: inline-block;"
                                                                     id="<?= $value->invitetoken ?>"><?= $value->invitetoken ?></span></code></span>
@@ -387,7 +414,8 @@
     </div>
 </form>
 
-<form   method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"  id="form-submit-createadminlink">
+<form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"
+      id="form-submit-createadminlink">
     <div class="panel panel-default">
         <div class="panel-heading">เพิ่ม / แก้ไข</div>
         <div class="panel-wrapper collapse in">
@@ -401,19 +429,22 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3">ชื่อ</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="adminname" id="adminname" required class="form-control">
+                                            <input type="text" name="adminname" id="adminname" required
+                                                   class="form-control">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">อีเมลล์</label>
                                         <div class="col-md-9">
-                                            <input type="email" name="adminemail" id="adminemail" required class="form-control">
+                                            <input type="email" name="adminemail" id="adminemail" required
+                                                   class="form-control">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">เบอร์โทร</label>
                                         <div class="col-md-9">
-                                            <input type="tel" name="admintel" id="admintel" required class="form-control">
+                                            <input type="tel" name="admintel" id="admintel" required
+                                                   class="form-control">
                                         </div>
                                     </div>
 
@@ -423,14 +454,16 @@
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-offset-9 col-md-3">
-                                                    <button type="submit" id="btnadminubmit"  class="btn btn-success"> <i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล</button>
+                                                    <button type="submit" id="btnadminubmit" class="btn btn-success"><i
+                                                                class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" id="adminid" name="adminid" />
+                            <input type="hidden" id="adminid" name="adminid"/>
 
                         </div>
                     </div>
@@ -599,7 +632,7 @@
 <script src="<?= base_url("res/account/plugins/bower_components/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js") ?>"
         type="text/javascript"></script>
 <script>
-
+    var $Multi = $(".select2").select2();
     function copylink(x) {
         $("#animationlink").removeClass().addClass(x + ' animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
             $(this).removeClass();
@@ -626,9 +659,6 @@
 //        $("#tch3_22").TouchSpin({
 //            initval: 0
 //        });
-        // For select 2
-        var $Multi = $(".select2").select2();
-
 
         $("#checkAll").click(function () {
             $('input:checkbox').not(this).prop('checked', this.checked);
@@ -647,14 +677,7 @@
         });
 
         $('.btn-genbill').click(function () {
-            $("#name").val("");
-            $("#editnotiusers").val("");
-            $("#id").val("");
-            $("#merchantuid").removeAttr("disabled");
-            var val = $("#merchantuid option:first").val();
-            var text = $("#merchantuid option:first").text();
-            $Multi.val([val + "|" + text]).trigger("change");
-            $.magnificPopup.open({items: {src: '#form-submit-billtoken'}, type: 'inline'}, 0);
+            genbill();
         });
 
 
@@ -672,7 +695,7 @@
         });
 
         $(".btn-createadminlink").click(function () {
-            $.magnificPopup.open({items: {src: '#form-submit-createadminlink'}, type: 'inline'}, 0);
+            addmerchant();
         });
 
 
@@ -916,8 +939,21 @@
 
         reload_billtoken();
     });
+    
+    function genbill() {
+        $("#name").val("");
+        $("#editnotiusers").val("");
+        $("#id").val("");
+        $("#merchantuid").removeAttr("disabled");
+        var val = $("#merchantuid option:first").val();
+        var text = $("#merchantuid option:first").text();
+        $Multi.val([val + "|" + text]).trigger("change");
+        $.magnificPopup.open({items: {src: '#form-submit-billtoken'}, type: 'inline'}, 0);
+    }
 
-
+    function addmerchant() {
+        $.magnificPopup.open({items: {src: '#form-submit-createadminlink'}, type: 'inline'}, 0);
+    }
     function copyuid(e, uid) {
         e.preventDefault();
         var anim = "bounce";

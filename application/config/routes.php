@@ -66,6 +66,7 @@ elseif (preg_match('/.+\.(zoaish|rochubeauty)\.(com|co)$/', $_SERVER['HTTP_HOST'
     $route['items'] = "web/mapitems"; ;
     $route['item/(:any)/(:any)'] = "web/mapitem/$1/$2";
     $route['post/(:any)/(:any)'] = "web/mappost/$1/$2";
+    $route['item/detail/1012/(:any)'] = "web/mapitem/3/$1";
 }
 else {
     $route['default_controller'] = 'home';
