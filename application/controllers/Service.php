@@ -195,6 +195,41 @@ class Service extends CI_Controller
         echo $html;
     }
 
+
+    public function getsalehistory()
+    {
+        $merchantid = $this->input->post('merchantid');
+        $lineuid = $this->input->post('lineuid');
+        $limit = $this->input->post('limit');
+        $offset = $this->input->post('offset');
+        $result = $this->get->v_salehistory($lineuid, $merchantid, $offset, $limit)->result();
+
+        $html = "";
+        foreach ($result as $key => $value) {
+            $list = $this->get_orderitemslist($value->orderitems);
+            $i = $key + 1 + $offset;
+            $total = number_format($value->total);
+            $html .= "<tr>";
+            $html .= "<td>$i</td>";
+            $html .= "<td>$value->date</td>";
+            $html .= "<td>$list</td>";
+            $html .= "<td>$total</td>";
+            $html .= "</tr>";
+        }
+        echo $html;
+    }
+
+    public function get_orderitemslist($items)
+    {
+        $html = "";
+        $orderitems = $this->get->getorderitems($items);
+        foreach ($orderitems as $item) {
+            $html .= "$item->name  ($item->sum) <br/>,";
+        }
+        return rtrim($html, ",");
+    }
+
+
     public function saveadminuid()
     {
         $token = $this->input->post('token');
@@ -239,7 +274,7 @@ class Service extends CI_Controller
         foreach ($items as $index => $item) {
             $i = $index + 1;
             $stock = $item->itemstock == null ? 0 : $item->itemstock;
-            $stock = $stock <= 0 ?"<span class=\"badge badge-danger\" style=\"padding-left: 10px;padding-right: 10px;\">$stock</span>":$stock;
+            $stock = $stock <= 0 ? "<span class=\"badge badge-danger\" style=\"padding-left: 10px;padding-right: 10px;\">$stock</span>" : $stock;
             $html .= "<tr>
                                                     <td class=\"text-center\">$i</td>
                                                     <td><span class=\"font-medium\">$item->name</td>

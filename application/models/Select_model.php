@@ -197,14 +197,12 @@ class Select_model extends CI_Model
     }
 
 
-
-
     function article($cond)
     {
         $this->db->select('*');
         $this->db->from('article');
         $this->db->where($cond);
-        $this->db->order_by("id","desc");
+        $this->db->order_by("id", "desc");
         $query = $this->db->get();
         return $query;
     }
@@ -222,7 +220,7 @@ class Select_model extends CI_Model
     {
         $this->db->select('a.*,sum(b.amount) as itemstock');
         $this->db->from('items a');
-        $this->db->join("billtokenstock b", " a.id = b.itemid and  b.billtokenid = $billtokenid","left");
+        $this->db->join("billtokenstock b", " a.id = b.itemid and  b.billtokenid = $billtokenid", "left");
         $this->db->where($cond);
         $this->db->group_by("a.id");
         $query = $this->db->get();
@@ -259,6 +257,13 @@ class Select_model extends CI_Model
         $query = $this->db->get();
         return $query;
     }
+
+    function v_salehistory($lineuid, $merchantid, $limit = 0, $offset = 10)
+    {
+        $query = $this->db->query("select sum(`a`.`total`) AS `total`,cast(`a`.`submitdate` as date) AS `date`,`b`.`uid` AS `uid`,(select group_concat(concat(`a`.`id`) separator ', ')) AS `orderitems`,`b`.`merchantid` AS `merchantid` from (`order` `a` join `ordertoken` `b` on((`a`.`id` = `b`.`orderid`))) where ((`a`.`status` in (2,3)) and (`a`.`closestatus` = 0) and (b.uid = '$lineuid') and (`b`.`merchantid` = $merchantid)) group by cast(`a`.`submitdate` as date)  order by a.submitdate desc limit $limit , $offset");
+        return $query;
+    }
+
 
     function merchantin($tokens)
     {
@@ -345,6 +350,22 @@ where tb . merchantid = $merchantid");
 
         return $query->result();
     }
+
+    function getorderitems($orderid)
+    {
+        $query = $this->db->query("select  
+ii.name,
+sum(oo.amount) as sum
+from orderdetail  oo
+JOIN
+items ii
+on oo.itemid = ii.id
+where orderid  in ($orderid)
+ group by ii.id");
+
+        return $query->result();
+    }
+
 
     function getordersumbybilltoken($billtoken)
     {
