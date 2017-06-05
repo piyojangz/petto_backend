@@ -136,6 +136,22 @@
         </div>
         <div>
             <div class="row">
+                <h4 class="text-center head-section payment">Payment Method</h4>
+                <div class="col-xs-12">
+                    <?php foreach ($paymentmethod as $index => $item): ?>
+                        <label class="bank" for="checkbox<?= $index ?>">
+                            <input name="paymenttype" type="radio" id="checkbox<?= $index ?>" required checked
+                                   value="<?= $item->id ?>"/>
+                            <img src="<?= $item->banklogo ?>" style="width: 30px; height: 30px;">
+                            ธนาคาร <?= $item->bankname ?> ประเภท <?= $item->acctype ?> ชื่อบัญชี <?= $item->accname ?>
+                            เลขที่บัญชี <?= $item->accno ?>
+                        </label>
+                    <?php endforeach; ?>
+
+                </div><!-- /.demo-col -->
+
+            </div>
+            <div class="row">
                 <div class="col-xs-12">
                     <h4 class="text-center head-section userdetail" style="margin-top: 25px;">Shipping info</h4>
                 </div>
@@ -285,26 +301,10 @@
             </div>
 
 
-            <div class="row">
-                <h4 class="text-center head-section payment">Payment Method</h4>
-                <div class="col-xs-12">
-                    <?php foreach ($paymentmethod as $index => $item): ?>
-                        <label class="bank" for="checkbox<?= $index ?>">
-                            <input  name="paymenttype" type="radio" id="checkbox<?= $index ?>" required checked
-                                   value="<?= $item->id ?>"/>
-                            <img src="<?= $item->banklogo ?>" style="width: 30px; height: 30px;">
-                            ธนาคาร <?= $item->bankname ?> ประเภท <?= $item->acctype ?> ชื่อบัญชี <?= $item->accname ?>
-                            เลขที่บัญชี <?= $item->accno ?>
-                        </label>
-                    <?php endforeach; ?>
+            <input type="hidden" value="<?= $ordertoken ?>" id="ordertoken"/>
+            <button type="submit" class="btn btn-hg btn-block btn-inverse checkamount">ส่งข้อมูลการชำระเงิน
+            </button>
 
-
-                    <input type="hidden" value="<?= $ordertoken ?>" id="ordertoken"/>
-                    <button type="submit" class="btn btn-hg btn-block btn-inverse checkamount">ส่งข้อมูลการชำระเงิน
-                    </button>
-                </div><!-- /.demo-col -->
-
-            </div>
         </div>
         <input type="hidden" id="itemselectedhd" name="itemselectedhd"/>
         <input type="hidden" id="shippinghd" name="shippinghd"/>
@@ -548,7 +548,6 @@
         }
 
 
-
         return true;
     });
 
@@ -563,10 +562,17 @@
     }
 </script>
 <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
     ga('create', 'UA-39217117-10', 'auto');
     ga('send', 'pageview');
