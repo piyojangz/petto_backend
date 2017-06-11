@@ -88,6 +88,7 @@ else {
     $route['account/(:any)'] = "account/index/$1";
     $route['account/(:any)/dashboard'] = "account/dashboard/$1";
     $route['account/(:any)/products'] = "account/products/$1";
+    $route['account/(:any)/productcate'] = "account/productcate/$1";
     $route['account/(:any)/setting'] = "account/setting/$1";
     $route['account/(:any)/setting_home'] = "account/setting_home/$1";
     $route['account/(:any)/setting_about'] = "account/setting_about/$1";
@@ -100,6 +101,7 @@ else {
     $route['account/(:any)/shippingrate'] = "account/shippingrate/$1";
     $route['account/(:any)/base64_to_jpeg'] = "account/base64_to_jpeg";
     $route['account/(:any)/addnewproduct'] = "account/addnewproduct/$1";
+    $route['account/(:any)/addnewcate'] = "account/addnewcate/$1";
     $route['account/(:any)/addnewpaymentmethod'] = "account/addnewpaymentmethod/$1";
     $route['account/(:any)/addnewshippingrate'] = "account/addnewshippingrate/$1";
     $route['account/(:any)/updatesetting'] = "account/updatesetting/$1";

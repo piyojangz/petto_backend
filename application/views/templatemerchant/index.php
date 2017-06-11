@@ -32,6 +32,7 @@
                         <li><a href="
                     <?= $http . $_SERVER['HTTP_HOST'] ?>/contact">ติดต่อเรา</a></li>
                     </ul>
+
                 </div>
 
                 <div class="row">
@@ -96,7 +97,17 @@
                     </div>
                 </div>
 
+                <hr/>
+                <div class="row">
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <h4 class="text-center">หมวดหมู่</h4>
+                        <a class="btn btn-primary" href="?cate=all">ทั้งหมด</a>
+                        <?php foreach ($v_cate as $item): ?>
+                        <a class="btn btn-default" href="?cate=<?= $item->id ?>"><?= $item->name ?> (<?= $item->itemcount ?>)</a>
+                        <?php endforeach; ?>
 
+                    </div>
+                </div>
                 <div class="row">
                     <div class="row el-element-overlay m-b-40 block1">
                         <div class="col-md-12">

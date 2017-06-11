@@ -156,6 +156,14 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label class="control-label col-md-3">หมวดหมู่</label>
+                                                <div class="col-md-9">
+                                                    <select required id="category" name="category" class="form-control">
+                                                        <option value="">ไม่มี</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <label class="control-label col-md-3">ราคา</label>
                                                 <div class="col-md-9">
                                                     <input type="number" name="price" id="price" required
@@ -270,6 +278,29 @@
 </body>
 <script>
     $(document).ready(function () {
+        //category
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getallcate'); ?>",
+            data: {'merchantid': '<?=$merchant->id?>'},
+            dataType: "json",
+            success: function (data) {
+                var html = "";
+                if (data.result != null) {
+                    html += '<option value="">ไม่มี</option>';
+                    $.each(data.result, function (index, value) {
+                        html += '<option value="' + value.id + '">' + value.name + '</option>';
+                    });
+                    $("#category").html(html);
+                }
+
+            },
+            error: function (XMLHttpRequest) {
+
+            }
+        });
+
+
         $('.summernote').summernote({
             height: 350, // set editor height
             minHeight: null, // set minimum height of editor
@@ -330,6 +361,7 @@
             $("#id").val("");
             $("#name").val("");
             $("#price").val("");
+            $("#category").val("");
             $(".summernote").code("");
             $(".cropit-preview-edit").hide();
             $(".btn-edit-img").hide();
@@ -360,6 +392,7 @@
                     $("#name").val(data.result.name);
                     $("#price").val(data.result.price);
                     $(".summernote").code(data.result.description);
+                    $("#category").val(data.result.cateid);
 
                     if (data.result.image != "") {
                         $("#imgedit").attr("src", data.result.image);

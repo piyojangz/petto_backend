@@ -275,6 +275,71 @@
 
         <form method="post"
               class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft form-update-stock block1"
+              id="form-update-stock">
+            <input type="hidden" id="updateitemamount" name="updateitemamount"/>
+            <input type="hidden" id="billtokenid" name="billtokenid"/>
+            <div class="panel panel-default">
+                <div class="panel-heading">เพิ่ม/แก้ไขสินค้าคงคลัง</div>
+
+                <div class="panel-wrapper collapse in">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="checkbox" id="isstockenable" name="isstockenable"/>
+                                <label for="isstockenable">เปิด/ปิดการใช้งาน</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-info ">
+                            <div class="panel-body">
+                                <table class="table table-hover manage-u-table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 70px;" class="text-center">#</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>สินค้าคงคลัง</th>
+                                        <th>เพิ่ม/ลบ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="itemstock">
+
+                                    </tbody>
+                                </table>
+
+
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-offset-9 col-md-3">
+                                                    <button type="submit" id="btnupdateamount"
+                                                            name="btnupdateamount"
+                                                            class="btn btn-success"><i class="fa fa-check"></i>
+                                                        บันทึก/แก้ไขข้อมูล
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="adminid" name="adminid"/>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+</div>
+</form>
+
+        <form method="post"
+              class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft   block1"
               id="form-sale-history">
             <div class="panel panel-default">
                 <div class="panel-heading">รายการขายย้อนหลัง</div>

@@ -19,6 +19,8 @@
             <li><a href="javascript:;"><i class="ti-package fa-fw"></i> <span class="hide-menu">คลังสินค้า<span
                                 class="fa arrow"></span></span></a>
                 <ul class="nav nav-second-level">
+                    <li><a href="<?= base_url("account/$token/productcate") ?>"><i class="fa-fw">C</i><span
+                                    class="hide-menu">หมวดหมู่</span></a></li>
                     <li><a href="<?= base_url("account/$token/products") ?>"><i class="fa-fw">P</i><span
                                     class="hide-menu">สินค้า</span></a></li>
                 </ul>

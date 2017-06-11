@@ -106,7 +106,7 @@ class Account extends CI_Controller
         $data["token"] = $data["user"] ['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["paidorder"] = $this->paidorder;
-        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id,"status"=>"1"))->result();
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -426,7 +426,6 @@ class Account extends CI_Controller
         }
 
 
-
         $this->load->view('account/index', $data);
     }
 
@@ -504,6 +503,20 @@ class Account extends CI_Controller
         $this->load->view('account/products', $data);
     }
 
+    public function productcate($acctoken = "")
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"] ['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+        $data["cate"] = $this->get->category(array("merchantid" => $data["user"]["id"], "status" => 1))->result();
+
+        $this->load->view('account/cate', $data);
+    }
+
     public
     function updateproduct($id, $acctoken = "", $isdelete = "false")
     {
@@ -518,6 +531,48 @@ class Account extends CI_Controller
             }
         }
     }
+
+
+    public
+    function addnewcate($acctoken = "")
+    {
+        if ($_POST) {
+            if (!$this->user->is_login()) {
+                redirect('/');
+            }
+            $id = $this->input->post("id");
+            $data["user"] = $this->user->get_account_cookie();
+            $name = $this->input->post("name");
+
+
+            if (empty($id)) {
+                $input = array(
+                    'merchantid' => $data["user"]["id"],
+                    'name' => $name,
+                    'status' => "1",
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+                if ($this->put->category($input)) {
+                    redirect("account/$acctoken/productcate");
+                }
+            } else {
+                $input = array(
+                    'id' => $id,
+                    'merchantid' => $data["user"]["id"],
+                    'name' => $name,
+                    'status' => "1",
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+//                if ($image != "") {
+//                    $input["image"] = $image;
+//                }
+                if ($this->set->category($input)) {
+                    redirect("account/$acctoken/productcate");
+                }
+            }
+        }
+    }
+
 
     public
     function addnewpaymentmethod($acctoken = "")
@@ -589,6 +644,21 @@ class Account extends CI_Controller
     }
 
     public
+    function updatecate($id, $acctoken = "", $isdelete = "false")
+    {
+        if ($isdelete == "true") {
+            $input = array(
+                'id' => $id,
+                'status' => 0,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            if ($this->set->category($input)) {
+                redirect("account/$acctoken/productcate");
+            }
+        }
+    }
+
+    public
     function addnewproduct($acctoken = "")
     {
         if ($_POST) {
@@ -597,6 +667,7 @@ class Account extends CI_Controller
             $data["user"] = $this->user->get_account_cookie();
             $name = $this->input->post("name");
             $price = $this->input->post("price");
+            $category = $this->input->post("category");
             $inputcustomtext = $this->input->post("inputcustomtext");
             $image = "";
             if (!empty($imageData)) {
@@ -608,6 +679,7 @@ class Account extends CI_Controller
                 $input = array(
                     'name' => $name,
                     'price' => $price,
+                    'cateid' => $category,
                     'description' => $inputcustomtext,
                     'image' => $image,
                     'status' => "1",
@@ -622,6 +694,7 @@ class Account extends CI_Controller
                 $input = array(
                     'id' => $id,
                     'name' => $name,
+                    'cateid' => $category,
                     'description' => $inputcustomtext,
                     'price' => $price,
                     'updatedate' => date('Y-m-d H:i:s'),

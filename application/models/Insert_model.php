@@ -23,6 +23,18 @@ class Insert_model extends CI_Model
     }
 
 
+    function category($input)
+    {
+        if ($this->db->insert('category', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
+
+
+
 
     function customer($input)
     {

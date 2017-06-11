@@ -613,6 +613,24 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function getcate()
+    {
+        $id = $this->input->post('id');
+        $cond = array('id' => $id);
+        $data['result'] = $this->get->category($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getallcate()
+    {
+        $merchantid = $this->input->post('merchantid');
+        $cond = array('merchantid' => $merchantid , 'status	' => '1');
+        $data['result'] = $this->get->category($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
     public function getshippingrate()
     {
         $merchantid = $this->input->post('merchantid');

@@ -121,6 +121,25 @@ class Select_model extends CI_Model
         $query = $this->db->get();
         return $query;
     }
+    function category($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('category');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function v_cate($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_cate');
+        $this->db->where($cond);
+        $this->db->order_by('id','desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
 
     function paymentmethod($cond)
     {

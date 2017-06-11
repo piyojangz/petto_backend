@@ -32,7 +32,9 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
-        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id,"status"=>"1"))->result();
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -45,6 +47,7 @@ class Web extends CI_Controller
 
     public function test($merchantname)
     {
+
         $data["islogin"] = $this->user->is_login();
         $data['http'] = "http://";
         $data["merchant"] = $this->get->merchant(array("webname" => $merchantname))->row();
@@ -53,12 +56,22 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
-        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id,"status"=>"1"))->result();
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
 
-        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+        if (isset($_GET['cate'])) {
+            $cate = $this->input->get("cate");
+            if ($cate == "all") {
+                $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+            } else {
+                $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "cateid" => $cate, "status" => 1))->result();
+            }
+        } else {
+            $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => 1))->result();
+        }
 
         $this->load->view('templatemerchant/index', $data);
     }
@@ -74,8 +87,9 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
-        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id,"status"=>"1"))->result();
-        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id,"status"=>"1"))->result();
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -104,8 +118,9 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
-        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id,"status"=>"1"))->result();
-        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id,"status"=>"1"))->result();
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -134,6 +149,7 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -153,6 +169,7 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -162,7 +179,7 @@ class Web extends CI_Controller
         $this->load->view("templatemerchant/$page", $data);
     }
 
-    public function post($merchantname, $id,$title="")
+    public function post($merchantname, $id, $title = "")
     {
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
@@ -173,6 +190,7 @@ class Web extends CI_Controller
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         $data["article"] = $this->get->article(array("id" => $id))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
 
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
@@ -201,6 +219,8 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -223,6 +243,8 @@ class Web extends CI_Controller
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         $data["item"] = $this->get->items(array("id" => $itemid))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -252,6 +274,8 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -274,6 +298,8 @@ class Web extends CI_Controller
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         $data["item"] = $this->get->items(array("id" => $itemid))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -302,6 +328,8 @@ class Web extends CI_Controller
         $data["ordertoken"] = substr($data["merchant"]->billtoken, -5);
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -330,6 +358,8 @@ class Web extends CI_Controller
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         $data["item"] = $this->get->items(array("id" => $itemid))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
         }
@@ -340,7 +370,7 @@ class Web extends CI_Controller
     }
 
 
-    public function subpost( $id,$title="")
+    public function subpost($id, $title = "")
     {
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
@@ -352,6 +382,7 @@ class Web extends CI_Controller
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         $data["article"] = $this->get->article(array("id" => $id))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
 
         if (count($data["merchant"]) == 0) {
             redirect(base_url());
@@ -362,7 +393,7 @@ class Web extends CI_Controller
         $this->load->view("templatemerchant/post", $data);
     }
 
-    public function mappost( $id,$title="")
+    public function mappost($id, $title = "")
     {
         $data['http'] = "http://";
         $data["islogin"] = $this->user->is_login();
@@ -381,6 +412,7 @@ class Web extends CI_Controller
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         $data["article"] = $this->get->article(array("id" => $id))->row();
+        $data["v_cate"] = $this->get->v_cate(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
 
         if (count($data["merchant"]) == 0) {
             redirect(base_url());

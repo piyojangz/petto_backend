@@ -20,6 +20,14 @@ class Update_model extends CI_Model {
         endif;
     }
 
+    public function category($input) {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('category', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
 
     public function article($input) {
         $this->db->where('id', $input['id']);
@@ -29,6 +37,7 @@ class Update_model extends CI_Model {
             return false;
         endif;
     }
+
 
     public function billtoken($input) {
         $this->db->where('id', $input['id']);
