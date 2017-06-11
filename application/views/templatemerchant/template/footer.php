@@ -379,6 +379,9 @@
             }
         }
 
+        $('.logo p').slimScroll({
+            height: '150px'
+        });
         //$(".billpanel").css({'height': ($(window).height()) + 'px'});
         $('.billpanel').slimScroll({
             height: $(window).height()
