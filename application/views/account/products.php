@@ -158,7 +158,7 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3">หมวดหมู่</label>
                                                 <div class="col-md-9">
-                                                    <select required id="category" name="category" class="form-control">
+                                                    <select  id="category" name="category" class="form-control">
                                                         <option value="">ไม่มี</option>
                                                     </select>
                                                 </div>
