@@ -39,7 +39,7 @@ class Bill extends CI_Controller
 
 
                 $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid, 'status' => '1'))->result();
-                $this->load->view('template/merchantbill', $data); 
+                $this->load->view('template/merchantbill', $data);  
                 return;
             }
         }
