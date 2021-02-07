@@ -130,8 +130,7 @@
                                     <div class="form-group">
                                         <label class="col-md-12">รายละเอียด (Meta description)</label>
                                         <div class="col-md-12">
-                                            <input type="text" name="detail" class="form-control form-control-line"
-                                                   value="<?= $merchant->description ?>"></div>
+                                            <textarea rows="4" name="detail" class="form-control form-control-line" ><?= $merchant->description ?></textarea></div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-12">อีเมลล์</label>
@@ -223,9 +222,9 @@
             //exportZoom: 1.25,
             imageBackground: true,
             imageBackgroundBorderWidth: 30,
-//                imageState: {
-//                    src: '<?= $merchant->image ?>',
-//                },
+               imageState: {
+                   src: '<?= $merchant->image ?>',
+               },
         });
 
         $('.cropit-preview-image').attr("src", '<?= $merchant->image ?>');

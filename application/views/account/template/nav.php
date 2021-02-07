@@ -7,15 +7,15 @@
                     <!--This is dark logo icon--><img src="<?= base_url("res/account/plugins/images/admin-logo.png") ?>"
                                                       style="width: 50px;" alt="home" class="dark-logo"/>
                     <!--This is light logo icon--><img
-                            src="<?= base_url("res/account/plugins/images/admin-logo-dark.png") ?>" alt="home"
-                            class="light-logo" style="width:38px;"/>
+                            src="https://pettodemo.web.app/assets/images/icon/logo/petto_logo.png" alt="home"
+                            class="light-logo" style="width:60px;"/>
                 </b>
-                <!-- Logo text image you can use text also --><span class="hidden-xs" style="color: #2ebd68;
+                <!-- Logo text image you can use text also --><span class="hidden-xs" style="color: #0072be;
     font-weight: 500;
     font-size: 1em;">
-                    <!--This is dark logo text-->Perdbill<small style="font-size: 1em;
+                    <!--This is dark logo text-->Admin<small style="font-size: 1em;
     font-weight: 400;
-    color: #2ebd68;">Admin</small><!--This is light logo text-->
+    color: #0072be;">CONTROL</small><!--This is light logo text-->
                 </span> </a>
         </div>
         <!-- /Logo -->
@@ -40,8 +40,12 @@
                     </ul>
                 </li>
             <?php endif; ?>
-            <li><a href="http://<?= $user["webname"] ?>.perdbill.co" class="waves-effect waves-light"><i
-                            class="ti-arrow-top-right"></i> ดูหน้าเว็บ</a></li>
+            <!-- <li><a href="http://<?= $user["webname"] ?>.perdbill.co" class="waves-effect waves-light"><i
+                            class="ti-arrow-top-right"></i> ดูหน้าเว็บ</a></li> -->
+
+                            <!-- <li><a href="<?=base_url('web/')?><?= $user["webname"] ?>" class="waves-effect waves-light"><i
+                            class="ti-arrow-top-right"></i> ดูหน้าเว็บ</a></li> -->
+
         </ul>
         <ul class="nav navbar-top-links navbar-right pull-right">
             <!--            <li>

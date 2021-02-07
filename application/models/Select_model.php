@@ -135,7 +135,7 @@ class Select_model extends CI_Model
         $this->db->select('*');
         $this->db->from('v_cate');
         $this->db->where($cond);
-        $this->db->order_by('id','desc');
+        $this->db->order_by('id', 'desc');
         $query = $this->db->get();
         return $query;
     }
@@ -163,16 +163,7 @@ class Select_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('province');
-        $this->db->order_by('PROVINCE_NAME', 'asc');
-        $this->db->where($cond);
-        $query = $this->db->get();
-        return $query;
-    }
-
-    function amphur($cond)
-    {
-        $this->db->select('*');
-        $this->db->from('amphur');
+        $this->db->order_by('name_th', 'asc');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
@@ -182,6 +173,15 @@ class Select_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('district');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function subdistrict($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('subdistrict');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
@@ -255,14 +255,112 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function v_merchantwithpackage($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_merchantwithpackage');
+        $this->db->where($cond);
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function v_shopslot($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_shopslot');
+        $this->db->where($cond);
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    
+    function language($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('language');
+        $this->db->where($cond);
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
     function merchant($cond)
     {
         $this->db->select('*');
         $this->db->from('merchant');
         $this->db->where($cond);
+        $this->db->order_by('status , id', 'desc');
         $query = $this->db->get();
         return $query;
     }
+
+    function shopslot($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('shopslot');
+        $this->db->where($cond);
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+    function v_merchantwithshopslot($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_merchantwithshopslot');
+        $this->db->where($cond);
+        $this->db->order_by('status , id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+    
+
+    function aboutus($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('aboutus');
+        $this->db->where($cond);
+        $this->db->order_by('  id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+    function contractus($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('contractus');
+        $this->db->where($cond);
+        $this->db->order_by('  id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    
+
+
+    function package($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('package');
+        $this->db->where($cond);
+        $this->db->order_by('id', 'asc');
+        $query = $this->db->get();
+        return $query;
+    }
+    function searchmerchant($cond, $searchtxt)
+    {
+        $this->db->select('*');
+        $this->db->from('v_merchantwithpackage');
+        $this->db->where($cond);
+        $this->db->like('firstname', $searchtxt);
+        $this->db->or_like('lastname', $searchtxt);
+        $this->db->or_like('email', $searchtxt);
+        $this->db->or_like('tel', $searchtxt);
+        $this->db->order_by('status , id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
 
     function v_serchorderbytelandmerchantuid($tel, $lineuid)
     {
@@ -323,7 +421,7 @@ class Select_model extends CI_Model
     function order($cond)
     {
         $this->db->select('*');
-        $this->db->from('order');
+        $this->db->from('orders');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
@@ -360,11 +458,12 @@ class Select_model extends CI_Model
     function getcustomerlist($merchantid)
     {
         $query = $this->db->query("SELECT tb .*,(SELECT tk . token from customer c
-inner join `order` o  
+inner join `orders` o  
 on c . id = o . custid
 inner join ordertoken tk 
 on tk . orderid = o . id
-WHERE c . tel = tb . customertel order by o . id desc limit 1) as lastestordertoken from(SELECT a .* FROM `v_serchorderbytelandmerchantuid` a     group by a . customertel)  tb
+WHERE c . tel = tb . customertel order by o . id desc limit 1) as lastestordertoken 
+from (SELECT a .* FROM `v_serchorderbytelandmerchantuid` a     group by a . customertel)  tb
 where tb . merchantid = $merchantid");
 
         return $query->result();
@@ -378,7 +477,7 @@ sum(oo.amount) as sum
 from orderdetail  oo
 JOIN
 items ii
-on oo.itemid = ii.id
+on oo.itemsid = ii.id
 where orderid  in ($orderid)
  group by ii.id");
 
@@ -390,11 +489,11 @@ where orderid  in ($orderid)
     {
         $query = $this->db->query("select   unix_timestamp(b . createdate) as row1,COUNT(a . id) as row2,SUM(b . total) as row3
 from ordertoken a
-join `order` b
+join `orders` b
 on a . orderid = b . id
 where a . billtoken = '$billtoken'
     and b . closestatus = 0
-    and createdate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+    and b.createdate BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
 GROUP BY DATE(b . createdate)
 limit 0,30");
 
@@ -404,15 +503,12 @@ limit 0,30");
     function getdashboarddata($merchantid)
     {
         $query = $this->db->query("SELECT
-    (select count(id)  from  `order` where merchantid = $merchantid and closestatus = 0) as bills
-, (select count(id)  from  `order` where status in(2, 3) and merchantid = $merchantid and closestatus = 0) as paid
-, (select count(id)  from  `order` where status in(1) and merchantid = $merchantid and closestatus = 0) as unpaid
-, (select sum(total)  from  `order` where status in(2, 3) and MONTH(updatedate) = MONTH(CURRENT_DATE()) and merchantid = $merchantid and closestatus = 0) as monthlytotal
-FROM `dual`");
+    (select count(id)  from  `orders` where merchantid = $merchantid and closestatus = 0) as bills
+, (select count(id)  from  `orders` where status in(2, 3) and merchantid = $merchantid and closestatus = 0) as paid
+, (select count(id)  from  `orders` where status in(1) and merchantid = $merchantid and closestatus = 0) as unpaid
+, (select sum(total)  from  `orders` where status in(2, 3) and MONTH(updatedate) = MONTH(CURRENT_DATE()) and merchantid = $merchantid and closestatus = 0) as monthlytotal
+FROM dual");
 
         return $query;
     }
-
 }
-
-?>

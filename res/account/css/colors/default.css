@@ -4,6 +4,22 @@
 /*Normal Color*/
 /*Border radius*/
 /*Preloader*/
+/* html {
+    font-size: 1em;
+  }
+  
+  p {
+    font-size: 20px;
+  }
+  
+  p span {
+    font: 12px "Fira Sans", sans-serif;
+  }
+  
+  x {
+    /* No font rules at all */
+    background: green;
+  } */
 .preloader {
     width: 100%;
     height: 100%;
@@ -42,7 +58,7 @@ body {
 }
 
 .navbar-header {
-    background: #2ebd68;
+    background: #0072be ;
 }
 
 .navbar-top-links > li > a {

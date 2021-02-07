@@ -6,7 +6,7 @@
 <!-- ============================================================== -->
 <!-- Preloader -->
 <!-- ============================================================== -->
-<?php $this->load->view('account/template/preloader'); ?>
+<!-- <?php $this->load->view('account/template/preloader'); ?> -->
 <!-- ============================================================== -->
 <!-- Wrapper -->
 <!-- ============================================================== -->
@@ -208,7 +208,7 @@
 
 
             <!--/.row -->
-            <div class="row block2">
+            <!-- <div class="row block2">
                 <div class="col-md-12 col-sm-12">
                     <div class="white-box panel-wrapper collapse in  p-b-0">
                         <div class="panel-body ">
@@ -269,7 +269,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
 
@@ -405,7 +405,7 @@
                                                    class="form-control">
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label class="control-label col-md-3">ผู้ขาย</label>
                                         <div class="col-md-9">
                                             <select class="form-control" name="merchantuid" id="merchantuid"
@@ -415,7 +415,7 @@
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> -->
 
 
                                     <div class="form-group">
@@ -425,7 +425,7 @@
                                                    name="daterange" id="daterange" value="<?= $daterange ?>"/>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label class="control-label col-md-3">ส่งการแจ้งเตือนทางไลน์</label>
                                         <div class="col-md-9">
                                             <select class="select2 m-b-10 select2-multiple" multiple="multiple"
@@ -437,7 +437,7 @@
 
 
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
 
@@ -1240,7 +1240,7 @@
     }
 
     function getbilldata(token) {
-        $("#billink").html('perdbill.co/' + '<b>' + token + '</b> ');
+        $("#billink").html('petto.co/' + '<b>' + token + '</b> ');
         $("#billinkhd").html('<?= base_url() ?>' + token);
         $("#billtokenhd").val(token);
 

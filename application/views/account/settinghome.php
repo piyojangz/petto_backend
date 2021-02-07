@@ -93,41 +93,7 @@
                             <div class="col-md-12">
                                 <form class="form-horizontal" method="post"
                                       action="<?= base_url("account/$token/updatehomesetting") ?>" id="form-submit">
-
-
-                                    <div class="form-group">
-                                        <label class="col-md-12">รูป Cover (735*315) <span
-                                                    class="label label-primary m-l-5"><a href="javascript:;"
-                                                                                         class="btn-cover"
-                                                                                         style="color: #fff;"><i
-                                                            class="fa fa-plus"></i> เพิ่ม</a></span></label>
-
-                                        <div class="row">
-                                            <?php foreach ($imagescover as $item): ?>
-                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading"> <span class="label label-danger m-l-5"> <a
-                                                                        href="javascript:;"
-                                                                        onclick="removecover('<?= $item->id; ?>')"
-                                                                        style="color: #fff;"><i class="fa fa-remove"></i> ลบ</a></span>
-                                                            <span class="label label-primary m-l-5"> <a
-                                                                        href="javascript:;"
-                                                                        onclick="editcover('<?= $item->id; ?>')"
-                                                                        style="color: #fff;"><i class="fa fa-edit"></i> แก้ไข</a></span>
-                                                        </div>
-                                                        <div class="panel-wrapper collapse in">
-                                                            <div class="panel-body">
-                                                                <img src="<?= $item->image; ?>" width="100%"/>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-
-                                    </div>
-
-                                    <hr/>
+ 
                                     <div class="form-group">
                                         <label class="col-md-12">ข้อความหน้าเว็บ</label>
                                         <div class="col-md-12">
@@ -140,17 +106,7 @@
                                     </div>
 
 
-                                    <div class="form-group">
-                                        <label class="col-md-12"><span class="text-danger">*</span>url bill
-                                            (ผูกกับสินค้าที่หน้าเว็บ) <a
-                                                    href="<?= base_url("account/$token/dashboard") ?>">สร้างรายการบิลที่นี่
-                                                <i class="fa fa-external-link-square"></i></a></label>
-                                        <div class="col-md-12">
-                                            <input type="text" name="billtoken" id="billtoken" required
-                                                   class="form-control form-control-line"
-                                                   placeholder="ตัวอย่าง https://perdbill.co/RY1T3"
-                                                   value="<?= $merchant->billtoken ?>"></div>
-                                    </div>
+                                    
 
 
                                     <button type="submit"

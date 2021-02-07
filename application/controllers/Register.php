@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Register extends CI_Controller
 {
@@ -26,7 +26,10 @@ class Register extends CI_Controller
         if ($_POST) {
             $email = $this->input->post('email');
             $lineid = $this->input->post('lineid');
-            $name = $this->input->post('name');
+            $firstname = $this->input->post('firstname');
+            $lastname = $this->input->post('lastname');
+            $tel = $this->input->post('tel');
+            // $name = $this->input->post('name');
             $webname = $this->input->post('webname');
             $cond = array('email' => $email);
             if ($this->get->merchant($cond)->num_rows() > 0) {
@@ -39,15 +42,21 @@ class Register extends CI_Controller
                 $input = array(
                     'email' => $email,
                     'webname' => $webname,
-                    'name' => $name,
+                    'firstname' => $firstname,
+                    'lastname' => $lastname,
+                    'tel' => $tel,
+                    // 'name' => $name,
                     'lineid' => $lineid,
                     'image' => base_url("public/avatar.png"),
                     'password' => md5($password),
                     'token' => $token,
                 );
                 $this->put->merchant($input);
-                $data["register"] = true;
-                redirect(base_url("login?register=success"));
+
+                $this->sendemail($token, $firstname);
+
+                // $data["register"] = true;
+                // redirect(base_url("login?register=success"));
             }
         }
 
@@ -59,4 +68,14 @@ class Register extends CI_Controller
         $this->load->view('register/index', $data);
     }
 
+    function sendemail($token, $firstname)
+    {
+        echo "สวัสดี $firstname<br/>
+        คุณได้ทำการสมัครสมาชิก Petto.co เรียบร้อยแล้ว<br/>
+        โปรดทำตามขั้นตอนเพื่อยืนยันตนของท่านดังนี้<br/>
+        1.ทำการ Add Line : @232ruaun หรือ แสกน QR code<br/>
+        2.จากนั้น copy ข้อความ 'ลงทะเบียน $token' ในช่องแชท<br/>
+        3.เสร็จสิ้นขั้นตอนจะมีข้อความยืนยัน และรอระบบอนุมัติ<br/>
+        ขอบคุณค่ะ";
+    }
 }

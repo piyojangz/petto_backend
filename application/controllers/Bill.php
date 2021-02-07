@@ -20,7 +20,7 @@ class Bill extends CI_Controller
     {
         $data["ordertoken"] = $token;
         $billtoken = $this->get->billtoken(array('token' => $token))->row();
-        if (count($billtoken) > 0) {
+        if (isset($billtoken) > 0) {
             $merchantid = $billtoken->merchantid;
             $data["sqlmerchant"] = $this->get->merchant(array('id' => $merchantid));
             if ($data["sqlmerchant"]->num_rows() > 0) {
@@ -32,14 +32,15 @@ class Bill extends CI_Controller
                 $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
                 $data["province"] = $this->get->province(array())->result();
                 if ($billtoken->isstockenable == 1) {
-                    $data["items"] = $this->get->v_itemswithstock(array('billtokenid' => $billtoken->id, 'itemstock > ' => 0), $billtoken->id)->result();
+                    $data["items"] = $this->get->items(array('merchantid' => $merchantid, 'status' => 1))->result();
+                    // $data["items"] = $this->get->v_itemswithstock(array('billtokenid' => $billtoken->id, 'itemstock > ' => 0), $billtoken->id)->result();
                 } else {
                     $data["items"] = $this->get->items(array('merchantid' => $merchantid, 'status' => 1))->result();
                 }
 
 
                 $data["paymentmethod"] = $this->get->paymentmethod(array('merchantid' => $merchantid, 'status' => '1'))->result();
-                $this->load->view('template/merchantbill', $data);  
+                $this->load->view('template/merchantbill', $data);
                 return;
             }
         }
@@ -95,7 +96,7 @@ class Bill extends CI_Controller
     public function getamount($orderdetail, $itemid)
     {
         foreach ($orderdetail as $item) {
-            if ($item->itemid == $itemid) {
+            if ($item->itemsid == $itemid) {
                 return $item->amount;
             }
         }
@@ -395,7 +396,7 @@ class Bill extends CI_Controller
                             $no = 1;
                             foreach ($orderhistory as $index => $item) {
                                 $paidtime = date("d/m/Y ,เวลา H:i:s", strtotime($item->paiddate));
-                                $msg .= "$no. https://perdbill.co/$item->token \n    $paidtime\n";
+                                $msg .= "$no. https://petto.co/$item->token \n    $paidtime\n";
                                 $no++;
                             }
                         }
@@ -511,7 +512,7 @@ class Bill extends CI_Controller
                             for ($i = count($billcolums); $i < 3; $i++) {
                                 array_push($billcolums, array("type" => "message",
                                     "label" => "-",
-                                    "text" => "สามารถสร้างบิลเพิ่มได้ที่ https://perdbill.co/account/$item->token/dashboard"));
+                                    "text" => "สามารถสร้างบิลเพิ่มได้ที่ https://petto.co/account/$item->token/dashboard"));
                             }
 
 
@@ -602,7 +603,7 @@ class Bill extends CI_Controller
                                 array(
                                     "type" => "uri",
                                     "label" => "กรอกข้อมูลสำรับรับลิงค์",
-                                    "uri" => "https://perdbill.co/pro/$item->token/$uid"
+                                    "uri" => "https://petto.co/pro/$item->token/$uid"
                                 )
                             )
                         ));
@@ -634,7 +635,7 @@ class Bill extends CI_Controller
                 switch ($command) {
                     case "บิล":
                         $merchant = $this->get->merchant(array('name' => $msgqarr[1]))->row();
-                        $replymsg = "ลูกค้าสามารถซื้อสินค้าได้ที่ลิงค์นี้ https://perdbill.co/$merchant->token";
+                        $replymsg = "ลูกค้าสามารถซื้อสินค้าได้ที่ลิงค์นี้ https://petto.co/$merchant->token";
                         break;
                     default:
                         return false;
@@ -680,7 +681,7 @@ class Bill extends CI_Controller
                 $billtoken = $this->generatebilltoken($data["sqlmerchant"]->row(), $msg[2]);
                 return $messages = [
                     'type' => 'text',
-                    'text' => "https://perdbill.co/$billtoken"
+                    'text' => "https://petto.co/$billtoken"
                 ];
             }
         }
@@ -690,7 +691,7 @@ class Bill extends CI_Controller
                 $billtoken = $this->getbilltokenformerchant($data["sqlmerchant"]->row(), $msg[2]);
                 return $messages = [
                     'type' => 'text',
-                    'text' => "https://perdbill.co/$billtoken"
+                    'text' => "https://petto.co/$billtoken"
                 ];
             }
         }
@@ -699,7 +700,7 @@ class Bill extends CI_Controller
             $billtoken = $this->get->billtoken(array("id" => $msg[1]))->row();
             return $messages = [
                 'type' => 'text',
-                'text' => "https://perdbill.co/$billtoken->token"
+                'text' => "https://petto.co/$billtoken->token"
             ];
 
         }
@@ -716,7 +717,7 @@ class Bill extends CI_Controller
 
     }
 
-    public function generatebilltoken($merchant, $merchantuid)
+    public function generatebilltoken($merchant, $merchantuid = null)
     {
         $uniqid = $this->common->getToken(6);
         $cond = array('token' => $uniqid);

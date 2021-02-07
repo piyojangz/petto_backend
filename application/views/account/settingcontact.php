@@ -100,7 +100,7 @@
                                         <div class="col-md-12">
                                             <div style="width: 795px; margin: 0 auto">
                                                 <textarea id="customtext" name="customtext"
-                                                          class="summernote"><?= $merchant->textcontact ?></textarea>
+                                                          class="summernote"><?= $contractus->description ?></textarea>
                                             </div>
                                         </div>
                                         <input value="" name="inputcustomtext" id="inputcustomtext" type="hidden">
@@ -175,25 +175,7 @@
             airMode: true
         });
 
-        $('.select-image-btn').click(function () {
-            $('.cropit-image-input').click();
-        });
-        $('.image-editor').cropit({
-            //exportZoom: 1.25,
-            imageBackground: true,
-            imageBackgroundBorderWidth: 30,
-//                imageState: {
-//                    src: '<?= $merchant->image ?>',
-//                },
-        });
-
-        $('.cropit-preview-image').attr("src", '<?= $merchant->imagecover ?>');
-        $('.rotate-cw').click(function () {
-            $('.image-editor').cropit('rotateCW');
-        });
-        $('.rotate-ccw').click(function () {
-            $('.image-editor').cropit('rotateCCW');
-        });
+        
         $('#form-submit').submit(function () {
             var imageData = $('.image-editor').cropit('export');
 

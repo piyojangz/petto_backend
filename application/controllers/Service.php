@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Service extends CI_Controller
 {
@@ -150,8 +150,8 @@ class Service extends CI_Controller
     public function getaumphure()
     {
         $provinceid = $this->input->post('provinceid');
-        $cond = array('PROVINCE_ID' => $provinceid);
-        $data['result'] = $this->get->amphur($cond)->result();
+        $cond = array('SUBSTR(code,1,2)' => substr($provinceid, 0, 2));
+        $data['result'] = $this->get->district($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -179,12 +179,12 @@ class Service extends CI_Controller
 
             $url = "perdbill.co/";
             $html .= "<tr   id=\"$value->token\">";
-//            $html .= "<td>";
-//            $html .= "<div class=\"checkbox m-t-0 m-b-0\">";
-//            $html .= "<input type=\"checkbox\" name=\"billtokenid\" id =\"billtokenid\">";
-//            $html .= "<label for=\"checkbox0\"></label>";
-//            $html .= "</div>";
-//            $html .= "</td>";
+            //            $html .= "<td>";
+            //            $html .= "<div class=\"checkbox m-t-0 m-b-0\">";
+            //            $html .= "<input type=\"checkbox\" name=\"billtokenid\" id =\"billtokenid\">";
+            //            $html .= "<label for=\"checkbox0\"></label>";
+            //            $html .= "</div>";
+            //            $html .= "</td>";
             $html .= "<td colspan=\"2\">";
             $html .= "<small>$value->createdate</small><br/>$value->name</br>";
             $html .= "<small style=\"color:#ee6123;\">$url<b>$value->token</b></small>";
@@ -227,6 +227,25 @@ class Service extends CI_Controller
             $html .= "$item->name  ($item->sum) <br/>,";
         }
         return rtrim($html, ",");
+    }
+
+
+    public function saveshopslot()
+    {
+        $token = $this->input->post('token');
+        $merchantid = $this->input->post('merchantid');
+
+        $input = array(
+            'merchantid' => $merchantid,
+            'shoprange' => 0,
+            'isactive' => 1,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+
+
+        $data['result'] = $this->put->shopslot($input);
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
     }
 
 
@@ -297,15 +316,17 @@ class Service extends CI_Controller
     {
 
         $data["user"] = $this->user->get_account_cookie();
-        $data["token"] = $data["user"] ['token'];
+        $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $isstockenable = $this->input->post("isstockenable") == 'on' ? 1 : 0;
         $updateitemamount = $this->input->post("updateitemamount");
         $billtokenid = $this->input->post("billtokenid");
 
-        $input = array("id" => $billtokenid,
+        $input = array(
+            "id" => $billtokenid,
             "isstockenable" => $isstockenable,
-            "updatedate" => date('Y-m-d H:i:s'),);
+            "updatedate" => date('Y-m-d H:i:s'),
+        );
         $this->set->billtoken($input);
 
 
@@ -315,15 +336,16 @@ class Service extends CI_Controller
             $id = $var[0];
             $amount = $var[1];
 
-            $input = array("billtokenid" => $billtokenid,
+            $input = array(
+                "billtokenid" => $billtokenid,
                 "amount" => $amount,
                 "itemid" => $id,
-                "merchantid" => $data["merchant"]->id,);
+                "merchantid" => $data["merchant"]->id,
+            );
 
             if ($amount != 0) {
                 $this->put->billtokenstock($input);
             }
-
         }
 
         $this->checkinglowstock($data["merchant"]->id, $billtokenid);
@@ -347,10 +369,7 @@ class Service extends CI_Controller
                         $this->lineapi->pushmsg($user->lineuid, "STOCK($billtoken->name) : $item->name มีจำนวนเหลือ $stock");
                     }
                 }
-
             }
-
-
         }
     }
 
@@ -523,7 +542,8 @@ class Service extends CI_Controller
                 $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), null, array($status));
             }
         } else {
-            $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), array("0", "3"), null);
+            $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), null, null);
+            // $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), array("0", "3"), null);
         }
         $date = date('YmdHis');
         $this->excel->to_excel($result, 'order-excel' . $date);
@@ -540,7 +560,8 @@ class Service extends CI_Controller
                 $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, array($status))->result();
             }
         } else {
-            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), array("0", "3"), null)->result();
+            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, null)->result();
+            // $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), array("0", "3"), null)->result();
         }
 
         $html = "";
@@ -556,12 +577,14 @@ class Service extends CI_Controller
             $html .= "</td>";
             $html .= "<td><a class=\"badge badge-info \" target=\"_blank\" href=\"" . base_url($item->token) . "\">$item->token</a></td>";
             $html .= "<td> $submitdate</td>";
-            $html .= "<td>" . number_format($item->total) . "</td>";
+            // $html .= "<td>" . number_format($item->total) . "</td>";
             $html .= "<td>$item->paymentinfo</td>";
             $html .= "<td>$item->fullname</td>";
             $html .= "<td>$item->billingaddress</td>";
             $html .= "<td>$item->orderitems</td>";
-            $html .= "<td>$item->sumamount</td>";
+            // $html .= "<td>$item->sumamount</td>";
+            $html .= "<td>" . number_format($item->total) . "</td>";
+            $html .= "<td>" . number_format($item->shipingrate) . "</td>";
             $html .= "<td>$statuslabel</td> ";
             $html .= "</tr>";
         }
@@ -625,7 +648,7 @@ class Service extends CI_Controller
     public function getallcate()
     {
         $merchantid = $this->input->post('merchantid');
-        $cond = array('merchantid' => $merchantid , 'status	' => '1');
+        $cond = array('merchantid' => $merchantid, 'status	' => '1');
         $data['result'] = $this->get->category($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -646,8 +669,9 @@ class Service extends CI_Controller
     public function gettumbol()
     {
         $aumpureid = $this->input->post('aumpureid');
-        $cond = array('AMPHUR_ID' => $aumpureid);
-        $data['result'] = $this->get->district($cond)->result();
+        $cond = array('SUBSTR(code,1,4)' => substr($aumpureid, 0, 4));
+
+        $data['result'] = $this->get->subdistrict($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -733,5 +757,4 @@ class Service extends CI_Controller
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
-
 }

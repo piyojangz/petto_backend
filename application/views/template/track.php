@@ -233,12 +233,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
-                    <a href="#fakelink" class="bottom-menu-brand">Powered by ServeWellSolution Co.,ltd.</a>
+                    <a href="#fakelink" class="bottom-menu-brand">Powered by Petto.co</a>
                 </div>
 
                 <div class="col-xs-12">
                     <ul class="bottom-menu-iconic-list">
-                        <i class="fa fa-phone-square" aria-hidden="true"></i> Hotline : 062292917
+                        <i class="fa fa-phone-square" aria-hidden="true"></i> Hotline : 0863647397
                     </ul>
                 </div>
             </div>

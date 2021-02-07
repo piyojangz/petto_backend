@@ -372,7 +372,8 @@ table.package  thead tr th{
 }
 
 .header-index {
-    background: url(../img/mac1.png) no-repeat center top;
+    /* background: url(../img/mac1.png) no-repeat center top; */
+    background: #3498db;
     background-size: 100%;
     padding-top: 20px;
 }

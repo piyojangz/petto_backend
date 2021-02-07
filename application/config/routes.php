@@ -73,7 +73,10 @@ else {
     $route['404_override'] = '';
     $route['translate_uri_dashes'] = FALSE;
 
-
+    
+    $route['webhook'] = "webhook/index/"; 
+    
+    
     $route['logout'] = "logout/index/";
     $route['register'] = "register/index/";
     $route['login'] = "login/index/";
@@ -86,11 +89,19 @@ else {
 
     $route['account'] = "account/index/";
     $route['account/(:any)'] = "account/index/$1";
+    $route['account/(:any)/userlist'] = "account/userlist";
+    $route['account/(:any)/banlist'] = "account/banlist";
+    $route['account/(:any)/package'] = "account/package/$1"; 
+    $route['account/(:any)/changeuserstatus'] = "account/changeuserstatus/$1";
+    $route['account/(:any)/setting_lang'] = "account/setting_lang/$1"; 
+    $route['account/(:any)/changeuserpackage'] = "account/changeuserpackage/$1";
     $route['account/(:any)/dashboard'] = "account/dashboard/$1";
     $route['account/(:any)/products'] = "account/products/$1";
+    $route['account/(:any)/auction'] = "account/auction/$1";
     $route['account/(:any)/productcate'] = "account/productcate/$1";
     $route['account/(:any)/setting'] = "account/setting/$1";
     $route['account/(:any)/setting_home'] = "account/setting_home/$1";
+    $route['account/(:any)/setting_ads_banner'] = "account/setting_ads_banner/$1";
     $route['account/(:any)/setting_about'] = "account/setting_about/$1";
     $route['account/(:any)/setting_contact'] = "account/setting_contact/$1";
     $route['account/(:any)/setting_gganalytic'] = "account/setting_gganalytic/$1";
@@ -110,6 +121,7 @@ else {
     $route['account/(:any)/updatecontactsetting'] = "account/updatecontactsetting/$1";
     $route['account/(:any)/updategganalyticsetting'] = "account/updategganalyticsetting/$1";
     $route['account/(:any)/addcover'] = "account/addcover/$1";
+    $route['account/(:any)/shopslot'] = "account/shopslot/$1";
     $route['account/(:any)/addarticle'] = "account/addarticle/$1";
 
 

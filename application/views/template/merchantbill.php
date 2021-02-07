@@ -202,7 +202,7 @@
                 <select class="selectpicker" name="txtprovince" id="txtprovince" required>
                     <option value="">== กรุณาเลือกจังหวัด ==</option>
                     <?php foreach ($province as $value): $provid = isset($customer) ? $customer->provinceid : ''; ?>
-                        <option value="<?= $value->PROVINCE_ID ?>"><?= $value->PROVINCE_NAME ?></option>
+                        <option value="<?= $value->code ?>"><?= $value->name_th ?></option>
                     <?php endforeach; ?>
                 </select>
 
@@ -373,7 +373,7 @@
                 success: function (data) {
                     var html = "<option  value=\"\">== กรุณาเลือกอำเภอ ==</option>";
                     $.each(data.result, function (index, value) {
-                        html += "<option  value=\"" + value.AMPHUR_ID + "\">" + value.AMPHUR_NAME + "</option>";
+                        html += "<option  value=\"" + value.code + "\">" + value.name_th + "</option>";
                     });
                     $("#txtaumpure").html(html);
                     html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
@@ -395,7 +395,7 @@
                 success: function (data) {
                     var html = "<option  value=\"\">== กรุณาเลือกตำบล ==</option>";
                     $.each(data.result, function (index, value) {
-                        html += "<option  value=\"" + value.DISTRICT_ID + "\">" + value.DISTRICT_NAME + "</option>";
+                        html += "<option  value=\"" + value.code + "\">" + value.name_th + "</option>";
                     });
                     $("#txttumbol").html(html);
                     $(".overlay-loader").hide();

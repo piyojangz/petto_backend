@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Login extends CI_Controller
 {
@@ -31,22 +31,24 @@ class Login extends CI_Controller
             $remember_me = 'on';
 
             $result = $this->user->user_login($email, md5($password), $remember_me);
+            if ($result['login'] == 'success') {
+                $user = $this->user->get_account_cookie();
+                $token = $user['token'];
+                redirect(base_url("account/$token/dashboard"));
+            } else {
+                $data["login"] = $result['data'];
+            }
+        } else {
             $user = $this->user->get_account_cookie();
-            $token = $user['token'];
-            if ($result) {
+            if ($this->user->is_login()) {
+                $token = $user['token'];
                 redirect(base_url("account/$token/dashboard"));
             }
-            $data["login"] = false;
         }
 
-        $user = $this->user->get_account_cookie();
-        if ($this->user->is_login()) {
-            $token = $user['token'];
-            redirect(base_url("account/$token/dashboard"));
-        }
+
 
 
         $this->load->view('login/index', $data);
     }
-
 }

@@ -41,7 +41,7 @@
             <h4>การสั่งซื้อสินค้าเสร็จเรียบร้อย</h4>
             <h5>Thank you!</h5>
             <small>ลูกค้าสามารถติดตามรายการสั่งได้ที่ลิงค์นี้<br/> <span id="animationlink" class="text-danger"
-                                                                         style="display: inline-block;">perdbill.co/track/<b><?= $ordertoken->token ?></b></span>
+                                                                         style="display: inline-block;">petto.co/track/<b><?= $ordertoken->token ?></b></span>
                 <button id="copyanim" class="btn btn-small btn-warning" style="padding: 2px;">copy to clipboard</button>
             </small>
             <span type="hidden" id="billinkhd"
@@ -54,12 +54,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
-                    <a href="#fakelink" class="bottom-menu-brand">Powered by ServeWellSolution Co.,ltd.</a>
+                    <a href="#fakelink" class="bottom-menu-brand">Powered by Petto.co</a>
                 </div>
 
                 <div class="col-xs-12">
                     <ul class="bottom-menu-iconic-list">
-                        <i class="fa fa-phone-square" aria-hidden="true"></i> Hotline : 062292917
+                        <i class="fa fa-phone-square" aria-hidden="true"></i> Hotline : 0863647397
                     </ul>
                 </div>
             </div>

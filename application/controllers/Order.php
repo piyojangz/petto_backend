@@ -57,9 +57,9 @@ class Order extends CI_Controller
         $data["order"] = $this->get->order(array('id' => $orderid))->row();
 
 
-        $meruid = $this->get->v_merchantlineuid(array('token' => $token, 'lineuid' => $merchantuid))->num_rows();
-        $data["canedit"] = $meruid > 0 ? true : false;
-
+        // $meruid = $this->get->v_merchantlineuid(array('token' => $token, 'lineuid' => $merchantuid))->num_rows();
+        // $data["canedit"] = $meruid > 0 ? true : false;
+        $data["canedit"] = true;
 
         $this->load->view('template/track', $data);
     }
@@ -355,12 +355,12 @@ class Order extends CI_Controller
                 }
             }
 
-            $v_notificationtousers = $this->get->v_notificationtousers(array('token' => $token))->result();
-            foreach ($v_notificationtousers as $item) {
-                $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/$item->lineuid");
-            }
+            // $v_notificationtousers = $this->get->v_notificationtousers(array('token' => $token))->result();
+            // foreach ($v_notificationtousers as $item) {
+            //     $this->lineapi->pushmsg($item->lineuid, "ลูกค้าได้ส่งคำสั่งการสั่งซื้อ สามารถดูได้ที่ https://perdbill.co/track/$token/$item->lineuid");
+            // }
 
-            $this->sendinfotouser($txtfullname, $token, $txtemail, $billtoken->merchantid);
+            // $this->sendinfotouser($txtfullname, $token, $txtemail, $billtoken->merchantid);
 
             redirect(base_url("/paymentsuccess/$token"));
         }
@@ -419,9 +419,9 @@ class Order extends CI_Controller
     public function getfulladdress($txtaddress, $txttumbol, $txtaumpure, $txtprovince, $txtzipcode)
     {
         $fulladdr = $txtaddress;
-        $fulladdr .= " ตำบล/แขวง " . $this->get->district(array('DISTRICT_ID' => $txttumbol))->row()->DISTRICT_NAME;
-        $fulladdr .= " อำเภอ/เขต " . $this->get->amphur(array('AMPHUR_ID' => $txtaumpure))->row()->AMPHUR_NAME;
-        $fulladdr .= " จังหวัด " . $this->get->province(array('PROVINCE_ID' => $txtprovince))->row()->PROVINCE_NAME;
+        $fulladdr .= " ตำบล/แขวง " . $this->get->subdistrict(array('SUBSTR(code,1,4)' => substr($txttumbol,0,4)))->row()->name_th;
+        $fulladdr .= " อำเภอ/เขต " . $this->get->district(array('SUBSTR(code,1,2)' => substr($txtaumpure,0,2)))->row()->name_th;
+        $fulladdr .= " จังหวัด " . $this->get->province(array('SUBSTR(code,1,2)' => substr($txtprovince,0,2)))->row()->name_th;
         $fulladdr .= " รหัสไปรษณีย์ " . $txtzipcode;
         return $fulladdr;
     }

@@ -128,6 +128,17 @@ class Insert_model extends CI_Model
         endif;
     }
 
+
+    
+    function shopslot($input)
+    {
+        if ($this->db->insert('shopslot', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     function merchantlineuid($input)
     {
         if ($this->db->insert('merchantlineuid', $input)):
@@ -148,7 +159,7 @@ class Insert_model extends CI_Model
 
     function order($input)
     {
-        if ($this->db->insert('order', $input)):
+        if ($this->db->insert('orders', $input)):
             $insert_id = $this->db->insert_id();
             return $insert_id;
         else:
@@ -165,6 +176,12 @@ class Insert_model extends CI_Model
         endif;
     }
 
-}
+    public function packagemapping($input) { 
+        if ($this->db->insert('package_mapping', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
 
-?>
+}

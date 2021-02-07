@@ -20,7 +20,7 @@ class Home extends CI_Controller {
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"] ['token'];
         $data["islogin"] = $this->user->is_login();
-        $this->load->view('template/index', $data);
+        $this->load->view('template/index2', $data);
     }
 
 }

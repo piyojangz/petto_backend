@@ -43,7 +43,8 @@
         margin-top: 10px;
     }
 
-    input, .export {
+    input,
+    .export {
         /* Use relative position to prevent from being covered by image background */
         position: relative;
         z-index: 10;
@@ -54,248 +55,241 @@
         margin-top: 10px;
     }
 </style>
+
 <body class="fix-header">
-<!-- ============================================================== -->
-<!-- Preloader -->
-<!-- ============================================================== -->
-<?php $this->load->view('account/template/preloader'); ?>
-<!-- ============================================================== -->
-<!-- Wrapper -->
-<!-- ============================================================== -->
-<div id="wrapper">
     <!-- ============================================================== -->
-    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- Preloader -->
     <!-- ============================================================== -->
-    <?php $this->load->view('account/template/nav'); ?>
-    <!-- End Top Navigation -->
+    <?php $this->load->view('account/template/preloader'); ?>
     <!-- ============================================================== -->
-    <!-- Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- Wrapper -->
     <!-- ============================================================== -->
-    <?php $this->load->view('account/template/sidebar'); ?>
-    <!-- ============================================================== -->
-    <!-- End Left Sidebar -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- Page Content -->
-    <!-- ============================================================== -->
-    <div id="page-wrapper">
-        <div class="container-fluid">
-            <div class="row bg-title">
-                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                    <h4 class="page-title">คลังสินค้า</h4></div>
-                <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-                    <ol class="breadcrumb">
-                        <li><a href="#">คลังสินค้า</a></li>
-                        <li class="active">สินค้า</li>
-                    </ol>
+    <div id="wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <?php $this->load->view('account/template/nav'); ?>
+        <!-- End Top Navigation -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <?php $this->load->view('account/template/sidebar'); ?>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page Content -->
+        <!-- ============================================================== -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row bg-title">
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                        <h4 class="page-title">คลังสินค้า</h4>
+                    </div>
+                    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                        <ol class="breadcrumb">
+                            <li><a href="#">คลังสินค้า</a></li>
+                            <li class="active">สินค้า</li>
+                        </ol>
+                    </div>
+                    <!-- /.col-lg-12 -->
                 </div>
-                <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-            <!-- ============================================================== -->
-            <!-- Different data widgets -->
-            <!-- ============================================================== -->
+                <!-- /.row -->
+                <!-- ============================================================== -->
+                <!-- Different data widgets -->
+                <!-- ============================================================== -->
 
-            <div class="row el-element-overlay m-b-40 block1">
-                <div class="col-md-12">
+                <div class="row el-element-overlay m-b-40 block1">
+                    <div class="col-md-12">
 
-                    <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i
-                                class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
+                        <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
 
-                    <hr>
-                </div>
-                <?php foreach ($items as $item): ?>
+                        <hr>
+                    </div>
+                    <?php foreach ($items as $item) : ?>
 
-                    <!-- /.usercard -->
-                    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                        <div class="white-box">
-                            <div class="el-card-item">
-                                <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden"><img
-                                            src="<?= $item->image ?>"/>
-                                    <div class="el-overlay">
-                                        <ul class="el-info">
-                                            <li><a class="btn default btn-outline image-popup-vertical-fit"
-                                                   href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i
-                                                            class="ti-pencil-alt"></i></a></li>
-                                            <li><a class="btn default btn-outline" href="javascript:void(0);"
-                                                   onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i
-                                                            class="ti-trash"></i></a></li>
-                                        </ul>
+                        <!-- /.usercard -->
+                        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                            <div class="white-box">
+                                <div class="el-card-item">
+                                    <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden"><img src="<?= $item->image ?>" />
+                                        <div class="el-overlay">
+                                            <ul class="el-info">
+                                                <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
+                                                <li><a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a></li>
+                                            </ul>
+                                        </div>
                                     </div>
+                                    <div class="el-card-content">
+                                        <h4 class="box-title text-info"  ><?= $item->name ?></h4>
+                                        <small>฿<?= number_format($item->price) ?></small>
+                                        <br>
+                                        <code>คลัง <?= $item->stock ?></code>
+                                        <br>
+                                    </div>
+
                                 </div>
-                                <div class="el-card-content">
-                                    <h3 class="box-title text-info"><?= $item->name ?></h3>
-                                    <small>฿<?= number_format($item->price) ?></small>
-                                    <br></div>
                             </div>
                         </div>
-                    </div>
-                    <!-- /.usercard-->
-                <?php endforeach; ?>
+                        <!-- /.usercard-->
+                    <?php endforeach; ?>
+                </div>
+
             </div>
+            <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit">
+                <div class="panel panel-default">
+                    <div class="panel-heading">เพิ่ม / แก้ไข</div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-info ">
+                                        <div class="panel-body">
 
-        </div>
-        <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post"
-              class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft"
-              style="max-width: 800px;" id="form-submit">
-            <div class="panel panel-default">
-                <div class="panel-heading">เพิ่ม / แก้ไข</div>
-                <div class="panel-wrapper collapse in">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="panel panel-info ">
-                                    <div class="panel-body">
-
-                                        <div class="form-body">
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ชื่อสินค้า</label>
-                                                <div class="col-md-9">
-                                                    <input type="text" name="name" id="name" class="form-control"
-                                                           maxlength="35" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">หมวดหมู่</label>
-                                                <div class="col-md-9">
-                                                    <select  id="category" name="category" class="form-control">
-                                                        <option value="">ไม่มี</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">ราคา</label>
-                                                <div class="col-md-9">
-                                                    <input type="number" name="price" id="price" required
-                                                           class="form-control">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="control-label col-md-3">รายละเอียดสินค้า</label>
-                                                <div class="col-md-9">
-                                                            <textarea id="customtext" name="customtext"
-                                                                      class="summernote"></textarea>
-                                                    <input value="" name="inputcustomtext" id="inputcustomtext"
-                                                           type="hidden">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-
-                                                <label class="control-label col-md-3">รูปภาพ</label>
-                                                <div class="col-md-9">
-                                                    <div class="cropit-preview-edit"><img id="imgedit" src=""/></div>
-                                                    <button class="btn-edit-img btn btn-warning waves-effect waves-light"
-                                                            type="button"><span class="btn-label"><i
-                                                                    class="fa fa-edit"></i></span>แก้ไขรูปภาพ
-                                                    </button>
-
-
-                                                    <div class="image-editor">
-                                                        <input type="hidden" id="imageData" name="imageData"/>
-                                                        <input type="file" class="cropit-image-input"
-                                                               data-max-file-size="2M" accept=".jpg,.png"/>
-                                                        <div class="cropit-preview"></div>
-                                                        <div class="image-size-label">
-                                                            ย่อ / ขยายรูป
-                                                        </div>
-                                                        <input type="range" class="cropit-image-zoom-input"
-                                                               style="width:300px;">
-                                                        <button class="select-image-btn btn btn-info waves-effect waves-light"
-                                                                type="button"><span class="btn-label"><i
-                                                                        class="fa fa-image"></i></span>เลือกรูปภาพ
-                                                        </button>
+                                            <div class="form-body">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">ชื่อสินค้า</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" name="name" id="name" class="form-control" maxlength="35" required>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">หมวดหมู่</label>
+                                                    <div class="col-md-9">
+                                                        <select id="category" name="category" class="form-control">
+                                                            <option value="">ไม่มี</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">ราคา</label>
+                                                    <div class="col-md-9">
+                                                        <input type="number" name="price" id="price" required class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">คลัง</label>
+                                                    <div class="col-md-9">
+                                                        <input type="number" name="stock" id="stock" required class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">รายละเอียดสินค้า</label>
+                                                    <div class="col-md-9">
+                                                        <textarea id="customtext" name="customtext" class="summernote"></textarea>
+                                                        <input value="" name="inputcustomtext" id="inputcustomtext" type="hidden">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+
+                                                    <label class="control-label col-md-3">รูปภาพ</label>
+                                                    <div class="col-md-9">
+                                                        <div class="cropit-preview-edit"><img id="imgedit" src="" /></div>
+                                                        <button class="btn-edit-img btn btn-warning waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>แก้ไขรูปภาพ
+                                                        </button>
 
 
-                                            <div class="form-actions">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-offset-9 col-md-3">
-                                                                <button type="submit" id="btnsubmit"
-                                                                        class="btn btn-success"><i
-                                                                            class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล
-                                                                </button>
+                                                        <div class="image-editor">
+                                                            <input type="hidden" id="imageData" name="imageData" />
+                                                            <input type="file" class="cropit-image-input" data-max-file-size="2M" accept=".jpg,.png" />
+                                                            <div class="cropit-preview"></div>
+                                                            <div class="image-size-label">
+                                                                ย่อ / ขยายรูป
+                                                            </div>
+                                                            <input type="range" class="cropit-image-zoom-input" style="width:300px;">
+                                                            <button class="select-image-btn btn btn-info waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-image"></i></span>เลือกรูปภาพ
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-actions">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-offset-9 col-md-3">
+                                                                    <button type="submit" id="btnsubmit" class="btn btn-success"><i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <input type="hidden" id="id" name="id"/>
+                                            <input type="hidden" id="id" name="id" />
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
-
                 </div>
-            </div>
 
 
-        </form>
+            </form>
 
-        <!-- /.container-fluid -->
+            <!-- /.container-fluid -->
 
-        <?php $this->load->view('account/template/footer'); ?>
+            <?php $this->load->view('account/template/footer'); ?>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page Content -->
+        <!-- ============================================================== -->
     </div>
     <!-- ============================================================== -->
-    <!-- End Page Content -->
+    <!-- End Wrapper -->
     <!-- ============================================================== -->
-</div>
-<!-- ============================================================== -->
-<!-- End Wrapper -->
-<!-- ============================================================== -->
-<!-- ============================================================== -->
-<!-- All Jquery -->
-<!-- ============================================================== -->
-<script src="<?= base_url("res/account/plugins/bower_components/jquery/dist/jquery.min.js") ?>"></script>
-<!-- Bootstrap Core JavaScript -->
-<script src="<?= base_url("res/account/bootstrap/dist/js/bootstrap.min.js") ?>"></script>
-<!-- Menu Plugin JavaScript -->
-<script src="<?= base_url("res/account/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js") ?>"></script>
-<!--slimscroll JavaScript -->
-<script src="<?= base_url("res/account/js/jquery.slimscroll.js") ?>"></script>
-<!-- Custom Theme JavaScript -->
-<script src="<?= base_url("res/account/js/custom.min.js") ?>"></script>
-<script src="<?= base_url("res/account/plugins/bower_components/toast-master/js/jquery.toast.js") ?>"></script>
-<!--Style Switcher -->
-<script src="<?= base_url("res/account/plugins/bower_components/styleswitcher/jQuery.style.switcher.js") ?>"></script>
-<!-- Sweet-Alert  -->
-<script src="<?= base_url("res/account/plugins/bower_components/sweetalert/sweetalert.min.js") ?>"></script>
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="<?= base_url("res/account/plugins/bower_components/jquery/dist/jquery.min.js") ?>"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="<?= base_url("res/account/bootstrap/dist/js/bootstrap.min.js") ?>"></script>
+    <!-- Menu Plugin JavaScript -->
+    <script src="<?= base_url("res/account/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js") ?>"></script>
+    <!--slimscroll JavaScript -->
+    <script src="<?= base_url("res/account/js/jquery.slimscroll.js") ?>"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="<?= base_url("res/account/js/custom.min.js") ?>"></script>
+    <script src="<?= base_url("res/account/plugins/bower_components/toast-master/js/jquery.toast.js") ?>"></script>
+    <!--Style Switcher -->
+    <script src="<?= base_url("res/account/plugins/bower_components/styleswitcher/jQuery.style.switcher.js") ?>"></script>
+    <!-- Sweet-Alert  -->
+    <script src="<?= base_url("res/account/plugins/bower_components/sweetalert/sweetalert.min.js") ?>"></script>
 
-<script src="<?= base_url("res/account/plugins/bower_components/dropify/dist/js/dropify.min.js") ?>"></script>
-<script src="<?= base_url("res/account/plugins/bower_components/cropit/jquery.cropit.js") ?>"></script>
-<script src="<?= base_url("res/account/plugins/bower_components/blockUI/jquery.blockUI.js") ?>"></script>
-<script src="<?= base_url("res/account/plugins/bower_components/summernote/dist/summernote.min.js") ?>"></script>
-<!-- Magnific popup JavaScript -->
-<script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script>
+    <script src="<?= base_url("res/account/plugins/bower_components/dropify/dist/js/dropify.min.js") ?>"></script>
+    <script src="<?= base_url("res/account/plugins/bower_components/cropit/jquery.cropit.js") ?>"></script>
+    <script src="<?= base_url("res/account/plugins/bower_components/blockUI/jquery.blockUI.js") ?>"></script>
+    <script src="<?= base_url("res/account/plugins/bower_components/summernote/dist/summernote.min.js") ?>"></script>
+    <!-- Magnific popup JavaScript -->
+    <script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script>
 </body>
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         //category
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getallcate'); ?>",
-            data: {'merchantid': '<?=$merchant->id?>'},
+            data: {
+                'merchantid': '<?= $merchant->id ?>'
+            },
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
                 var html = "";
                 if (data.result != null) {
                     html += '<option value="">ไม่มี</option>';
-                    $.each(data.result, function (index, value) {
+                    $.each(data.result, function(index, value) {
                         html += '<option value="' + value.id + '">' + value.name + '</option>';
                     });
                     $("#category").html(html);
                 }
 
             },
-            error: function (XMLHttpRequest) {
+            error: function(XMLHttpRequest) {
 
             }
         });
@@ -314,7 +308,7 @@
             preloader: true,
             focus: '#name',
             callbacks: {
-                beforeOpen: function () {
+                beforeOpen: function() {
                     if ($(window).width() < 700) {
                         this.st.focus = false;
                     } else {
@@ -325,7 +319,7 @@
         });
 
 
-        $('.select-image-btn').click(function () {
+        $('.select-image-btn').click(function() {
             $('.cropit-image-input').click();
         });
         $('.image-editor').cropit({
@@ -333,13 +327,13 @@
             imageBackground: true,
             imageBackgroundBorderWidth: 30,
         });
-        $('.rotate-cw').click(function () {
+        $('.rotate-cw').click(function() {
             $('.image-editor').cropit('rotateCW');
         });
-        $('.rotate-ccw').click(function () {
+        $('.rotate-ccw').click(function() {
             $('.image-editor').cropit('rotateCCW');
         });
-        $('#form-submit').submit(function () {
+        $('#form-submit').submit(function() {
             var imageData = $('.image-editor').cropit('export');
             if (imageData != null) {
                 $("#imageData").val(imageData.split(",")[1]);
@@ -353,11 +347,11 @@
             return true;
         });
 
-        $('.btn-edit-img').click(function () {
+        $('.btn-edit-img').click(function() {
             $(".image-editor").show();
         });
 
-        $('.btn-item-modal').click(function () {
+        $('.btn-item-modal').click(function() {
             $("#id").val("");
             $("#name").val("");
             $("#price").val("");
@@ -367,7 +361,12 @@
             $(".btn-edit-img").hide();
             $("#imgedit").hide();
             $(".image-editor").show();
-            $.magnificPopup.open({items: {src: '#form-submit'}, type: 'inline'}, 0);
+            $.magnificPopup.open({
+                items: {
+                    src: '#form-submit'
+                },
+                type: 'inline'
+            }, 0);
         });
 
 
@@ -383,14 +382,17 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getitem'); ?>",
-            data: {'id': id},
+            data: {
+                'id': id
+            },
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
                 $('div.block1').unblock();
                 if (data.result != null) {
                     $("#id").val(data.result.id);
                     $("#name").val(data.result.name);
                     $("#price").val(data.result.price);
+                    $("#stock").val(data.result.stock);
                     $(".summernote").code(data.result.description);
                     $("#category").val(data.result.cateid);
 
@@ -409,11 +411,16 @@
                     }
 
 
-                    $.magnificPopup.open({items: {src: '#form-submit'}, type: 'inline'}, 0);
+                    $.magnificPopup.open({
+                        items: {
+                            src: '#form-submit'
+                        },
+                        type: 'inline'
+                    }, 0);
                 }
 
             },
-            error: function (XMLHttpRequest) {
+            error: function(XMLHttpRequest) {
                 $('div.block1').unblock();
             }
         });
@@ -430,7 +437,7 @@
             cancelButtonText: "No",
             closeOnConfirm: false,
             closeOnCancel: false
-        }, function (isConfirm) {
+        }, function(isConfirm) {
             if (isConfirm) {
                 swal("Deleted!", "Your imaginary file has been deleted.", "success");
                 location.href = '<?= base_url("account/updateproduct/") ?>' + id + '/' + token + '/' + isdelete;
@@ -440,7 +447,6 @@
             }
         });
     }
-
-
 </script>
+
 </html>
