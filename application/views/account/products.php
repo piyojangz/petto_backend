@@ -162,6 +162,22 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
+                                                    <label class="control-label col-md-3">หมวดหมู่ย่อย1</label>
+                                                    <div class="col-md-9">
+                                                        <select id="category" name="category" class="form-control">
+                                                            <option value="">ไม่มี</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">หมวดหมู่ย่อย2</label>
+                                                    <div class="col-md-9">
+                                                        <select id="category" name="category" class="form-control">
+                                                            <option value="">ไม่มี</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
                                                     <label class="control-label col-md-3">ราคา</label>
                                                     <div class="col-md-9">
                                                         <input type="number" name="price" id="price" required class="form-control">
@@ -278,7 +294,7 @@
                 'merchantid': '<?= $merchant->id ?>'
             },
             dataType: "json",
-            success: function(data) {
+            success: function(data) { 
                 var html = "";
                 if (data.result != null) {
                     html += '<option value="">ไม่มี</option>';

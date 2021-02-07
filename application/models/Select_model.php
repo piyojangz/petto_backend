@@ -255,6 +255,28 @@ class Select_model extends CI_Model
         return $query;
     }
 
+
+    function auctionlist($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('auctionlist');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function package_mapping($cond)
+    {
+        $this->db->select('* ,   datediff(curdate(),updatedate) as diffday');
+        $this->db->from('package_mapping');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+
+
     function v_merchantwithpackage($cond)
     {
         $this->db->select('*');
@@ -275,7 +297,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    
+
     function language($cond)
     {
         $this->db->select('*');
@@ -314,7 +336,7 @@ class Select_model extends CI_Model
         $query = $this->db->get();
         return $query;
     }
-    
+
 
     function aboutus($cond)
     {
@@ -335,7 +357,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    
+
 
 
     function package($cond)

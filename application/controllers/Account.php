@@ -674,7 +674,7 @@ class Account extends CI_Controller
         if (!$this->user->is_login()) {
             redirect('/');
         }
-        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => '1'))->result();
+        $data["auctionlist"] = $this->get->auctionlist(array("merchantid" => $data["merchant"]->id, "status" => '1'))->result();
 
         $this->load->view('account/auction', $data);
     }
@@ -720,9 +720,35 @@ class Account extends CI_Controller
         if (!$this->user->is_login()) {
             redirect('/');
         }
-        $data["cate"] = $this->get->category(array("status" => 1))->result();
+        // $data["cate"] = $this->get->category(array("status" => 1, "parentid" => 0))->result();
+        $data["cate"] =   $this->getcateHierarchy(); 
 
         $this->load->view('account/cate', $data);
+    }
+
+    public function getcateHierarchy($parentid = 0)
+    {
+        $cateHierarchy = [];
+        $category = $this->get->category(array("status" => 1, "parentid" => 0))->result();
+        foreach ($category as  $i => $value) {
+            $value->level = 1;
+            $value->rowno = $i + 1;
+            array_push($cateHierarchy, $value);
+            $category1 = $this->get->category(array("status" => 1, "parentid" =>  $value->id))->result();
+            foreach ($category1 as  $i1 => $value1) {
+                $value1->level = 2;
+                $value1->rowno = strval($value->rowno) . "." . strval($i1 + 1);
+                array_push($cateHierarchy, $value1);
+                $category2 = $this->get->category(array("status" => 1, "parentid" =>  $value1->id))->result();
+                foreach ($category2 as $i2 =>  $value2) {
+                    $value2->level = 3;
+                    $value2->rowno = strval($value1->rowno) . "." . strval($i2 + 1);
+                    array_push($cateHierarchy, $value2);
+                }
+            }
+        }
+
+        return $cateHierarchy;
     }
 
     public function updateproduct($id, $acctoken = "", $isdelete = "false")
@@ -740,6 +766,21 @@ class Account extends CI_Controller
     }
 
 
+    public function updateauctionlist($id, $acctoken = "", $isdelete = "false")
+    {
+        if ($isdelete == "true") {
+            $input = array(
+                'id' => $id,
+                'status' => 0,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            if ($this->set->auctionlist($input)) {
+                redirect("account/$acctoken/auction");
+            }
+        }
+    }
+
+
     public function addnewcate($acctoken = "")
     {
         if ($_POST) {
@@ -747,19 +788,33 @@ class Account extends CI_Controller
                 redirect('/');
             }
             $id = $this->input->post("id");
+            $parentid = $this->input->post("parentid");
             $data["user"] = $this->user->get_account_cookie();
             $name = $this->input->post("name");
 
 
             if (empty($id)) {
-                $input = array(
-                    'merchantid' => $data["user"]["id"],
-                    'name' => $name,
-                    'status' => "1",
-                    'updatedate' => date('Y-m-d H:i:s'),
-                );
-                if ($this->put->category($input)) {
-                    redirect("account/$acctoken/productcate");
+                if (!empty($parentid)) {
+                    $input = array(
+                        'parentid' => $parentid,
+                        'merchantid' => $data["user"]["id"],
+                        'name' => $name,
+                        'status' => "1",
+                        'updatedate' => date('Y-m-d H:i:s'),
+                    );
+                    if ($this->put->category($input)) {
+                        redirect("account/$acctoken/productcate");
+                    }
+                } else {
+                    $input = array(
+                        'merchantid' => $data["user"]["id"],
+                        'name' => $name,
+                        'status' => "1",
+                        'updatedate' => date('Y-m-d H:i:s'),
+                    );
+                    if ($this->put->category($input)) {
+                        redirect("account/$acctoken/productcate");
+                    }
                 }
             } else {
                 $input = array(
@@ -848,7 +903,7 @@ class Account extends CI_Controller
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
 
-                if ($this->set->merchantbyid($input)) { 
+                if ($this->set->merchantbyid($input)) {
                     if ($status == 1) {
                         $this->pushMsgNotifyMerchant($id, "เจ้าหน้าที่อนุมัติแล้ว ยินดีตอนรับเข้าใช้งาน Petto.co ขอให้สนุกกับการช๊อปปิ้งค่ะ");
                     }
@@ -1035,6 +1090,83 @@ class Account extends CI_Controller
         }
     }
 
+
+
+    public function addnewauction($acctoken = "")
+    {
+        if ($_POST) {
+            $id = $this->input->post("id");
+            $imageData = $this->input->post("imageData");
+            $data["user"] = $this->user->get_account_cookie();
+            $name = $this->input->post("name");
+            $startprice = $this->input->post("startprice");
+            $minimumbidamount = $this->input->post("minimumbidamount");
+            $buyout = $this->input->post("buyout");
+            $stock = $this->input->post("stock");
+            $inputcustomtext = $this->input->post("inputcustomtext");
+
+            $daterange = $this->input->post("daterange");
+            $daterange   = explode(" - ", $daterange);
+            $dfrom = str_replace('/', '-', $daterange[0]);
+            $dto = str_replace('/', '-', $daterange[1]);
+
+
+            // $image = "";
+            // if (!empty($imageData)) {
+            //     $image = $this->base64_to_jpeg($imageData, $acctoken);
+            //     $image = base_url("public/upload/item/$acctoken/") . $image["upload_data"]["file_name"];
+            // }
+
+            if (empty($id)) {
+                $input = array(
+                    'name' => $name,
+                    'startprice' =>  $startprice,
+                    'buyoutprice' => $buyout,
+                    'minimumbidamount' => $minimumbidamount,
+                    'description' => $inputcustomtext,
+                    'dfrom' => date('Y-m-d H:i:s', strtotime($dfrom)),
+                    'dto' => date('Y-m-d H:i:s', strtotime($dto)),
+                    'status' => 1,
+                    'stock' => 1,
+                    'merchantid' => $data["user"]["id"],
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+
+                if ($imageData != "") {
+                    $input["image"] = $imageData;
+                }
+
+                if ($this->put->auctionlist($input)) {
+                    redirect("account/$acctoken/auction");
+                }
+            } else {
+                $input = array(
+                    'id' => $id,
+                    'name' => $name,
+                    'startprice' =>  $startprice,
+                    'buyoutprice' => $buyout,
+                    'minimumbidamount' => $minimumbidamount,
+                    'description' => $inputcustomtext,
+                    'dfrom' => date('Y-m-d H:i:s', strtotime($dfrom)),
+                    'dto' => date('Y-m-d H:i:s', strtotime($dto)),
+                    'status' => 1,
+                    'stock' => 1,
+                    'merchantid' => $data["user"]["id"],
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+
+                if ($imageData != "") {
+                    $input["image"] = $imageData;
+                }
+
+                if ($this->set->auctionlist($input)) {
+                    redirect("account/$acctoken/auction");
+                }
+            }
+        }
+    }
+
+
     function base64_to_jpeg_acc($data, $acctoken)
     {
         $temp_file_path = tempnam(sys_get_temp_dir(), 'tempimage'); // might not work on some systems, specify your temp path if system temp dir is not writeable
@@ -1185,7 +1317,7 @@ class Account extends CI_Controller
     function pushMsgNotifyMerchant($merchantid, $text)
     {
         $merchant = $this->get->merchant(array("id" => $merchantid))->row();
- 
+
 
         if ($merchant->lineuserid != "") {
             // push message block

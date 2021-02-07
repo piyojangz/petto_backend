@@ -139,6 +139,17 @@ class Insert_model extends CI_Model
         endif;
     }
 
+
+    
+    function auctionlist($input)
+    {
+        if ($this->db->insert('auctionlist', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
     function merchantlineuid($input)
     {
         if ($this->db->insert('merchantlineuid', $input)):

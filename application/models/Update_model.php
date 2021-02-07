@@ -251,6 +251,18 @@ class Update_model extends CI_Model
             return false;
         endif;
     }
+    
+
+    
+    function auctionlist($input)
+    {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('auctionlist', $input)) :
+            return true;
+        else :
+            return false;
+        endif;
+    }
 
 
     function package($input)

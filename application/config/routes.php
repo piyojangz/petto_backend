@@ -112,6 +112,7 @@ else {
     $route['account/(:any)/shippingrate'] = "account/shippingrate/$1";
     $route['account/(:any)/base64_to_jpeg'] = "account/base64_to_jpeg";
     $route['account/(:any)/addnewproduct'] = "account/addnewproduct/$1";
+    $route['account/(:any)/addnewauction'] = "account/addnewauction/$1";
     $route['account/(:any)/addnewcate'] = "account/addnewcate/$1";
     $route['account/(:any)/addnewpaymentmethod'] = "account/addnewpaymentmethod/$1";
     $route['account/(:any)/addnewshippingrate'] = "account/addnewshippingrate/$1";

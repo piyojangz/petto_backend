@@ -33,6 +33,17 @@ class User_model extends CI_Model
                 $set_cm_account['image'] = $row->image;
                 $set_cm_account['token'] = $row->token;
                 $set_cm_account['isadmin'] = $row->isadmin;
+
+                $queryx = $this->db->query("SELECT * FROM v_merchantwithpackage where email = '" . $user_id . "'  and password = '" . $password . "'  LIMIT 1");
+                if ($queryx->num_rows() > 0) {
+                    $rowx = $queryx->row();
+                    $set_cm_account['packageid'] = $rowx->packageid;
+                }
+                else{
+                    $set_cm_account['packageid'] = 0;
+                }
+
+              
                 $set_cm_account = $this->encryption->encrypt(serialize($set_cm_account));
                 set_cookie('useraccount', $set_cm_account, $expires);
                 return array('login' => 'success', 'data' => $row);

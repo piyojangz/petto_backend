@@ -135,16 +135,16 @@
                                                 $PACKICON = '';
                                                 switch ($row->packagename) {
                                                     case 'STARTUP':
-                                                        $PACKICON = '<span class="badge" style="background:blue"><i class="fa fa-star"> Free StartUP</span>';
+                                                        $PACKICON = '<span class="badge" style="background:blue"><i class="fa fa-star"></i> Free StartUP</span>';
                                                         break;
                                                     case 'SILVER':
-                                                        $PACKICON = '<span class="badge" style="background:silver"><i class="fa fa-star"> Silver</span>';
+                                                        $PACKICON = '<span class="badge" style="background:silver"><i class="fa fa-star"></i> Silver</span>';
                                                         break;
                                                     case 'GOLD':
-                                                        $PACKICON = '<span class="badge" style="background:gold"><i class="fa fa-star"> Gold</span>';
+                                                        $PACKICON = '<span class="badge" style="background:gold"><i class="fa fa-star"></i> Gold</span>';
                                                         break;
                                                     case 'PLATINUM':
-                                                        $PACKICON = '<span class="badge" style="background:platinum"><i class="fa fa-star"> Platinum</span>';
+                                                        $PACKICON = '<span class="badge" style="background:platinum"><i class="fa fa-star"></i> Platinum</span>';
                                                         break;
 
                                                     default:
@@ -168,11 +168,11 @@
                                                     <td style="vertical-align: middle;">
                                                         <select id="duration[]" name="duration[]" class="form-control">
                                                             <option value="0" <?= $row->duration == 0 ? 'selected' : '' ?>>Life time</option>
-                                                            <option value="15" <?= $row->duration == 15 ? 'selected' : '' ?>>15 Days</option>
-                                                            <option value="30" <?= $row->duration == 30 ? 'selected' : '' ?>>30 Days</option>
-                                                            <option value="45" <?= $row->duration == 45 ? 'selected' : '' ?>>45 Days</option>
-                                                            <option value="60" <?= $row->duration == 60 ? 'selected' : '' ?>>60 Days</option>
-                                                            <option value="120" <?= $row->duration == 120 ? 'selected' : '' ?>>120 Days</option>
+                                                            <option value="15" <?= $row->duration == 15 ? 'selected' : '' ?>>15 วัน</option>
+                                                            <option value="30" <?= $row->duration == 30 ? 'selected' : '' ?>>30 วัน</option>
+                                                            <option value="45" <?= $row->duration == 45 ? 'selected' : '' ?>>45 วัน</option>
+                                                            <option value="60" <?= $row->duration == 60 ? 'selected' : '' ?>>60 วัน</option>
+                                                            <option value="120" <?= $row->duration == 120 ? 'selected' : '' ?>>120 วัน</option>
                                                         </select>
                                                     </td>
                                                     <td style="vertical-align: middle;"><input id="price[]" name="price[]" type="number" class="form-control" value="<?= $row->price ?>"></td>

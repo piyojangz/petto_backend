@@ -458,6 +458,114 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function getpackagelist()
+    {
+        // $packageid = $this->input->post('packageid');
+        $packageid = 3;
+        $cond = array('id' => $packageid);
+        $packagelist = $this->get->package($cond)->result();
+        $html = "";
+        foreach ($packagelist as $index => $row) {
+            $PACKICON = '';
+            switch ($row->packagename) {
+                case 'STARTUP':
+                    $PACKICON = '<span class="badge" style="background:blue"><i class="fa fa-star"></i> Free StartUP</span>';
+                    break;
+                case 'SILVER':
+                    $PACKICON = '<span class="badge" style="background:silver"><i class="fa fa-star"></i> Silver</span>';
+                    break;
+                case 'GOLD':
+                    $PACKICON = '<span class="badge" style="background:gold"><i class="fa fa-star"></i> Gold</span>';
+                    break;
+                case 'PLATINUM':
+                    $PACKICON = '<span class="badge" style="background:platinum"><i class="fa fa-star"></i> Platinum</span>';
+                    break;
+
+                default:
+                    # code...
+                    break;
+            }
+            $rownum = $index + 1;
+            $isbestseller =   $row->isbestseller == 0 ? 'ไม่มีสิทธิ์' : 'มีสิทธิ์';
+            $isrecommend = $row->isrecommend == 0 ? 'ไม่มีสิทธิ์' : 'มีสิทธิ์';
+            $isbiding = $row->isbiding == 0 ? 'FALSE' : 'TRUE';
+
+
+            $duration = "";
+            switch ($row->duration) {
+                case '0':
+                    $duration = "Life time";
+                    break;
+                case '15':
+                    $duration = "15 วัน";
+                    break;
+
+                case '30':
+                    $duration = "30 วัน";
+                    break;
+
+                case '45':
+                    $duration = "45 วัน";
+                    break;
+
+                case '60':
+                    $duration = "60 วัน";
+                    break;
+                case '120':
+                    $duration = "120 วัน";
+                    break;
+
+
+                default:
+                    $duration = "Life time";
+                    break;
+            }
+            $html .= "<tr>
+            <td class='text-center' style='vertical-align: middle;'>$rownum</td>
+            <td style='vertical-align: middle;'>$PACKICON </td>
+            <td style='vertical-align: middle;'>
+            $row->saleslot
+            </td>
+            <td style='vertical-align: middle;'>
+            $isbiding
+            </td>
+            <td style='vertical-align: middle;'>
+            $duration
+            </td>
+            <td style='vertical-align: middle;'>$row->price</td>
+            <td style='vertical-align: middle;'>$row->manageuser</td>
+            <td style='vertical-align: middle;'>$isbestseller</td>
+         <td style='vertical-align: middle;'>$isrecommend</td>
+        </tr>";
+        }
+
+
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"]['token'];
+        $merchant = $this->get->merchant(array("token" => $data["token"]))->row();
+        $merchantid = $merchant->id;
+        $package_mapping = $this->get->package_mapping(array("packageid" => $packageid, 'merchantid' =>   $merchantid, 'status' => 1))->row();
+
+        $totaldays = $package_mapping->duration  - $package_mapping->diffday;
+        if ($packageid == 0) {
+            $html .= "";
+        } else {
+            $html .= "<tr><td  colspan='9' style='vertical-align: middle;'><code>แพคเกจคุณเหลืออายุอีก $totaldays วัน</code></td></tr>";
+        }
+
+        echo  $html;
+    }
+
+
+    public function getauction()
+    {
+        $id = $this->input->post('id');
+        $cond = array('id' => $id);
+        $data['result'] = $this->get->auctionlist($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
     public function getimagecover()
     {
         $id = $this->input->post('id');
@@ -648,7 +756,7 @@ class Service extends CI_Controller
     public function getallcate()
     {
         $merchantid = $this->input->post('merchantid');
-        $cond = array('merchantid' => $merchantid, 'status	' => '1');
+        $cond = array('status	' => '1');
         $data['result'] = $this->get->category($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
