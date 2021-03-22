@@ -278,7 +278,7 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getimagecover'); ?>",
-            data: {'id': id},
+            data: JSON.stringify({'id': id}),
             dataType: "json",
             success: function (data) {
                 console.log(data);

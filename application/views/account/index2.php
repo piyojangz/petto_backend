@@ -1247,7 +1247,7 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getmerchantbilldata'); ?>",
-            data: {'token': token},
+            data: JSON.stringify({'token': token}),
             dataType: "json",
             success: function (data) {
                 if (data.result.isstockenable == "1") {

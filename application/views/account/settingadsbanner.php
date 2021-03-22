@@ -8,7 +8,7 @@
         border: 0px solid #ccc;
         margin-top: 7px;
         width: 735px;
-        height: 315px;
+        height: 500px;
     }
 
     .cropit-image-input {
@@ -92,7 +92,7 @@
                                 <div class="col-md-12">
 
                                     <div class="form-group">
-                                        <label class="col-md-12">รูป Cover (735*315) <span class="label label-primary m-l-5"><a href="javascript:;" class="btn-cover" style="color: #fff;"><i class="fa fa-plus"></i> เพิ่ม</a></span></label>
+                                        <label class="col-md-12">รูป Cover (735*500) <span class="label label-primary m-l-5"><a href="javascript:;" class="btn-cover" style="color: #fff;"><i class="fa fa-plus"></i> เพิ่ม</a></span></label>
 
                                         <div class="row">
                                             <?php foreach ($imagescover as $item) : ?>
@@ -158,8 +158,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="image-editor" style="margin: 0 auto;
-    width: 735px;">
+                                            <div class="image-editor" style="margin: 0 auto; width: 735px;">
                                                 <input type="hidden" id="imageData" name="imageData" />
                                                 <input type="file" class="cropit-image-input" data-max-file-size="2M" accept=".jpg,.png" />
                                                 <div class="cropit-preview"></div>
@@ -276,11 +275,11 @@
                 $.ajax({
                     type: "POST",
                     url: "<?php echo base_url('service/removeimagecover'); ?>",
-                    data: {
+                    data: JSON.stringify({
                         'id': id
-                    },
+                    }),
                     dataType: "json",
-                    success: function(data) {
+                    success: function(data) { 
                         swal("Deleted!", "Your request has been deleted.", "success");
                         setTimeout(function() {
                             location.reload();
@@ -303,9 +302,9 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getimagecover'); ?>",
-            data: {
+            data: JSON.stringify({
                 'id': id
-            },
+            }),
             dataType: "json",
             success: function(data) {
                 console.log(data);

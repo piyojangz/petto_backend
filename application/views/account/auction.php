@@ -129,7 +129,7 @@
                                         <?php foreach ($auctionlist as $index => $item) : ?>
                                             <tr>
                                                 <td class="text-center" style="vertical-align: middle;"><?= $index + 1 ?></td>
-                                                <td style="vertical-align: middle;"><img src="data:image/jpeg;base64,<?= $item->image ?>" style="width:100px;" /></td>
+                                                <td style="vertical-align: middle;"><img src="<?= $item->image ?>" style="width:100px;" /></td>
                                                 <td style=" vertical-align: middle;"><?= $item->name ?></td>
                                                 <td style="vertical-align: middle;"><span class="badge" style="background:#555;"><?= number_format($item->startprice) ?></span></td>
                                                 <td style="vertical-align: middle;"><span class="badge"><?= number_format($item->minimumbidamount) ?></span></td>
@@ -329,9 +329,9 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getallcate'); ?>",
-            data: {
+            data: JSON.stringify({
                 'merchantid': '<?= $merchant->id ?>'
-            },
+            }),
             dataType: "json",
             success: function(data) {
                 var html = "";
@@ -437,9 +437,9 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getauction'); ?>",
-            data: {
+            data: JSON.stringify({
                 'id': id
-            },
+            }),
             dataType: "json",
             success: function(data) {
                 $('div.block1').unblock();
@@ -455,7 +455,7 @@
                     $("#category").val(data.result.cateid);
 
                     if (data.result.image != "") {
-                        $("#imgedit").attr("src", "data:image/jpeg;base64," + data.result.image);
+                        $("#imgedit").attr("src", data.result.image);
                         $(".image-editor").hide();
                         $(".cropit-preview-edit").show();
                         $(".btn-edit-img").show();

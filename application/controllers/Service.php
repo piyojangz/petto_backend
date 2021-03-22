@@ -8,6 +8,12 @@ class Service extends CI_Controller
     function __construct()
     {
         parent::__construct();
+
+        Header("Access-Control-Allow-Credentials: true");
+        Header('Access-Control-Allow-Origin: *'); //for allow any domain, insecure
+        Header('Access-Control-Allow-Headers:  X-Auth-Token,AccountKey,x-requested-with, Content-Type, origin, authorization, accept, client-security-token, host, date, cookie, cookie2'); //for allow any headers, insecure
+        Header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE'); //method allowed
+
         $this->load->model('Insert_model', 'put');
         $this->load->model('Select_model', 'get');
         $this->load->model('Update_model', 'set');
@@ -18,10 +24,102 @@ class Service extends CI_Controller
         $this->load->library('common');
     }
 
+    public function test()
+    {
+        echo "test";
+    }
+
+
+    public function getbanner()
+    {
+        $data['result'] = $this->get->imagescover(array('status' => 1))->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+    public function registercust()
+    {
+
+        $post = json_decode(file_get_contents('php://input'), true);
+        $firstname = $post['firstname'];
+        $lastname = $post['lastname'];
+        $email = $post['email'];
+        $password = $post['password'];
+        $token = $this->common->getToken(10);
+        $input = array(
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'email' => $email,
+            'password' => $password,
+            'token' => $token,
+            'createdate' => date('Y-m-d H:i:s')
+        );
+
+        $customer = $this->get->customer(array('email' => $email))->row();
+    
+        if(isset($customer)){ 
+            $data['result'] = false;
+        } 
+        else{
+            $data['result'] = $this->put->customer($input);
+            $whitelist = array(
+                '127.0.0.1',
+                '::1'
+            );
+            if (!in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
+                $this->sendregisteremail($token, $firstname, $email);
+            }
+        }
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data['result']);
+
+        
+    }
+
+    function sendregisteremail($token, $firstname, $email)
+    {
+        $msg =  "สวัสดีคุณ $firstname<br/>
+        คุณได้ทำการสมัครสมาชิก Pettogo.co เรียบร้อยแล้ว<br/>
+        โปรดทำตามขั้นตอนเพื่อยืนยันตนของท่านดังนี้<br/>
+        1.ทำการ Add Line : @232ruaun หรือ แสกน QR code<br/>
+        2.จากนั้น copy ข้อความ 'ลงทะเบียน $token' ในช่องแชท<br/>
+        3.เสร็จสิ้นขั้นตอนจะมีข้อความยืนยัน และรอระบบอนุมัติ<br/>
+        ขอบคุณค่ะ";
+        $this->Semail->sendinfo($msg, $email, 'ยืนยันการสมัครสมาชิก Pettogo.co');
+    }
+
+    public function customerlogin()
+    {
+        $post = json_decode(file_get_contents('php://input'), true); 
+        $email = $post['email'];
+        $password = $post['password'];
+        $cond = array('email' => $email, 'password' => $password);
+        $data['result'] = $this->get->customerdetail($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+
+    public function login()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+
+        $username = $post['username'];
+        $password = $post['password'];
+        $data['result'] = $this->user->weblogin($username, md5($password));
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
     public function lookupcustomer()
     {
-        $txttel = $this->input->post('txttel');
-        $txtidcard = $this->input->post('txtidcard');
+        $post = json_decode(file_get_contents('php://input'), true);
+
+        $txttel = $post['txttel'];
+        $txtidcard = $post['txtidcard'];
         $cond = array('tel' => $txttel, 'idcard' => $txtidcard);
         $data['result'] = $this->get->customerdetail($cond);
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -30,7 +128,8 @@ class Service extends CI_Controller
 
     public function getbilltoken()
     {
-        $token = $this->input->post('token');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $token = $post['token'];
         $cond = array('token' => $token);
         $data['result'] = $this->get->billtoken($cond)->row();
         $data['result2'] = $this->get->billnotificationusers(array('billtokenid' => $data['result']->id))->result();
@@ -61,16 +160,17 @@ class Service extends CI_Controller
 
     public function getpromobill()
     {
-        $merchantid = $this->input->post('merchantid');
-        $merchanttoken = $this->input->post('merchanttoken');
-        $merchantuid = $this->input->post('merchantuid');
-        $itemselected = $this->input->post('itemselected');
-        $total = $this->input->post('total');
-        $paymenttype = $this->input->post('paymenttype');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $merchantid = $post['merchantid'];
+        $merchanttoken = $post['merchanttoken'];
+        $merchantuid = $post['merchantuid'];
+        $itemselected = $post['itemselected'];
+        $total = $post['total'];
+        $paymenttype = $post['paymenttype'];
 
-        $shipingrate = $this->input->post('shipingrate');
-        $shippingdiscount = $this->input->post('shippingdiscount');
-        $pricediscount = $this->input->post('pricediscount');
+        $shipingrate = $post['shipingrate'];
+        $shippingdiscount = $post['shippingdiscount'];
+        $pricediscount = $post['pricediscount'];
 
         //genorder
         $order = $this->getpromobilltokenformerchant($merchantid, $merchantuid);
@@ -115,7 +215,8 @@ class Service extends CI_Controller
 
     public function deletemerchantlineuid()
     {
-        $id = $this->input->post('id');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
 
         $input = array(
             'id' => $id,
@@ -132,7 +233,8 @@ class Service extends CI_Controller
 
     public function deletebilltoken()
     {
-        $id = $this->input->post('id');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
 
         $input = array(
             'id' => $id,
@@ -149,7 +251,8 @@ class Service extends CI_Controller
 
     public function getaumphure()
     {
-        $provinceid = $this->input->post('provinceid');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $provinceid = $post['provinceid'];
         $cond = array('SUBSTR(code,1,2)' => substr($provinceid, 0, 2));
         $data['result'] = $this->get->district($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -158,7 +261,8 @@ class Service extends CI_Controller
 
     public function getmerchantbilldata()
     {
-        $token = $this->input->post('token');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $token = $post['token'];
         $cond = array('token' => $token, 'status' => '1');
         $billtoken = $this->get->billtoken($cond)->row();
         $data["result"] = $billtoken;
@@ -170,7 +274,8 @@ class Service extends CI_Controller
 
     public function getallbilltokenhtml()
     {
-        $merchantid = $this->input->post('merchantid');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $merchantid = $post['merchantid'];
         $cond = array('merchantid' => $merchantid, 'status' => '1');
         $result = $this->get->billtoken($cond)->result();
         $html = "";
@@ -198,10 +303,11 @@ class Service extends CI_Controller
 
     public function getsalehistory()
     {
-        $merchantid = $this->input->post('merchantid');
-        $lineuid = $this->input->post('lineuid');
-        $limit = $this->input->post('limit');
-        $offset = $this->input->post('offset');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $merchantid = $post['merchantid'];
+        $lineuid = $post['lineuid'];
+        $limit = $post['limit'];
+        $offset = $post['offset'];
         $result = $this->get->v_salehistory($lineuid, $merchantid, $offset, $limit)->result();
 
         $html = "";
@@ -232,8 +338,9 @@ class Service extends CI_Controller
 
     public function saveshopslot()
     {
-        $token = $this->input->post('token');
-        $merchantid = $this->input->post('merchantid');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $token = $post['token'];
+        $merchantid = $post['merchantid'];
 
         $input = array(
             'merchantid' => $merchantid,
@@ -251,11 +358,12 @@ class Service extends CI_Controller
 
     public function saveadminuid()
     {
-        $token = $this->input->post('token');
-        $merchantid = $this->input->post('merchantid');
-        $adminname = $this->input->post('adminname');
-        $adminemail = $this->input->post('adminemail');
-        $admintel = $this->input->post('admintel');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $token = $post['token'];
+        $merchantid = $post['merchantid'];
+        $adminname = $post['adminname'];
+        $adminemail = $post['adminemail'];
+        $admintel = $post['admintel'];
         $invitetoken = "Regis" . $this->common->getToken(8);
 
         $input = array(
@@ -277,7 +385,8 @@ class Service extends CI_Controller
 
     public function updateitemtobill()
     {
-        $itemid = $this->input->post('itemid');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $itemid = $post['itemid'];
         $data['result'] = $itemid;
 
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -286,7 +395,8 @@ class Service extends CI_Controller
 
     public function getbillitiemswithstock()
     {
-        $token = $this->input->post('token');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $token = $post['token'];
         $billtoken = $this->get->billtoken(array("token" => $token))->row();
         $items = $this->get->itemswithstock(array("a.merchantid" => $billtoken->merchantid, "a.status" => '1'), $billtoken->id)->result();
         $html = "";
@@ -315,12 +425,14 @@ class Service extends CI_Controller
     public function updatestock()
     {
 
+        $post = json_decode(file_get_contents('php://input'), true);
+
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
-        $isstockenable = $this->input->post("isstockenable") == 'on' ? 1 : 0;
-        $updateitemamount = $this->input->post("updateitemamount");
-        $billtokenid = $this->input->post("billtokenid");
+        $isstockenable = $post["isstockenable"] == 'on' ? 1 : 0;
+        $updateitemamount = $post["updateitemamount"];
+        $billtokenid = $post["billtokenid"];
 
         $input = array(
             "id" => $billtokenid,
@@ -375,13 +487,14 @@ class Service extends CI_Controller
 
     public function savebilltoken()
     {
-        $token = $this->input->post('token');
-        $editnotiusers = $this->input->post('editnotiusers');
-        $merchantid = $this->input->post('merchantid');
-        $daterange = $this->input->post('daterange');
-        $merchantuid = $this->input->post('merchantuid');
-        $usernoti = $this->input->post('usernoti');
-        $name = $this->input->post('name');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $token = $post['token'];
+        $editnotiusers = $post['editnotiusers'];
+        $merchantid = $post['merchantid'];
+        $daterange = $post['daterange'];
+        $merchantuid = $post['merchantuid'];
+        $usernoti = $post['usernoti'];
+        $name = $post['name'];
         $daterange = preg_split("/,|:|\s/", $daterange);
         $uniqid = $this->common->getToken(5);
 
@@ -449,18 +562,57 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function getreview()
+    {
+        // $id = $post['id'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('merchantid' => $id);
+        $data['result'] = $this->get->v_review($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+    public function getreviewbyproductid()
+    {
+        // $id = $post['id'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('itemid' => $id);
+        $data['result'] = $this->get->v_review($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
     public function getitem()
     {
-        $id = $this->input->post('id');
+        // $id = $post['id'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $cond = array('id' => $id);
         $data['result'] = $this->get->items($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
 
+
+    public function getitembyseller()
+    {
+        // $id = $post['id'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('merchantid' => $id, 'status' => 1);
+        $data['result'] = $this->get->items($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
     public function getpackagelist()
     {
-        // $packageid = $this->input->post('packageid');
+        // $packageid = $post['packageid'];
         $packageid = 3;
         $cond = array('id' => $packageid);
         $packagelist = $this->get->package($cond)->result();
@@ -557,9 +709,39 @@ class Service extends CI_Controller
     }
 
 
+    public function getauctionlist()
+    {
+        $cond = array('status' => 1);
+        $data['result'] = $this->get->auctionlist($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getcontentlist()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $limit = $post['limit'];
+        $cond = array('status' => 1);
+        $data['result'] = $this->get->article($cond, $limit)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getcontentbyid()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('status' => 1, 'id' => $id);
+        $data['result'] = $this->get->article($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
     public function getauction()
     {
-        $id = $this->input->post('id');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $cond = array('id' => $id);
         $data['result'] = $this->get->auctionlist($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -568,7 +750,8 @@ class Service extends CI_Controller
 
     public function getimagecover()
     {
-        $id = $this->input->post('id');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $cond = array('id' => $id);
         $data['result'] = $this->get->imagescover($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -577,9 +760,56 @@ class Service extends CI_Controller
 
     public function getarticle()
     {
-        $id = $this->input->post('id');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $cond = array('id' => $id);
         $data['result'] = $this->get->article($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getproducts()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $limit = $post['limit'];
+        $cond = array('status' => 1);
+        $data['result'] = $this->get->v_product($cond, $limit)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getproductbyid()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('status' => 1, 'id' => $id);
+        $data['result'] = $this->get->v_product($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getproductoffer()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $limit = $post['limit'];
+        $cond = array('status' => 1, 'isoffer' => 1);
+        $data['result'] = $this->get->v_product($cond, $limit)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getproductbycateid()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        if ($id == '0') {
+            $cond = array('status' => 1);
+            $data['result'] = $this->get->items($cond)->result();
+        } else {
+            $cond = array('status' => 1, 'cateid' => $id);
+            $data['result'] = $this->get->itemsbycateid($cond)->result();
+        }
+
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -587,7 +817,8 @@ class Service extends CI_Controller
 
     public function removeimagecover()
     {
-        $id = $this->input->post('id');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $input = array(
             'id' => $id,
             'status' => 0,
@@ -602,7 +833,8 @@ class Service extends CI_Controller
 
     public function removearticle()
     {
-        $id = $this->input->post('id');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $input = array(
             'id' => $id,
             'status' => 0,
@@ -622,8 +854,9 @@ class Service extends CI_Controller
 
     public function updateorderstatus()
     {
-        $items = $this->input->post('items');
-        $status = $this->input->post('status');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $items = $post['items'];
+        $status = $post['status'];
         $itemarr = array();
         foreach (explode("|", $items) as $value) {
             array_push($itemarr, $value);
@@ -641,8 +874,9 @@ class Service extends CI_Controller
 
     public function exportorderexcel()
     {
-        $merchantid = $this->input->post('merchantid');
-        $status = $this->input->post('exportorderstatus');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $merchantid = $post['merchantid'];
+        $status = $post['exportorderstatus'];
         if ($status != "0") {
             if ($status == "4") {
                 $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => "1"), null, null);
@@ -659,8 +893,9 @@ class Service extends CI_Controller
 
     public function getorderstatus()
     {
-        $merchantid = $this->input->post('merchantid');
-        $status = $this->input->post('status');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $merchantid = $post['merchantid'];
+        $status = $post['status'];
         if ($status != "0") {
             if ($status == "4") {
                 $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "1"), null, null)->result();
@@ -728,7 +963,9 @@ class Service extends CI_Controller
 
     public function getshippingrateconfig()
     {
-        $id = $this->input->post('id');
+        // $id = $post['id'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $cond = array('id' => $id);
         $data['result'] = $this->get->shippingrateconfig($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -737,16 +974,39 @@ class Service extends CI_Controller
 
     public function getpementmethod()
     {
-        $id = $this->input->post('id');
+        // $id = $post['id'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $cond = array('id' => $id);
         $data['result'] = $this->get->paymentmethod($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
 
+
+    public function getshoprecommend()
+    {
+        $cond = array('status' => 1, 'isrecommend' => 1);
+        $data['result'] = $this->get->v_merchantwithpackage($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getshop()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('status' => 1, 'id' => $id);
+        $data['result'] = $this->get->v_merchantwithpackage($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
     public function getcate()
     {
-        $id = $this->input->post('id');
+        // $id = $post['id'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
         $cond = array('id' => $id);
         $data['result'] = $this->get->category($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -755,8 +1015,28 @@ class Service extends CI_Controller
 
     public function getallcate()
     {
-        $merchantid = $this->input->post('merchantid');
+        // $merchantid = $post['merchantid'];
         $cond = array('status	' => '1');
+        $data['result'] = $this->get->category($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getcateparent()
+    {
+        // $merchantid = $post['merchantid'];
+        $cond = array('status	' => '1', 'parentid' => 0);
+        $data['result'] = $this->get->category($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+    public function getcatebyParentId()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('status	' => '1', 'parentid' => $id);
         $data['result'] = $this->get->category($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -764,8 +1044,11 @@ class Service extends CI_Controller
 
     public function getshippingrate()
     {
-        $merchantid = $this->input->post('merchantid');
-        $unit = $this->input->post('unit');
+        header("Content-Type: application/json");
+        // $merchantid = $post['merchantid'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $merchantid = $post['merchantid'];
+        $unit = $post['unit'];
 
         $data['result'] = $this->get->shippingrate($merchantid, $unit)->row();
 
@@ -776,7 +1059,9 @@ class Service extends CI_Controller
 
     public function gettumbol()
     {
-        $aumpureid = $this->input->post('aumpureid');
+        // $aumpureid = $post['aumpureid'];
+        $post = json_decode(file_get_contents('php://input'), true);
+        $aumpureid = $post['aumpureid'];
         $cond = array('SUBSTR(code,1,4)' => substr($aumpureid, 0, 4));
 
         $data['result'] = $this->get->subdistrict($cond)->result();
@@ -786,15 +1071,17 @@ class Service extends CI_Controller
 
     public function submitorder()
     {
-        $itemselected = $this->input->post('itemselected');
-        $total = $this->input->post('total');
-        $paymenttype = $this->input->post('paymenttype');
-        $orderid = $this->input->post('orderid');
-        $shipingrate = $this->input->post('shipingrate');
-        $ordertoken = $this->input->post('ordertoken');
-        $shippingdiscount = $this->input->post('shippingdiscount');
-        $pricediscount = $this->input->post('pricediscount');
-        $mnbillstatus = $this->input->post('mnbillstatus');
+        $post = json_decode(file_get_contents('php://input'), true);
+
+        $itemselected = $post['itemselected'];
+        $total = $post['total'];
+        $paymenttype = $post['paymenttype'];
+        $orderid = $post['orderid'];
+        $shipingrate = $post['shipingrate'];
+        $ordertoken = $post['ordertoken'];
+        $shippingdiscount = $post['shippingdiscount'];
+        $pricediscount = $post['pricediscount'];
+        $mnbillstatus = $post['mnbillstatus'];
 
         //update order
         $input = array(
@@ -832,7 +1119,8 @@ class Service extends CI_Controller
 
     public function confirmpayment()
     {
-        $orderid = $this->input->post('orderid');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $orderid = $post['orderid'];
         $ordertoken = $this->get->ordertoken(array('orderid' => $orderid))->row();
         $input = array(
             'id' => $orderid,
@@ -850,7 +1138,8 @@ class Service extends CI_Controller
 
     public function cancelpayment()
     {
-        $orderid = $this->input->post('orderid');
+        $post = json_decode(file_get_contents('php://input'), true);
+        $orderid = $post['orderid'];
         $ordertoken = $this->get->ordertoken(array('orderid' => $orderid))->row();
         $input = array(
             'id' => $orderid,

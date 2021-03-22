@@ -75,7 +75,10 @@ else {
 
     
     $route['webhook'] = "webhook/index/"; 
-    
+    $route['service/v1/(:any)'] = "service/$1"; 
+    $route['service/v1/(:any)/(:any)'] = "service/$1/$2"; 
+    $route['service/v1/(:any)/(:any)/(:any)'] = "service/$1/$2/$3"; 
+    $route['service/v1/(:any)/(:any)/(:any)/(:any)'] = "service/$1/$2/$3/$4"; 
     
     $route['logout'] = "logout/index/";
     $route['register'] = "register/index/";

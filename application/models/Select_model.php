@@ -9,9 +9,10 @@ class Select_model extends CI_Model
         $this->db->from('customer');
         $this->db->where($cond);
         $query = $this->db->get();
-        return $query->row();
+        return $query;
     }
 
+    
     function billnotificationusers($cond)
     {
         $this->db->select('*');
@@ -187,6 +188,9 @@ class Select_model extends CI_Model
         return $query;
     }
 
+  
+
+
     function customer($cond)
     {
         $this->db->select('*');
@@ -216,12 +220,16 @@ class Select_model extends CI_Model
     }
 
 
-    function article($cond)
+    function article($cond, $limit = null)
     {
         $this->db->select('*');
         $this->db->from('article');
         $this->db->where($cond);
         $this->db->order_by("id", "desc");
+        if ($limit != null) {
+            $this->db->limit($limit);
+        }
+
         $query = $this->db->get();
         return $query;
     }
@@ -256,6 +264,40 @@ class Select_model extends CI_Model
     }
 
 
+
+    function itemsbycateid($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('items');
+        $this->db->where($cond);
+        $this->db->or_where('cateid1 = ', $cond['cateid']);
+        $this->db->or_where('cateid2 = ', $cond['cateid']);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function v_product($cond, $limit = "")
+    {
+        if ($limit != "") {
+            $this->db->limit($limit, 0);
+        }
+        $this->db->select('*');
+        $this->db->from('v_product');
+        $this->db->where($cond);
+        $this->db->order_by('updatedate','desc');
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function v_review($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_review');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function auctionlist($cond)
     {
         $this->db->select('*');
@@ -264,6 +306,7 @@ class Select_model extends CI_Model
         $query = $this->db->get();
         return $query;
     }
+
 
     function package_mapping($cond)
     {

@@ -8,8 +8,8 @@
         border: 1px solid #ccc;
         border-radius: 3px;
         margin-top: 7px;
-        width: 300px;
-        height: 300px;
+        width: 150px;
+        height: 150px;
     }
 
     .cropit-preview-edit img {
@@ -22,8 +22,8 @@
         border: 1px solid #ccc;
         border-radius: 3px;
         margin-top: 7px;
-        width: 300px;
-        height: 300px;
+        width: 150px;
+        height: 150px;
     }
 
     .cropit-image-input {
@@ -149,7 +149,7 @@
                                                     <td style="vertical-align: middle;"><i style="color:blue" class="fa fa-angle-right" aria-hidden="true"></i><i style="color:blue" class="fa fa-angle-right" aria-hidden="true"></i><i style="color:blue" class="fa fa-angle-right" aria-hidden="true"></i><i style="color:blue" class="fa fa-angle-right" aria-hidden="true"></i><?= $item->level == 3 ? $item->rowno : '' ?> <?= $item->name ?></td>
                                                 <?php endif; ?>
                                                 </td>
-                                                <td class="text-right" >
+                                                <td class="text-right">
                                                     <?php if ($item->level != 3) : ?>
                                                         <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5" onclick="additem('<?= $item->id ?>');"><i class="ti-plus"></i></button>
                                                     <?php endif; ?>
@@ -188,8 +188,20 @@
                                                             <input type="text" name="name" id="name" required class="form-control">
                                                         </div>
                                                     </div>
-
-
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">รูป</label>
+                                                        <div class="col-md-9">
+                                                            <div class="image-editor" style="margin: 0 auto; width: 500px;">
+                                                                <input type="hidden" id="imageData" name="imageData" />
+                                                                <input type="file" class="cropit-image-input" data-max-file-size="2M" accept=".jpg,.png" />
+                                                                <div class="cropit-preview"></div>
+                                                                <div class="image-size-label"></div>
+                                                                <input type="range" class="cropit-image-zoom-input" style="width:100%;">
+                                                                <button class="select-image-btn btn btn-info waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-image"></i></span>เลือกรูปภาพ
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="form-actions">
                                                         <div class="row">
                                                             <div class="col-md-12">
@@ -260,6 +272,35 @@
 <script>
     $(document).ready(function() {
 
+        $('.select-image-btn').click(function() {
+            $('.cropit-image-input').click();
+        });
+        $('.image-editor').cropit({
+            //exportZoom: 1.25,
+            imageBackground: true,
+            imageBackgroundBorderWidth: 30, 
+        });
+
+
+        $('.rotate-cw').click(function() {
+            $('.image-editor').cropit('rotateCW');
+        });
+        $('.rotate-ccw').click(function() {
+            $('.image-editor').cropit('rotateCCW');
+        });
+        $('#form-submit').submit(function() { 
+            var imageData = $('.image-editor').cropit('export'); 
+
+            if (imageData != null) {
+                $("#imageData").val(imageData.split(",")[1]);
+            }
+
+            return true;
+        });
+
+
+
+
         $('.popup-with-form').magnificPopup({
             type: 'inline',
             preloader: true,
@@ -308,15 +349,17 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getcate'); ?>",
-            data: {
+            data: JSON.stringify({
                 'id': id
-            },
+            }),
             dataType: "json",
             success: function(data) {
                 $('div.block1').unblock();
                 console.log(data.result);
                 if (data.result != null) {
+                    $("#title").val("");
                     $("#parentid").val(data.result.id);
+                    $('.cropit-preview-image').attr("src", "");
                     $.magnificPopup.open({
                         items: {
                             src: '#form-submit'
@@ -342,9 +385,9 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getcate'); ?>",
-            data: {
+            data: JSON.stringify({
                 'id': id
-            },
+            }),
             dataType: "json",
             success: function(data) {
                 $('div.block1').unblock();
@@ -352,6 +395,7 @@
                 if (data.result != null) {
                     $("#id").val(data.result.id);
                     $("#name").val(data.result.name);
+                    $('.cropit-preview-image').attr("src", data.result.picture);
                     $.magnificPopup.open({
                         items: {
                             src: '#form-submit'

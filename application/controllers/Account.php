@@ -12,11 +12,13 @@ class Account extends CI_Controller
         $this->load->model('Select_model', 'get');
         $this->load->model('Update_model', 'set');
         $this->load->model('User_model', 'user');
+        $this->load->model('Email', 'Semail');
 
         $this->load->library('upload');
         $this->load->library('common');
         $this->load->library('lineapi');
         $this->load->library('excel');
+
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]["token"];
         $data["merchantuid"] = $this->get->lineuid(array("token" => $data["token"]))->row();
@@ -37,6 +39,8 @@ class Account extends CI_Controller
 
     public function index($acctoken = "")
     {
+
+        // $this->Semail->sendinfo('xxx','breesh.comsci@gmail.com','aaaa');
         if (!$this->user->is_login()) {
             redirect(base_url("login"));
         } else {
@@ -127,7 +131,7 @@ class Account extends CI_Controller
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["paidorder"] = $this->paidorder;
-        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
+        $data["article"] = $this->get->article(array("merchantid" => $data["merchant"]->id, "status" => "1"), 100)->result();
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -721,7 +725,7 @@ class Account extends CI_Controller
             redirect('/');
         }
         // $data["cate"] = $this->get->category(array("status" => 1, "parentid" => 0))->result();
-        $data["cate"] =   $this->getcateHierarchy(); 
+        $data["cate"] =   $this->getcateHierarchy();
 
         $this->load->view('account/cate', $data);
     }
@@ -791,8 +795,7 @@ class Account extends CI_Controller
             $parentid = $this->input->post("parentid");
             $data["user"] = $this->user->get_account_cookie();
             $name = $this->input->post("name");
-
-
+            $imageData = $this->input->post("imageData");
             if (empty($id)) {
                 if (!empty($parentid)) {
                     $input = array(
@@ -802,6 +805,11 @@ class Account extends CI_Controller
                         'status' => "1",
                         'updatedate' => date('Y-m-d H:i:s'),
                     );
+
+
+                    if ($imageData != "") {
+                        $input["picture"] = "data:image/jpeg;base64,$imageData";
+                    }
                     if ($this->put->category($input)) {
                         redirect("account/$acctoken/productcate");
                     }
@@ -812,6 +820,11 @@ class Account extends CI_Controller
                         'status' => "1",
                         'updatedate' => date('Y-m-d H:i:s'),
                     );
+
+
+                    if ($imageData != "") {
+                        $input["picture"] = "data:image/jpeg;base64,$imageData";
+                    }
                     if ($this->put->category($input)) {
                         redirect("account/$acctoken/productcate");
                     }
@@ -824,9 +837,9 @@ class Account extends CI_Controller
                     'status' => "1",
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
-                //                if ($image != "") {
-                //                    $input["image"] = $image;
-                //                }
+                if ($imageData != "") {
+                    $input["picture"] = "data:image/jpeg;base64,$imageData";
+                }
                 if ($this->set->category($input)) {
                     redirect("account/$acctoken/productcate");
                 }
@@ -1036,7 +1049,10 @@ class Account extends CI_Controller
             }
         }
     }
-
+    function is_base64($s)
+    {
+        return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $s);
+    }
     public function addnewproduct($acctoken = "")
     {
         if ($_POST) {
@@ -1045,22 +1061,47 @@ class Account extends CI_Controller
             $data["user"] = $this->user->get_account_cookie();
             $name = $this->input->post("name");
             $price = $this->input->post("price");
+            $discount = $this->input->post("discount");
+            $vdourl = $this->input->post("vdourl");
             $category = $this->input->post("category");
+            $category1 = $this->input->post("category1");
+            $category2 = $this->input->post("category2");
             $stock = $this->input->post("stock");
             $inputcustomtext = $this->input->post("inputcustomtext");
-            $image = "";
+            $fileUpload = $this->input->post("multipleimages");
+            $images = "";
+            // print_r($fileUpload);
             if (!empty($imageData)) {
-                $image = $this->base64_to_jpeg($imageData, $acctoken);
-                $image = base_url("public/upload/item/$acctoken/") . $image["upload_data"]["file_name"];
+                if ($this->is_base64($imageData)) {
+                    $image = $this->base64_to_jpeg($imageData, $acctoken);
+                    $images .= base_url("public/upload/item/$acctoken/") . $image["upload_data"]["file_name"] . "#";
+                } else {
+                    $images .= $imageData . "#";
+                }
             }
 
+            foreach ($fileUpload as $img) {
+                $img = preg_replace('#data:image/[^;]+;base64,#', '', $img);
+                if ($this->is_base64($img)) {
+                    $image = $this->base64_to_jpeg($img, $acctoken);
+                    $images .= base_url("public/upload/item/$acctoken/") . $image["upload_data"]["file_name"] . "#";
+                } else {
+                    $images .= $img . "#";
+                }
+            }
+
+            // print_r($category);
             if (empty($id)) {
                 $input = array(
                     'name' => $name,
                     'price' => $price,
+                    'discount' => $discount,
                     'cateid' => $category,
+                    'cateid1' => $category1,
+                    'cateid2' => $category2,
+                    'video' => $vdourl,
                     'description' => $inputcustomtext,
-                    'image' => $image,
+                    'image' => rtrim($images, "#"),
                     'status' => "1",
                     'stock' => $stock,
                     'merchantid' => $data["user"]["id"],
@@ -1074,15 +1115,19 @@ class Account extends CI_Controller
                 $input = array(
                     'id' => $id,
                     'name' => $name,
+                    'video' => $vdourl,
                     'cateid' => $category,
+                    'cateid1' => $category1,
+                    'cateid2' => $category2,
                     'description' => $inputcustomtext,
                     'price' => $price,
+                    'discount' => $discount,
                     'stock' => $stock,
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
-                if ($image != "") {
-                    $input["image"] = $image;
-                }
+                // if ($image != "") {
+                $input["image"] = rtrim($images, "#");
+                // }
                 if ($this->set->items($input)) {
                     redirect("account/$acctoken/products");
                 }
@@ -1156,7 +1201,7 @@ class Account extends CI_Controller
                 );
 
                 if ($imageData != "") {
-                    $input["image"] = $imageData;
+                    $input["image"] = "data:image/jpeg;base64,$imageData";
                 }
 
                 if ($this->set->auctionlist($input)) {
@@ -1221,10 +1266,10 @@ class Account extends CI_Controller
             mkdir("public/upload/item/$acctoken", 0777);
         }
 
-        $config['allowed_types'] = 'gif|jpg|png';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
         $config['max_size'] = '0';
-        $config['max_width'] = '1024';
-        $config['max_height'] = '1024';
+        // $config['max_width'] = '1024';
+        // $config['max_height'] = '1024';
         $config['overwrite'] = FALSE;
         $config['encrypt_name'] = TRUE;
         $config['remove_spaces'] = TRUE;

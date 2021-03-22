@@ -301,7 +301,7 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getarticle'); ?>",
-            data: {'id': id},
+            data: JSON.stringify({'id': id}),
             dataType: "json",
             success: function (data) {
                 if (data.result != null) {

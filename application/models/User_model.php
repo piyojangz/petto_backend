@@ -91,4 +91,38 @@ class User_model extends CI_Model
         $this->db->where('id', $id);
         return $this->db->get('merchant');
     }
+
+
+    function weblogin($user_id = '', $password = '')
+    {
+        $query = $this->db->query("SELECT * FROM merchant where email = '" . $user_id . "'  and password = '" . $password . "'  LIMIT 1");
+        if ($query->num_rows() > 0) {
+            $row = $query->row(); 
+            if ($row->status == 1) {
+                $set_cm_account['id'] = $row->id;
+                $set_cm_account['name'] = $row->name;
+                $set_cm_account['webname'] = $row->webname;
+                $set_cm_account['email'] = $row->email;
+                $set_cm_account['description'] = $row->description;
+                $set_cm_account['lineid'] = $row->lineid;
+                $set_cm_account['image'] = $row->image;
+                $set_cm_account['token'] = $row->token;
+                $set_cm_account['isadmin'] = $row->isadmin;
+
+                $queryx = $this->db->query("SELECT * FROM v_merchantwithpackage where email = '" . $user_id . "'  and password = '" . $password . "'  LIMIT 1");
+                if ($queryx->num_rows() > 0) {
+                    $rowx = $queryx->row();
+                    $set_cm_account['packageid'] = $rowx->packageid;
+                }
+                else{
+                    $set_cm_account['packageid'] = 0;
+                } 
+                return array('login' => 'success', 'data' => $row);
+            } else {
+                return array('login' => 'failed', 'data' => $row);
+            }
+        } else {
+            return array('login' => 'failed', 'data' => null);
+        }
+    }
 }

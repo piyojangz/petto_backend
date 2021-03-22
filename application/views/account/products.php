@@ -54,6 +54,22 @@
     button {
         margin-top: 10px;
     }
+
+    .removeimg {
+        background: rgb(237, 60, 32);
+        padding: 5px;
+        border-radius: 5px 5px 5px 5px;
+        width: 30px;
+        position: absolute;
+        text-align: center;
+        align-items: center;
+        top: 0px;
+        right: -20px;
+        color: #fff !important;
+        z-index: 999;
+        display: block;
+        cursor: pointer;
+    }
 </style>
 
 <body class="fix-header">
@@ -112,7 +128,7 @@
                         <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
                             <div class="white-box">
                                 <div class="el-card-item">
-                                    <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden"><img src="<?= $item->image ?>" />
+                                    <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;min-height:100px"><img src="<?= $item->image ?>" />
                                         <div class="el-overlay">
                                             <ul class="el-info">
                                                 <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
@@ -121,7 +137,7 @@
                                         </div>
                                     </div>
                                     <div class="el-card-content">
-                                        <h4 class="box-title text-info"  ><?= $item->name ?></h4>
+                                        <h4 class="box-title text-info"><?= $item->name ?></h4>
                                         <small>฿<?= number_format($item->price) ?></small>
                                         <br>
                                         <code>คลัง <?= $item->stock ?></code>
@@ -150,30 +166,30 @@
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ชื่อสินค้า</label>
                                                     <div class="col-md-9">
-                                                        <input type="text" name="name" id="name" class="form-control" maxlength="35" required>
+                                                        <input type="text" name="name" id="name" class="form-control" maxlength="120" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">หมวดหมู่</label>
                                                     <div class="col-md-9">
                                                         <select id="category" name="category" class="form-control">
-                                                            <option value="">ไม่มี</option>
+                                                            <option value="0">ไม่มี</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">หมวดหมู่ย่อย1</label>
                                                     <div class="col-md-9">
-                                                        <select id="category" name="category" class="form-control">
-                                                            <option value="">ไม่มี</option>
+                                                        <select id="category1" name="category1" class="form-control">
+                                                            <option value="0">ไม่มี</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">หมวดหมู่ย่อย2</label>
                                                     <div class="col-md-9">
-                                                        <select id="category" name="category" class="form-control">
-                                                            <option value="">ไม่มี</option>
+                                                        <select id="category2" name="category2" class="form-control">
+                                                            <option value="0">ไม่มี</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -181,6 +197,12 @@
                                                     <label class="control-label col-md-3">ราคา</label>
                                                     <div class="col-md-9">
                                                         <input type="number" name="price" id="price" required class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">ราคาลด</label>
+                                                    <div class="col-md-9">
+                                                        <input type="number" name="discount" id="discount" required class="form-control">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -198,8 +220,15 @@
                                                 </div>
 
                                                 <div class="form-group">
+                                                    <label class="control-label col-md-3">ลิงค์วีดีโอ <br /><code>ตัวอย่าง https://www.youtube.com/embed/714KiXU15eU</code></label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" name="vdourl" id="vdourl" class="form-control">
+                                                    </div>
+                                                </div>
 
-                                                    <label class="control-label col-md-3">รูปภาพ</label>
+                                                <div class="form-group">
+
+                                                    <label class="control-label col-md-3">รูปภาพปก</label>
                                                     <div class="col-md-9">
                                                         <div class="cropit-preview-edit"><img id="imgedit" src="" /></div>
                                                         <button class="btn-edit-img btn btn-warning waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>แก้ไขรูปภาพ
@@ -219,7 +248,19 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">รูปอื่นๆ</label>
+                                                        <div class="col-md-8">
+                                                            <div class="row">
+                                                                <div id="imagesother"></div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div id="coba"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
                                                 <div class="form-actions">
                                                     <div class="row">
@@ -283,18 +324,38 @@
     <script src="<?= base_url("res/account/plugins/bower_components/summernote/dist/summernote.min.js") ?>"></script>
     <!-- Magnific popup JavaScript -->
     <script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script>
+    <script src="<?= base_url("res/js/spartan-multi-image-picker.js") ?>"></script>
 </body>
 <script>
     $(document).ready(function() {
+
+        $("#category").change(function() {
+            var id = $(this).val();
+            getcate1(id,0);
+        })
+
+
+        $("#category1").change(function() {
+            var id = $(this).val();
+            getcate2(id,0);
+        })
+
+        $("#coba").spartanMultiImagePicker({
+            fieldName: 'fileUpload[]',
+            maxCount: 4,
+            rowHeight: '200px',
+            groupClassName: 'col-md-6 col-sm-6 col-xs-6',
+            allowedExt: 'png|jpg|jpeg',
+        });
         //category
         $.ajax({
             type: "POST",
-            url: "<?php echo base_url('service/getallcate'); ?>",
-            data: {
+            url: "<?php echo base_url('service/getcateparent'); ?>",
+            data: JSON.stringify({
                 'merchantid': '<?= $merchant->id ?>'
-            },
+            }),
             dataType: "json",
-            success: function(data) { 
+            success: function(data) {
                 var html = "";
                 if (data.result != null) {
                     html += '<option value="">ไม่มี</option>';
@@ -358,7 +419,22 @@
             var text = $('textarea[name="customtext"]').html($('#customtext').code());
             $("#inputcustomtext").val(text.val());
 
-            return true;
+
+            var elements = $(".img_");
+            elements.each(function(i, e) {
+                var val = $(e).attr('src');
+                if (val != undefined) {
+                    console.log(val);
+                    $('<input>').attr({
+                        type: 'hidden',
+                        id: 'multipleimages' + i,
+                        name: 'multipleimages[]',
+                        value: val
+                    }).appendTo('#form-submit');
+                }
+
+            });
+
 
             return true;
         });
@@ -371,7 +447,16 @@
             $("#id").val("");
             $("#name").val("");
             $("#price").val("");
+            $("#vdourl").val("");
             $("#category").val("");
+            $("#category1").val("");
+            $("#category2").val("");
+
+            $("#category1").html('<option value="0">ไม่มี</option>');
+            $("#category2").html('<option value="0">ไม่มี</option>');
+            
+            $("input[class=multipleimages").remove();
+            $("#imagesother").html("");
             $(".summernote").code("");
             $(".cropit-preview-edit").hide();
             $(".btn-edit-img").hide();
@@ -388,6 +473,63 @@
 
     });
 
+
+    function getcate1(parentid, id) {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getcatebyParentId'); ?>",
+            data: JSON.stringify({
+                'id': parentid
+            }),
+            dataType: "json",
+            success: function(data) {
+                var html = "";
+                if (data.result != null) {
+                    html += '<option value="0">ไม่มี</option>';
+                    $.each(data.result, function(index, value) {
+                        html += '<option value="' + value.id + '">' + value.name + '</option>';
+                    });
+                    $("#category1").html(html);
+                }
+                $("#category1").val(id);
+            },
+            error: function(XMLHttpRequest) {
+
+            }
+        });
+    }
+
+
+    function getcate2(parentid, id) {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getcatebyParentId'); ?>",
+            data: JSON.stringify({
+                'id': parentid
+            }),
+            dataType: "json",
+            success: function(data) {
+                var html = "";
+                if (data.result != null) {
+                    html += '<option value="0">ไม่มี</option>';
+                    $.each(data.result, function(index, value) {
+                        html += '<option value="' + value.id + '">' + value.name + '</option>';
+                    });
+                    $("#category2").html(html);
+                }
+                $("#category2").val(id);
+            },
+            error: function(XMLHttpRequest) {
+
+            }
+        });
+    }
+
+    function removeimage(index) {
+        $('#imagesother' + index).remove();
+        $('#multipleimages' + index).remove();
+    }
+
     function edititem(id) {
         $('div.block1').block({
             message: '<h3>กรุณารอสักครู่...</h3>',
@@ -395,29 +537,61 @@
                 border: '1px solid #fff'
             }
         });
+
+        $('#imagesother').html("");
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getitem'); ?>",
-            data: {
+            data: JSON.stringify({
                 'id': id
-            },
+            }),
             dataType: "json",
             success: function(data) {
                 $('div.block1').unblock();
+                console.log(data);
                 if (data.result != null) {
                     $("#id").val(data.result.id);
                     $("#name").val(data.result.name);
                     $("#price").val(data.result.price);
+                    $("#discount").val(data.result.discount);
+                    
                     $("#stock").val(data.result.stock);
+                    $("#vdourl").val(data.result.video);
                     $(".summernote").code(data.result.description);
                     $("#category").val(data.result.cateid);
 
+                    if (data.result.cateid1 != 0) {
+                        getcate1(data.result.cateid, data.result.cateid1);
+                    }
+
+                    if (data.result.cateid2 != 0) {
+                        getcate2(data.result.cateid1, data.result.cateid2);
+                    }
+
+
+
                     if (data.result.image != "") {
-                        $("#imgedit").attr("src", data.result.image);
+                        var images = data.result.image.split('#');
+                        console.log(images);
+                        $("#imgedit").attr("src", images[0]);
+                        $("#imageData").val(images[0]);
                         $(".image-editor").hide();
                         $(".cropit-preview-edit").show();
                         $(".btn-edit-img").show();
                         $("#imgedit").show();
+
+                        for (var i = 0; i < images.length; i++) {
+                            if (i > 0) {
+                                $('#imagesother').append('<div    id="imagesother' + i + '" class="col-xs-4 imagesother" style="margin:5px;"><a onclick="removeimage(' + i + ')" class="removeimg"><i class="fa fa-times"></i></a><img id="imgedit" src="' + images[i] + '" style="width:150px"></div>');
+                                $('<input>').attr({
+                                    type: 'hidden',
+                                    id: 'multipleimages' + i,
+                                    class:'multipleimages',
+                                    name: 'multipleimages[]',
+                                    value: images[i]
+                                }).appendTo('#form-submit');
+                            }
+                        }
                     } else {
                         $("#imgedit").attr("src", "");
                         $(".image-editor").show();

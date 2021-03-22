@@ -313,9 +313,9 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/saveshopslot'); ?>",
-            data: {
+            data: JSON.stringify({
                 'merchantid': id
-            },
+            }),
             dataType: "json",
             success: function(data) {
                 $('div.block1').unblock();

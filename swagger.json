@@ -1,0 +1,2064 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a  server Pettogo.co server.",
+    "version": "1.0.0",
+    "title": "Swagger Pettogo",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost/petto",
+  "basePath": "/service/v1",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เข้าสู่ระบบ",
+        "description": "",
+        "operationId": "login",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/login"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ออกจากระบบ",
+        "description": "",
+        "operationId": "logout",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/logout"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/lookupcustomer": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ค้นหาข้อมูลลูกค้า",
+        "description": "",
+        "operationId": "getcustomer",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/lookupcustomer"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getbilltoken": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ดึงข้อมูลบิล",
+        "description": "",
+        "operationId": "getbilltoken",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getbilltoken"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getpromobilltokenformerchant": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ดึงข้อมูลบิลพร้อมโปราโมชั่นสำหรับร้าน",
+        "description": "",
+        "operationId": "getpromobilltokenformerchant",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getpromobilltokenformerchant"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getpromobill": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ดึงข้อมูลบิลพร้อมโปรโมชั่น",
+        "description": "",
+        "operationId": "getpromobill",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getpromobill"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/deletemerchantlineuid": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ลบข้อมูลร้านค้า",
+        "description": "",
+        "operationId": "deletemerchantlineuid",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/deletemerchantlineuid"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/deletebilltoken": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ลบบิล",
+        "description": "",
+        "operationId": "deletebilltoken",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/deletebilltoken"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getaumphure": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ดึงข้อมูลอำเภอ",
+        "description": "",
+        "operationId": "getaumphure",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getaumphure"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getmerchantbilldata": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ดึงข้อมูลบิลของร้านค้า",
+        "description": "",
+        "operationId": "getmerchantbilldata",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getmerchantbilldata"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getallbilltokenhtml": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ดึงรายการบิลของร้านค้าเป็น html table",
+        "description": "",
+        "operationId": "getallbilltokenhtml",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getallbilltokenhtml"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getsalehistory": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ดูประวัติการขาย",
+        "description": "",
+        "operationId": "getsalehistory",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getsalehistory"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/get_orderitemslist/{items}": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เรียกข้อมูล item list",
+        "description": "",
+        "operationId": "get_orderitemslist",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "items",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/saveshopslot": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "บันทึกข้อมูลการขาย",
+        "description": "",
+        "operationId": "saveshopslot",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/saveshopslot"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/saveadminuid": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "บันทึกข้อมูลแอดมิน",
+        "description": "",
+        "operationId": "saveadminuid",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/saveadminuid"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/updateitemtobill": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "อัพเดทรายการสินค้าในบิล",
+        "description": "",
+        "operationId": "updateitemtobill",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/updateitemtobill"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getbillitiemswithstock": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เรียกข้อมูลบิลพร้อมกับสินค้าคงคลัง",
+        "description": "",
+        "operationId": "getbillitiemswithstock",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getbillitiemswithstock"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/updatestock": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "อัพเดทสินค้าคงคลัง",
+        "description": "",
+        "operationId": "updatestock",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/updatestock"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/checkinglowstock/{merchantid}/{billtokenid}": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เช็คสินค้าคงคลัง",
+        "description": "",
+        "operationId": "checkinglowstock",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "merchantid",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "required": true,
+            "name": "billtokenid",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/savebilltoken": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "บันทึกบิล",
+        "description": "",
+        "operationId": "savebilltoken",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/savebilltoken"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getitem": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เรียกรายการสินค้า",
+        "description": "",
+        "operationId": "getitem",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getitem"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getpackagelist": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เรียก package",
+        "description": "",
+        "operationId": "getpackagelist",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getauction": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เรียกข้อมูลรายการประมูล",
+        "description": "",
+        "operationId": "getauction",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getauction"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getimagecover": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เรียกดู image cover",
+        "description": "",
+        "operationId": "getimagecover",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getimagecover"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getarticle": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "บทความ",
+        "description": "",
+        "operationId": "getarticle",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getarticle"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/removeimagecover": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ลบ image cover",
+        "description": "",
+        "operationId": "removeimagecover",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/removeimagecover"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/removearticle": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ลบบทความ",
+        "description": "",
+        "operationId": "removearticle",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/removearticle"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getordersumbibilltoken": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "สรุปยอดรวม",
+        "description": "",
+        "operationId": "getordersumbibilltoken",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getordersumbibilltoken"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getauctionlist": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "รายการประมูล",
+        "description": "",
+        "operationId": "getauctionlist",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getauctionlist"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getauctionbyID": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "รายการประมูลตามid",
+        "description": "",
+        "operationId": "getauctionbyID",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getauctionbyID"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/updateorderstatus": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "อัพเดทสถานะคำสั่งซื้อ",
+        "description": "",
+        "operationId": "updateorderstatus",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/updateorderstatus"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/exportorderexcel": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "สำหรับออกรายงานเป็นรูปแบบ excel",
+        "description": "",
+        "operationId": "exportorderexcel",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/exportorderexcel"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getorderstatus": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "รายการสถานะของคำสั่งซื้อ",
+        "description": "",
+        "operationId": "getorderstatus",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getorderstatus"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getorderstatuslabel/{status}/{closestatus}": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "summary": "...",
+        "description": "",
+        "operationId": "getorderstatuslabel",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "status",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "required": true,
+            "name": "closestatus",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getshippingrateconfig": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "config ของค่าจัดส่ง",
+        "description": "",
+        "operationId": "getshippingrateconfig",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getshippingrateconfig"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getpementmethod": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "config ของวิธีการขำระเงิน",
+        "description": "",
+        "operationId": "getpementmethod",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getpementmethod"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getcate": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "รายการหมวดหมู่",
+        "description": "",
+        "operationId": "getcate",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getcate"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getallcate": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "หมวดหมู่ทั้งหมด",
+        "description": "",
+        "operationId": "getallcate",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getallcate"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getshippingrate": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ค่าขนส่ง",
+        "description": "",
+        "operationId": "getshippingrate",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getshippingrate"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/gettumbol": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "รายการตำบล",
+        "description": "",
+        "operationId": "gettumbol",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/gettumbol"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/submitorder": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "เพิ่มรายการคำสั่งซื้อ",
+        "description": "",
+        "operationId": "submitorder",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/submitorder"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/confirmpayment": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ยืนยันการชำระเงิน",
+        "description": "",
+        "operationId": "confirmpayment",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/confirmpayment"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/cancelpayment": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "ยกเลิกออเดอร์",
+        "description": "",
+        "operationId": "cancelpayment",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cancelpayment"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getreviewlist": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "รายการ review",
+        "description": "",
+        "operationId": "getreviewlist",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getreviewlist"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/getreviewbyID": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "รายการ review",
+        "description": "",
+        "operationId": "getreviewbyID",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/getreviewbyID"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/savereview": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "บันทึก review",
+        "description": "",
+        "operationId": "savereview",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/savereview"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "login": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "logout": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "lookupcustomer": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "txttel": {
+          "type": "string"
+        },
+        "txtidcard": {
+          "type": "string"
+        }
+      }
+    },
+    "getbilltoken": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "getpromobilltokenformerchant": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "merchantuid": {
+          "type": "integer"
+        }
+      }
+    },
+    "getpromobill": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "merchantuid": {
+          "type": "integer"
+        },
+        "merchanttoken": {
+          "type": "string"
+        },
+        "itemselected": {
+          "type": "string"
+        },
+        "total": {
+          "type": "number"
+        },
+        "paymenttype": {
+          "type": "number"
+        },
+        "shipingrate": {
+          "type": "number"
+        },
+        "shippingdiscount": {
+          "type": "number"
+        },
+        "pricediscount": {
+          "type": "number"
+        }
+      }
+    },
+    "deletemerchantlineuid": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "deletebilltoken": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getaumphure": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "provinceid": {
+          "type": "integer"
+        }
+      }
+    },
+    "getmerchantbilldata": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "getallbilltokenhtml": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        }
+      }
+    },
+    "getsalehistory": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "lineuid": {
+          "type": "string"
+        },
+        "limit": {
+          "type": "integer"
+        },
+        "offset": {
+          "type": "integer"
+        }
+      }
+    },
+    "get_orderitemslist": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "orderid": {
+          "type": "integer"
+        }
+      }
+    },
+    "saveshopslot": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        }
+      }
+    },
+    "saveadminuid": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "adminname": {
+          "type": "string"
+        },
+        "adminemail": {
+          "type": "string"
+        },
+        "admintel": {
+          "type": "string"
+        }
+      }
+    },
+    "updateitemtobill": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "itemid": {
+          "type": "integer"
+        }
+      }
+    },
+    "updatestock": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "isstockenable": {
+          "type": "boolean"
+        },
+        "updateitemamount": {
+          "type": "number"
+        },
+        "billtokenid": {
+          "type": "integer"
+        }
+      }
+    },
+    "checkinglowstock": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "billtokenid": {
+          "type": "integer"
+        }
+      }
+    },
+    "savebilltoken": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "daterange": {
+          "type": "string"
+        },
+        "merchantuid": {
+          "type": "string"
+        },
+        "usernoti": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "getitem": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getbillitiemswithstock": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "getauction": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getimagecover": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getarticle": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "removeimagecover": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "removearticle": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getordersumbibilltoken": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "billtoken": {
+          "type": "string"
+        }
+      }
+    },
+    "updateorderstatus": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "items": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer"
+        }
+      }
+    },
+    "exportorderexcel": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "exportorderstatus": {
+          "type": "string"
+        }
+      }
+    },
+    "getorderstatus": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "integer"
+        }
+      }
+    },
+    "getorderstatuslabel": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer"
+        },
+        "closestatus": {
+          "type": "integer"
+        }
+      }
+    },
+    "getshippingrateconfig": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getcate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getallcate": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        }
+      }
+    },
+    "getshippingrate": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        },
+        "unit": {
+          "type": "integer"
+        }
+      }
+    },
+    "gettumbol": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "aumpureid": {
+          "type": "integer"
+        }
+      }
+    },
+    "submitorder": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "itemselected": {
+          "type": "string"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "paymenttype": {
+          "type": "integer"
+        },
+        "orderid": {
+          "type": "integer"
+        },
+        "shipingrate": {
+          "type": "number"
+        },
+        "ordertoken": {
+          "type": "string"
+        },
+        "shippingdiscount": {
+          "type": "number"
+        },
+        "pricediscount": {
+          "type": "number"
+        },
+        "mnbillstatus": {
+          "type": "integer"
+        }
+      }
+    },
+    "confirmpayment": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "orderid": {
+          "type": "integer"
+        }
+      }
+    },
+    "cancelpayment": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "orderid": {
+          "type": "integer"
+        }
+      }
+    },
+    "getpementmethod": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getauctionlist": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "getauctionbyID": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "getreviewlist": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "merchantid": {
+          "type": "integer"
+        }
+      }
+    },
+    "getreviewbyID": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        }
+      }
+    },
+    "savereview": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "reviewid": {
+          "type": "integer"
+        },
+        "userid": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

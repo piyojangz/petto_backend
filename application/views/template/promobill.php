@@ -214,7 +214,7 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getshippingrate'); ?>",
-            data: {'merchantid': merchantid, 'unit': unit},
+            data: JSON.stringify({'merchantid': merchantid, 'unit': unit}),
             dataType: "json",
             success: function (data) {
                 if (data.result != null) {
@@ -304,7 +304,7 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getpromobill'); ?>",
-            data: {
+            data: JSON.stringify({
                 'itemselected': itemselected,
                 'total': total,
                 'paymenttype': paymenttype,
@@ -314,7 +314,7 @@
                 'merchanttoken': merchanttoken,
                 'merchantuid': merchantuid,
                 'merchantid': merchantid
-            },
+            }),
             dataType: "json",
             success: function (data) {
                 console.log(data);
