@@ -29,24 +29,24 @@ class Register extends CI_Controller
             $firstname = $this->input->post('firstname');
             $lastname = $this->input->post('lastname');
             $tel = $this->input->post('tel');
-            // $name = $this->input->post('name');
+            $name = $this->input->post('nameth');
             $webname = $this->input->post('webname');
             $cond = array('email' => $email);
             if ($this->get->merchant($cond)->num_rows() > 0) {
                 $data["emaildoesexit"] = true;
-            } elseif ($this->get->merchant(array('webname' => $webname))->num_rows() > 0) {
+            } elseif ($this->get->merchant(array('name' => $name))->num_rows() > 0) {
                 $data["webnamedoesexit"] = true;
             } else {
                 $password = $this->input->post('password');
                 $token = $this->common->getToken(10);
                 $input = array(
                     'email' => $email,
-                    'webname' => $webname,
+                    // 'webname' => $webname,
                     'firstname' => $firstname,
                     'lastname' => $lastname,
                     'tel' => $tel,
-                    // 'name' => $name,
-                    'lineid' => $lineid,
+                    'name' => $name,
+                    // 'lineid' => $lineid,
                     'image' => base_url("public/avatar.png"),
                     'password' => md5($password),
                     'token' => $token,

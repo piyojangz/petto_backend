@@ -116,7 +116,7 @@
                                     <div class="form-group">
                                         <label class="col-md-12">ชื่อร้าน</label>
                                         <div class="col-md-12">
-                                            <input type="text" name="name" id="name" disabled
+                                            <input type="text" name="name" id="name"  
                                                    class="form-control form-control-line"
                                                    value="<?= $merchant->name ?>"></div>
                                     </div>

@@ -80,12 +80,12 @@
                         อีเมลล์นี้มีผู้ใช้งานแล้ว
                     </div>
                 <?php endif; ?>
-                <?php if ($webnamedoesexit) : ?>
+                <!-- <?php if ($webnamedoesexit) : ?>
                     <div class="alert alert-success alert-dismissable" id="passwordnotmath">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                         ร้านค้านี้ผู้ใช้งานแล้ว
                     </div>
-                <?php endif; ?>
+                <?php endif; ?> -->
                 <?php if ($register) : ?>
                     <div class="alert alert-success" id="passwordnotmath">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -101,12 +101,12 @@
                             <input class="form-control" type="email" name="email" required placeholder="Email">
                         </div>
                     </div>
-                    <div class="form-group  m-t-20">
+                    <!-- <div class="form-group  m-t-20">
                         <div class="col-xs-12">
                             <label style="font-weight: bold;">Line ID</label>
                             <input class="form-control" type="text" name="lineid" required placeholder="Line ID">
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group  m-t-20">
                         <div class="col-xs-12">
                             <label style="font-weight: bold;">ชื่อ</label>
@@ -125,20 +125,26 @@
                             <input class="form-control" type="text" name="tel" id="tel" required placeholder="เบอร์โทรศัพท์มือถือ">  
                         </div>
                     </div>
-                    <div class="form-group  m-t-20">
+                    <!-- <div class="form-group  m-t-20">
                         <div class="col-xs-12">
-                            <label style="font-weight: bold;">ชื่อร้าน</label>
-                            <input class="form-control" type="tel" name="name" id="name" required placeholder="ชื่อร้าน">
+                            <label style="font-weight: bold;">ชื่อร้าน(Eng)</label>
+                            <input class="form-control" type="text" name="name" id="name" required placeholder="ชื่อร้าน">
                             <input name="webname" id="webname" type="hidden">
                             <i class="text-success" id="shopname"></i>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group  m-t-20">
                         <div class="col-xs-12">
-                            <label style="font-weight: bold;">รายละเอียดร้านค่้า</label>
-                            <input class="form-control" type="name" name="name" id="name" required placeholder="รายละเอียด">
+                            <label style="font-weight: bold;">ชื่อร้าน(ไทย)</label>
+                            <input class="form-control" type="text" name="nameth" id="nameth" required placeholder="ชื่อร้าน">  
                         </div>
                     </div>
+                    <!-- <div class="form-group  m-t-20">
+                        <div class="col-xs-12">
+                            <label style="font-weight: bold;">รายละเอียดร้านค่้า</label>
+                            <input class="form-control" type="text" name="name" id="name" required placeholder="รายละเอียด">
+                        </div>
+                    </div> -->
                     <div class="form-group">
 
                         <div class="col-xs-12">
@@ -155,14 +161,14 @@
                             <input class="form-control" type="password" name="confirmpassword" id="confirmpassword" required placeholder="Password">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <div class="col-md-12">
                             <div class="checkbox checkbox-primary p-t-0">
                                 <input id="checkbox-signup" type="checkbox" checked>
                                 <label for="checkbox-signup"> ฉันทราบเงื่อนไขแล้ว</label>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group text-center m-t-20">
                         <div class="col-xs-12">
                             <button class="btn btn-info btn-lg btn-block  text-uppercase waves-effect waves-light" type="submit">สมัครสมาชิก
@@ -224,10 +230,10 @@
                     $("#passwordincorrectformat").show();
                     return false;
                 }
-                if (!$("#checkbox-signup").is(':checked')) {
-                    $("#termandcond").show();
-                    return false;
-                }
+                // if (!$("#checkbox-signup").is(':checked')) {
+                //     $("#termandcond").show();
+                //     return false;
+                // }
                 return true;
             });
 

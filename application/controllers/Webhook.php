@@ -18,6 +18,16 @@ class Webhook extends CI_Controller
         $this->load->library('common');
     }
 
+    public function test(){
+           // push message block
+           $pushmessages = [];
+           $pushmessages['to'] = 'U7fbb7c7d7ba6f2642c0eb7026f8da615';
+           $pushmessages['messages'][0] = $this->getFormatTextMessage("Pushs Message [U7fbb7c7d7ba6f2642c0eb7026f8da615]");
+           $encodeJson2 = json_encode($pushmessages);
+           // push message block
+   
+           $results = $this->lineapi->pushMessage($encodeJson2);
+    }
 
     public function testflex()
     {

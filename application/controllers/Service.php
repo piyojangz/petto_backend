@@ -18,6 +18,7 @@ class Service extends CI_Controller
         $this->load->model('Select_model', 'get');
         $this->load->model('Update_model', 'set');
         $this->load->model('User_model', 'user');
+        $this->load->model('Email', 'Semail');
         $this->load->library('upload');
         $this->load->library('lineapi');
         $this->load->library('excel');
@@ -46,6 +47,10 @@ class Service extends CI_Controller
         $lastname = $post['lastname'];
         $email = $post['email'];
         $password = $post['password'];
+        $userLineID = $post['userLineID'];
+        $pictureUrl = $post['pictureUrl'];
+        $name = $post['name'];
+
         $token = $this->common->getToken(10);
         $input = array(
             'firstname' => $firstname,
@@ -53,46 +58,62 @@ class Service extends CI_Controller
             'email' => $email,
             'password' => $password,
             'token' => $token,
+            'lineid' => $userLineID,
+            'pictureUrl' => $pictureUrl,
+            'name' => $name,
             'createdate' => date('Y-m-d H:i:s')
         );
 
         $customer = $this->get->customer(array('email' => $email))->row();
-    
-        if(isset($customer)){ 
+
+        if (isset($customer)) {
             $data['result'] = false;
-        } 
-        else{
+        } else {
             $data['result'] = $this->put->customer($input);
+            $this->sendtoLine($userLineID, "ยินดีตอนรับสู่ Pettogo.co ท่านสามารถเข้าใช้งานระบบได้เลยที่ https://cd259cde582f.ngrok.io/");
             $whitelist = array(
                 '127.0.0.1',
                 '::1'
             );
             if (!in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
                 $this->sendregisteremail($token, $firstname, $email);
-            }
+            } 
         }
 
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data['result']);
+    }
 
-        
+
+    public function sendtoLine($userLineID, $msg)
+    {
+        // push message block
+        $pushmessages = [];
+        $pushmessages['to'] = $userLineID;
+        $pushmessages['messages'][0] = $this->getFormatTextMessage($msg);
+        $encodeJson2 = json_encode($pushmessages);
+        // push message block
+
+        $results = $this->lineapi->pushMessage($encodeJson2);
+    }
+
+    function getFormatTextMessage($text)
+    {
+        $datas = [];
+        $datas['type'] = 'text';
+        $datas['text'] = $text;
+        return $datas;
     }
 
     function sendregisteremail($token, $firstname, $email)
     {
-        $msg =  "สวัสดีคุณ $firstname<br/>
-        คุณได้ทำการสมัครสมาชิก Pettogo.co เรียบร้อยแล้ว<br/>
-        โปรดทำตามขั้นตอนเพื่อยืนยันตนของท่านดังนี้<br/>
-        1.ทำการ Add Line : @232ruaun หรือ แสกน QR code<br/>
-        2.จากนั้น copy ข้อความ 'ลงทะเบียน $token' ในช่องแชท<br/>
-        3.เสร็จสิ้นขั้นตอนจะมีข้อความยืนยัน และรอระบบอนุมัติ<br/>
-        ขอบคุณค่ะ";
+        $msg =  "สวัสดีคุณ $firstname คุณได้ทำการสมัครสมาชิก Pettogo.co เรียบร้อยแล้ว ขอบคุณค่ะ";
         $this->Semail->sendinfo($msg, $email, 'ยืนยันการสมัครสมาชิก Pettogo.co');
     }
 
     public function customerlogin()
     {
-        $post = json_decode(file_get_contents('php://input'), true); 
+        $post = json_decode(file_get_contents('php://input'), true);
         $email = $post['email'];
         $password = $post['password'];
         $cond = array('email' => $email, 'password' => $password);
