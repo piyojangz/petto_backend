@@ -208,7 +208,7 @@
             $('input:checkbox').not(this).prop('checked', this.checked);
         });
 
-        getorderstatus(0, 'ทั้งหมด');
+      getorderstatus(0, 'ทั้งหมด');
 
     });
 
@@ -226,12 +226,13 @@
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getorderstatus'); ?>",
-            data: {
+            data: JSON.stringify({
                 'merchantid': '<?= $merchant->id ?>',
                 status: status
-            },
+            }),
             dataType: "html",
             success: function(data) {
+                console.log(data);
                 $("#orderlist").html(data);
                 $('div.block1').unblock();
             },

@@ -621,13 +621,13 @@ class Account extends CI_Controller
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["paidorder"] = $this->paidorder;
-        // $data["order"] = $this->get->v_order(array("merchantid" => $data["merchant"]->id, "closestatus != " => 1), array("0", "3"))->result();
-
+       // $data["order"] = $this->get->v_order(array("merchantid" => $data["merchant"]->id, "closestatus != " => 1), array("0", "3"))->result();
+ 
         if (!$this->user->is_login()) {
             redirect('/');
         }
 
-        // $data["customer"] = $this->get->getcustomerlist($data["merchant"]->id);
+         //$data["customer"] = $this->get->getcustomerlist($data["merchant"]->id);
 
         $this->load->view('account/allorder', $data);
     }

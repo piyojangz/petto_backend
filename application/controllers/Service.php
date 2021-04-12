@@ -77,7 +77,7 @@ class Service extends CI_Controller
             );
             if (!in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
                 $this->sendregisteremail($token, $firstname, $email);
-            } 
+            }
         }
 
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -926,7 +926,9 @@ class Service extends CI_Controller
         } else {
             $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, null)->result();
             // $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), array("0", "3"), null)->result();
-        }
+        } 
+
+        
 
         $html = "";
         foreach ($data['result'] as $item) {
@@ -939,14 +941,14 @@ class Service extends CI_Controller
             $html .= "<label for=\"orderid$item->id\"> </label>";
             $html .= "</div>";
             $html .= "</td>";
-            $html .= "<td><a class=\"badge badge-info \" target=\"_blank\" href=\"" . base_url($item->token) . "\">$item->token</a></td>";
+            $html .= "<td><a class=\"badge badge-info \" target=\"_blank\" href=\"" . base_url($item->id) . "\">$item->id</a></td>";
             $html .= "<td> $submitdate</td>";
-            // $html .= "<td>" . number_format($item->total) . "</td>";
+            $html .= "<td>" . number_format($item->total) . "</td>";
             $html .= "<td>$item->paymentinfo</td>";
             $html .= "<td>$item->fullname</td>";
             $html .= "<td>$item->billingaddress</td>";
-            $html .= "<td>$item->orderitems</td>";
-            // $html .= "<td>$item->sumamount</td>";
+            $html .= "<td>-</td>";
+            $html .= "<td>$item->sumamount</td>";
             $html .= "<td>" . number_format($item->total) . "</td>";
             $html .= "<td>" . number_format($item->shipingrate) . "</td>";
             $html .= "<td>$statuslabel</td> ";
@@ -1137,6 +1139,95 @@ class Service extends CI_Controller
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
+
+
+    public function createorder()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+
+        $cartItems =  $post['cartItems'];
+        $merchantlist =  $post['merchantlist'];
+        $userid =  $post['userid'];
+
+        foreach ($merchantlist as $merchant) {
+            $input = array(
+                'merchantid' => $merchant['id'],
+                'status' => 0,
+                'custid' => $userid,
+                'createdate' => date('Y-m-d H:i:s'),
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            $orderid  = $this->put->order($input);
+
+            foreach ($cartItems as $item) {
+                if ($merchant['id'] == $item['merchantid']) {
+                    $input = array(
+                        'orderid' => $orderid,
+                        'itemid' => $item['id'],
+                        'amount' => $item['qty'],
+                        'price' =>  $item['discount'] != "" ? $item['discount']  :  $item['price'],
+                        'createdate' => date('Y-m-d H:i:s'),
+                        'updatedate' => date('Y-m-d H:i:s'),
+                    );
+                    $cond = array('orderid' => $input['orderid'], 'itemid' => $input['itemid']);
+                    if ($this->get->orderdetail($cond)->num_rows() == 0) {
+                        $this->put->orderdetail($input);
+                    } else {
+                        $this->set->orderdetail($input);
+                    }
+                }
+            }
+        }
+        // foreach ($cartItems as $value) {
+        //     $item = explode(",", $value);
+        //     $input = array(
+        //         'orderid' => $orderid,
+        //         'itemid' => $item[0],
+        //         'amount' => $item[1],
+        //         'price' => $item[2],
+        //     );
+        //     $cond = array('orderid' => $input['orderid'], 'itemid' => $input['itemid']);
+        //     if ($this->get->orderdetail($cond)->num_rows() == 0) {
+        //         $this->put->orderdetail($input);
+        //     } else {
+        //         $this->set->orderdetail($input);
+        //     }
+        // }
+
+        //update order
+        // $input = array(
+        //     'id' => $orderid,
+        //     'total' => $total,
+        //     'shipingrate' => $shipingrate,
+        //     'paymentmethodid' => $paymenttype,
+        //     'shippingdiscount' => $shippingdiscount,
+        //     'pricediscount' => $pricediscount,
+        //     'mnbillstatus' => $mnbillstatus,
+        //     'submitdate' => date('Y-m-d H:i:s'),
+        //     'updatedate' => date('Y-m-d H:i:s'),
+        // );
+        // $this->set->order($input);
+        // $orderitem = explode(";", $itemselected);
+        // foreach ($orderitem as $value) {
+        //     $item = explode(",", $value);
+        //     $input = array(
+        //         'orderid' => $orderid,
+        //         'itemid' => $item[0],
+        //         'amount' => $item[1],
+        //         'price' => $item[2],
+        //     );
+        //     $cond = array('orderid' => $input['orderid'], 'itemid' => $input['itemid']);
+        //     if ($this->get->orderdetail($cond)->num_rows() == 0) {
+        //         $this->put->orderdetail($input);
+        //     } else {
+        //         $this->set->orderdetail($input);
+        //     }
+        // }
+        $data['result'] =  true;
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
 
     public function confirmpayment()
     {
