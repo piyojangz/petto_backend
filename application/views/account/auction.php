@@ -119,7 +119,7 @@
                                             <th width="100">ชื่อสินค้า</th>
                                             <th>ราคาเริ่มต้น</th>
                                             <th>ราคาบิดขั้นต่ำ</th>
-                                            <th>ราคา Buy out</th>
+                                            <!-- <th>ราคา Buy out</th> -->
                                             <th>ระยะเวลา</th>
                                             <th>สถานะ</th>
                                             <th>ACTION</th>
@@ -133,7 +133,7 @@
                                                 <td style=" vertical-align: middle;"><?= $item->name ?></td>
                                                 <td style="vertical-align: middle;"><span class="badge" style="background:#555;"><?= number_format($item->startprice) ?></span></td>
                                                 <td style="vertical-align: middle;"><span class="badge"><?= number_format($item->minimumbidamount) ?></span></td>
-                                                <td style="vertical-align: middle;color:red"><span class="badge"><?= number_format($item->buyoutprice) ?></span></td>
+                                                <!-- <td style="vertical-align: middle;color:red"><span class="badge"><?= number_format($item->buyoutprice) ?></span></td> -->
                                                 <td style=" vertical-align: middle;"><?= date('d/m/Y เวลา H:i', strtotime($item->dfrom)) ?><br /><i class="fa fa-long-arrow-down"></i></br /><?= date('d/m/Y เวลา H:i', strtotime($item->dto)) ?></td>
                                                 <td style="vertical-align: middle;"><span class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-success' ?> " href="#"><?= $item->status == 0 ? 'สิ้นสุดการประมูล' : 'ปกติ' ?></span> </td>
                                                 <td>
@@ -176,12 +176,12 @@
                                                         <input type="number" name="startprice" id="startprice" required class="form-control">
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
+                                                <!-- <div class="form-group">
                                                     <label class="control-label col-md-3">ราคา buyout <code>ถ้าไม่มีให้ใส่ 0</code></label>
                                                     <div class="col-md-9">
                                                         <input type="number" name="buyout" id="buyout" required class="form-control">
                                                     </div>
-                                                </div>
+                                                </div> -->
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ราคา bid ขั้นต่ำ <code>เช่น 50 , 100 , 150 , n</code></label>
                                                     <div class="col-md-9">

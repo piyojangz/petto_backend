@@ -183,7 +183,7 @@ class Update_model extends CI_Model
 
     function customer($input)
     {
-        $this->db->where('uid', $input['uid']);
+        $this->db->where('id', $input['id']);
         if ($this->db->update('customer', $input)) :
             return true;
         else :
@@ -275,6 +275,17 @@ class Update_model extends CI_Model
             return false;
         endif;
     }
+
+    function package_mapping($input)
+    {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('package_mapping', $input)) :
+            return true;
+        else :
+            return false;
+        endif;
+    }
+
 
     function order($input, $wherein = null)
     {

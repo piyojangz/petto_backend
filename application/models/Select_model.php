@@ -12,7 +12,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    
+
     function billnotificationusers($cond)
     {
         $this->db->select('*');
@@ -104,6 +104,7 @@ class Select_model extends CI_Model
         $this->db->select('*');
         $this->db->from('v_order');
         $this->db->where($cond);
+        $this->db->order_by('id', 'desc');
         $query = $this->db->get();
         return $query;
     }
@@ -116,12 +117,27 @@ class Select_model extends CI_Model
         if ($in != null) {
             $this->db->where_in('status', $in);
         }
-        $this->db->select('DATE_FORMAT(submitdate,\'%d/%m/%Y\')   as `วันที่ส่งข้อมูล`,DATE_FORMAT(submitdate,\'%H:%i:%s\')   as `เวลาที่ส่งข้อมูล`,fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total จำนวนเงินโอน, paymentinfo เวลาโอน, accno เลขบัญชี, bankname ธนาคาร , orderitems รายการสินค้า , 	sumamount ยอดสั่งรวม/ชิ้น');
+        $this->db->select('DATE_FORMAT(submitdate,\'%d/%m/%Y\')   as `วันที่ส่งข้อมูล`,DATE_FORMAT(submitdate,\'%H:%i:%s\')   as `เวลาที่ส่งข้อมูล`,fullname as ชื่อ-สกุล,billingaddress ที่อยู่สำหรับจัดส่ง,CONCAT("_",tel) เบอร์โทร,total ยอดสั่งรวม ,paymentamount จำนวนเงินโอน, paymentinfo การชำระเงิน,    	total ยอดสั่งรวม');
         $this->db->from('v_order');
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
     }
+
+
+
+
+    function bankaccount($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('bankaccount');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+
     function category($cond)
     {
         $this->db->select('*');
@@ -188,7 +204,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-  
+
 
 
     function customer($cond)
@@ -276,15 +292,45 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function v_product($cond, $limit = "")
+    function v_product($cond, $limit = "", $pricelength = "", $pricesort = "")
     {
+        $plength = '';
+        switch ($pricelength) {
+            case '0':
+                break;
+            case '1':
+                if ($plength != '') {
+                    $this->db->where('discount >=', 100);
+                    $this->db->where('discount <=', 0);
+                }
+                break;
+            case '2':
+                $this->db->where('discount >=', 1000);
+                $this->db->where('discount <=', 101);
+                break;
+            case '3':
+                $this->db->where('discount >=', 5000);
+                $this->db->where('discount <=', 1001);
+            case '4':
+                $this->db->where('discount >=', 10000);
+                $this->db->where('discount <=', 5001);
+            case '5':
+                $this->db->where('discount >=', 10000);
+                break;
+        }
         if ($limit != "") {
             $this->db->limit($limit, 0);
         }
+        if ($pricesort != "") {
+            $this->db->order_by('discount', $pricesort);
+        } else {
+            $this->db->order_by('updatedate', 'desc');
+        }
+
+
         $this->db->select('*');
         $this->db->from('v_product');
         $this->db->where($cond);
-        $this->db->order_by('updatedate','desc');
         $query = $this->db->get();
         return $query;
     }
@@ -292,6 +338,16 @@ class Select_model extends CI_Model
     function v_review($cond)
     {
         $this->db->select('*');
+        $this->db->from('v_review');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+    function v_review_itemid($cond)
+    {
+        $this->db->select('itemid');
         $this->db->from('v_review');
         $this->db->where($cond);
         $query = $this->db->get();
@@ -307,6 +363,26 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function v_auction($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_auction');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function v_auctionhistory($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_auctionhistory');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+
 
     function package_mapping($cond)
     {
@@ -317,7 +393,14 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function package_mapping_noneactive()
+    {
+        $query = $this->db->query("SELECT  *   from package_mapping p  where p.duration - datediff(curdate(),updatedate) < 0 and duration > 0");  
+        return $query;
+    }
 
+
+  
 
 
     function v_merchantwithpackage($cond)
@@ -492,6 +575,113 @@ class Select_model extends CI_Model
         return $query;
     }
 
+
+    function orderdisplaylist($status, $custid, $delivery_iscomplete = 0)
+    {
+        $query = $this->db->query("SELECT o.id
+         ,o.orderno
+        ,o.status
+        ,o.isconfirm
+        ,o.shippingfee
+        ,o.shippingaddress
+        ,o.payamount
+        ,o.imgslip
+        ,o.paymentinfo
+        ,o.paymentmethodid
+        ,o.custid
+        ,o.total
+        ,o.merchantid
+        ,o.delivery_trackid
+        ,o.delivery_company
+        ,o.delivery_other
+        ,m.title
+        ,m.image
+        ,m.name
+        ,m.webname
+        FROM `orders` O join merchant m on o.merchantid = m.id
+        where o.status  in ($status) AND
+        o.closestatus  != 1 AND
+        o.delivery_iscomplete  = $delivery_iscomplete AND
+        o.custid = '$custid'
+        ");
+
+        return $query;
+    }
+
+
+    function orderreviewlist($status, $custid, $delivery_iscomplete = 0)
+    {
+        $query = $this->db->query("select tb.* from (
+            SELECT o.id
+                     ,o.orderno
+                    ,o.status
+                    ,o.isconfirm
+                    ,o.shippingfee
+                    ,o.shippingaddress
+                    ,o.payamount
+                    ,o.imgslip
+                    ,o.paymentinfo
+                    ,o.paymentmethodid
+                    ,o.custid
+                    ,o.total
+                    ,o.merchantid
+                    ,o.delivery_trackid
+                    ,o.delivery_company
+                    ,o.delivery_other
+                    ,m.title
+                    ,m.image
+                    ,m.name
+                    ,m.webname
+                    ,(SELECT count(r.id) FROM review r where r.orderid = o.id) as cntreview
+                    ,(SELECT count(od.id) FROM orderdetail od where od.orderid = o.id) as cntorderdetail
+                    FROM `orders` O join merchant m on o.merchantid = m.id
+                 where o.status  in ($status) AND
+                    o.closestatus  != 1 AND
+                    o.delivery_iscomplete  =  $delivery_iscomplete  AND
+                    o.isauction != 1 AND
+                 o.custid = '$custid'
+            ) as tb
+            where tb.cntorderdetail != tb.cntreview");
+
+        return $query;
+    }
+
+    function orderhistory($custid)
+    {
+        $query = $this->db->query("select tb.* from (
+            SELECT o.id
+                     ,o.orderno
+                     ,o.createdate
+                    ,o.status
+                    ,o.isconfirm
+                    ,o.shippingfee
+                    ,o.shippingaddress
+                    ,o.payamount
+                    ,o.imgslip
+                    ,o.paymentinfo
+                    ,o.paymentmethodid
+                    ,o.custid
+                    ,o.total
+                    ,o.merchantid
+                    ,o.delivery_trackid
+                    ,o.delivery_company
+                    ,o.delivery_other
+                    ,m.title
+                    ,m.image
+                    ,m.name
+                    ,m.webname
+                    ,(SELECT count(r.id) FROM review r where r.orderid = o.id) as cntreview
+                    ,(SELECT count(od.id) FROM orderdetail od where od.orderid = o.id) as cntorderdetail
+                    FROM `orders` O join merchant m on o.merchantid = m.id
+                 where o.closestatus  != 1 AND
+                    o.delivery_iscomplete  =  1   
+                    AND  o.custid = '$custid'
+            ) as tb");
+
+        return $query;
+    }
+
+
     function orderids($uid)
     {
         $this->db->select('orderid');
@@ -511,11 +701,14 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function orderdetail($cond)
+    function orderdetail($cond, $notin = null)
     {
         $this->db->select('*');
         $this->db->from('orderdetail');
         $this->db->where($cond);
+        if ($notin != null) {
+            $this->db->where_not_in('itemid', $notin);
+        }
         $query = $this->db->get();
         return $query;
     }

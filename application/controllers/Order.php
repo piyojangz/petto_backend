@@ -37,30 +37,18 @@ class Order extends CI_Controller
         $this->load->view('template/paymentsuccess', $data);
     }
 
-    public function trackorder($token = "", $merchantuid = "")
+    public function trackorder($orderid = "")
     {
-        $ordertoken = $this->get->ordertoken(array('token' => $token))->row();
-        if ($ordertoken == null) {
-            redirect(base_url());
-        }
-        $data["obj"] = $this;
-        $data["uid"] = $ordertoken->uid;
-
-        $merchantid = $ordertoken->merchantid;
-        $orderid = $ordertoken->orderid;
-        $data["genstatus"] = $ordertoken->genstatus;
-        $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
-        $data["order"] = $this->get->order(array('id' => $orderid))->row();
+        $order = $this->get->order(array('id' => $orderid))->row();
+        $orderdetail = $this->get->orderdetail(array('orderid' => $orderid))->result();
+     
+        $data["obj"] = $this; 
+        // $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
+        $data["order"] =  $order;
         $data["custdetail"] = $this->get->customer(array('id' => $data["order"]->custid))->row();
-        $data["orderdetail"] = $this->get->orderdetail(array('orderid' => $orderid))->result();
-        $data["items"] = $this->get->items(array('merchantid' => $merchantid))->result();
-        $data["order"] = $this->get->order(array('id' => $orderid))->row();
-
-
-        // $meruid = $this->get->v_merchantlineuid(array('token' => $token, 'lineuid' => $merchantuid))->num_rows();
-        // $data["canedit"] = $meruid > 0 ? true : false;
-        $data["canedit"] = true;
-
+        $data["orderdetail"] = $orderdetail;
+      //  $data["items"] = $this->get->items(array('merchantid' => $merchantid))->result(); 
+  
         $this->load->view('template/track', $data);
     }
 

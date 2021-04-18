@@ -111,12 +111,15 @@ else {
     $route['account/(:any)/setting_post'] = "account/setting_post/$1";
     $route['account/(:any)/customer'] = "account/customer/$1";
     $route['account/(:any)/order/all'] = "account/orderall/$1";
+    $route['orderdetail/(:any)'] = "account/orderdetail/$1";
     $route['account/(:any)/paymentmethod'] = "account/paymentmethod/$1";
     $route['account/(:any)/shippingrate'] = "account/shippingrate/$1";
     $route['account/(:any)/base64_to_jpeg'] = "account/base64_to_jpeg";
     $route['account/(:any)/addnewproduct'] = "account/addnewproduct/$1";
     $route['account/(:any)/addnewauction'] = "account/addnewauction/$1";
     $route['account/(:any)/addnewcate'] = "account/addnewcate/$1";
+    $route['account/(:any)/addnewdeliverydetail'] = "account/addnewdeliverydetail/$1";
+    
     $route['account/(:any)/addnewpaymentmethod'] = "account/addnewpaymentmethod/$1";
     $route['account/(:any)/addnewshippingrate'] = "account/addnewshippingrate/$1";
     $route['account/(:any)/updatesetting'] = "account/updatesetting/$1";

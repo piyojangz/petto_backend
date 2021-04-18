@@ -85,6 +85,12 @@ switch ($user['packageid']) {
             </li>
             <?php if ($user['isadmin'] == 0) :  ?>
                 <li class="devider"></li>
+                <li><a href="javascript:;"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">ออเดอร์<span class="fa arrow"></span></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="<?= base_url("account/$token/order/all") ?>"><i class="fa fa-bookmark-o fa-fw"></i><span class="hide-menu">รายการสั่งซื้อ</span></a>
+                        </li>
+                    </ul>
+                </li>
                 <li><a href="javascript:;"><i class="ti-pencil-alt2 fa-fw"></i> <span class="hide-menu">กำหนดค่า<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level">
                         <li><a href="<?= base_url("account/$token/paymentmethod") ?>"><i class="ti-money fa-fw"></i><span class="hide-menu">เพิ่มบัญชี</span></a></li>
@@ -96,13 +102,7 @@ switch ($user['packageid']) {
                         <li><a href="<?= base_url("account/$token/setting") ?>"><i class="fa fa-pencil fa-fw"></i><span class="hide-menu">ข้อมูลทั่วไป</span></a></li>
                         <li><a href="<?= base_url("account/$token/setting_home") ?>"><i class="fa fa-home fa-fw"></i><span class="hide-menu">หน้าหลัก</span></a></li>
                     </ul>
-                </li>
-                <li><a href="javascript:;"><i class="ti-receipt fa-fw"></i> <span class="hide-menu">ออเดอร์<span class="fa arrow"></span></span></a>
-                    <ul class="nav nav-second-level">
-                        <li><a href="<?= base_url("account/$token/order/all") ?>"><i class="fa fa-bookmark-o fa-fw"></i><span class="hide-menu">รายการสั่งซื้อ</span></a>
-                        </li>
-                    </ul>
-                </li>
+                </li> 
                 <li>
                     <a href="<?= base_url("account/$token/auction") ?>"><i class="fa fa-sort-numeric-asc   fa-fw" data-icon="v"></i> ประมูล <span class="fa arrow"></span></a>
                 </li>
@@ -151,10 +151,10 @@ switch ($user['packageid']) {
                             <th width="70" class="text-center">#</th>
                             <th>ประเภท</th>
                             <th width="120">Sale slot <br><code>0 = unlimit</code></th>
-                            <th>Bidding</th>
-                            <th>Duration</th>
+                            <th>ประมูล</th>
+                            <th>ระยะเวลา</th>
                             <th width="120">Price <br><code>0 = free</code></th>
-                            <th width="80">Manage Users</th>
+                            <!-- <th width="80">Manage Users</th> -->
                             <th>ร้านขายดี</th>
                             <th>ร้านค้าแนะนำ</th>
                         </tr>
@@ -180,9 +180,9 @@ switch ($user['packageid']) {
         $.ajax({
             type: "POST",
             url: "<?php echo base_url('service/getpackagelist'); ?>",
-            data: {
+            data: JSON.stringify({
                 packageid: $packageid
-            },
+            }),
             dataType: "html",
             success: function(data) {
                 $('#packbody').html(data);

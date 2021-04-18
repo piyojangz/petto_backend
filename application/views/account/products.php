@@ -117,15 +117,18 @@
 
                 <div class="row el-element-overlay m-b-40 block1">
                     <div class="col-md-12">
-
-                        <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
-
+                        <?php if ($disabledadditem == 'false') : ?>
+                            <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
+                        <?php else : ?>
+                            <p style="color: #f55252;
+    font-size: 16px;">ไม่สามารถเพิ่มสินค้าได้เนื่องจากเกินกำหนดตามแพคเก็จ</p>
+                        <?php endif; ?>
                         <hr>
                     </div>
                     <?php foreach ($items as $item) : ?>
 
                         <!-- /.usercard -->
-                        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                             <div class="white-box">
                                 <div class="el-card-item">
                                     <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;min-height:100px"><img src="<?= $item->image ?>" />
@@ -331,13 +334,13 @@
 
         $("#category").change(function() {
             var id = $(this).val();
-            getcate1(id,0);
+            getcate1(id, 0);
         })
 
 
         $("#category1").change(function() {
             var id = $(this).val();
-            getcate2(id,0);
+            getcate2(id, 0);
         })
 
         $("#coba").spartanMultiImagePicker({
@@ -454,7 +457,7 @@
 
             $("#category1").html('<option value="0">ไม่มี</option>');
             $("#category2").html('<option value="0">ไม่มี</option>');
-            
+
             $("input[class=multipleimages").remove();
             $("#imagesother").html("");
             $(".summernote").code("");
@@ -554,7 +557,7 @@
                     $("#name").val(data.result.name);
                     $("#price").val(data.result.price);
                     $("#discount").val(data.result.discount);
-                    
+
                     $("#stock").val(data.result.stock);
                     $("#vdourl").val(data.result.video);
                     $(".summernote").code(data.result.description);
@@ -586,7 +589,7 @@
                                 $('<input>').attr({
                                     type: 'hidden',
                                     id: 'multipleimages' + i,
-                                    class:'multipleimages',
+                                    class: 'multipleimages',
                                     name: 'multipleimages[]',
                                     value: images[i]
                                 }).appendTo('#form-submit');

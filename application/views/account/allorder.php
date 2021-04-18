@@ -69,8 +69,8 @@
                                                 <ul role="menu" class="dropdown-menu">
                                                     <li><a href="javascript:;" onclick="changstatus(2)">ยืนยันการชำระ</a>
                                                     </li>
-                                                    <li><a href="javascript:;" onclick="changstatus(3)">แจ้งจัดส่ง</a></li>
-                                                    <li><a href="javascript:;" onclick="changstatus(4)">ยกเลิก</a></li>
+                                                    <!-- <li><a href="javascript:;" onclick="changstatus(3)">แจ้งจัดส่ง</a></li> -->
+                                                    <li><a href="javascript:;" onclick="changstatus(4)">ยกเลิกรายการ</a></li>
                                                 </ul>
                                             </div>
 
@@ -117,14 +117,15 @@
                                         <thead>
                                             <tr>
                                                 <th colspan="2" style="min-width: 80px; text-align: center;">บิลสั่งซื้อ</th>
+                                                <th>#</th>
                                                 <th style="min-width:120px;">timestamp</th>
-                                                <!-- <th style="min-width:80px;">ยอดสั่งซื้อ</th> -->
                                                 <th style="min-width:140px;">วันเวลาที่โอน</th>
                                                 <th style="min-width:150px;">ชื่อ</th>
                                                 <th style="min-width:150px;">ที่อยู่จัดส่ง</th>
-                                                <th>รายการสั่ง</th>
-                                                <th>ยอดสั่งรวม</th>
-                                                <th>ค่าจัดส่ง</th>
+                                                <!-- <th>รายการสั่ง</th> -->
+                                                <!-- <th>ยอดสั่งรวม</th> -->
+                                                <th style="min-width:80px;">ยอดสั่งซื้อ</th>
+                                                <th>ยอดที่ต้องชำระ</th>
                                                 <th>สถานะ</th>
                                             </tr>
                                         </thead>
@@ -161,7 +162,61 @@
                 </div>
 
             </div>
+            <form action="<?= base_url("account/$token/addnewdeliverydetail") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" id="form-submit">
+                <div class="panel panel-default">
+                    <div class="panel-heading">แจ้งจัดส่งสินค้า</div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-info ">
+                                        <div class="panel-body">
 
+                                            <div class="form-body">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">บริษัทขนส่ง</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" name="comp" id="comp" placeholder="เช่น Kerry, J&T , ไปรษณีย์ไทย" required class="form-control">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">หมายเลขติดตาม</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" name="trackid" id="trackid" required class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">อื่นๆเพิ่มเติม</label>
+                                                    <div class="col-md-9">
+                                                        <input type="text" name="other" id="other"   class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-actions">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row">
+                                                                <div class="col-md-offset-9 col-md-3">
+                                                                    <button type="submit" id="btnsubmit" class="btn btn-success"> <i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="did" name="did" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </form>
 
         </div>
 
@@ -208,7 +263,7 @@
             $('input:checkbox').not(this).prop('checked', this.checked);
         });
 
-      getorderstatus(0, 'ทั้งหมด');
+        getorderstatus(0, 'ทั้งหมด');
 
     });
 
@@ -242,6 +297,17 @@
         });
     }
 
+    function setdelivery(item) {
+        console.log(item);
+        $('#did').val(item);
+        $.magnificPopup.open({
+            items: {
+                src: '#form-submit'
+            },
+            type: 'inline'
+        }, 0);
+    }
+
     function changstatus(status) {
         var itemchecked = 0;
         var items = "";
@@ -254,29 +320,60 @@
 
 
         if (itemchecked > 0) {
-            $('div.block1').block();
-            $.ajax({
-                type: "POST",
-                url: "<?php echo base_url('service/updateorderstatus'); ?>",
-                data: {
-                    'items': items,
-                    status: status
-                },
-                dataType: "json",
-                success: function(data) {
-                    $('div.block1').unblock();
-                    if (data.result != null) {
 
-                        swal("Good job!", "สถานะได้ถูกเปลี่ยนแล้ว.", "success");
+            switch (status) {
+                case 2:
+                    $('div.block1').block();
+                    console.log(items);
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo base_url('service/confirmOrderPayment'); ?>",
+                        data: JSON.stringify({
+                            'items': items,
+                        }),
+                        dataType: "json",
+                        success: function(data) {
+                            $('div.block1').unblock();
+                            if (data.result != null) {
 
-                        getorderstatus($("#currentstatus").val(), "");
-                    }
+                                swal("Good job!", "ยืนยันการชำระเงินเรียบร้อย.", "success");
 
-                },
-                error: function(XMLHttpRequest) {
-                    $('div.block1').unblock();
-                }
-            });
+                                getorderstatus($("#currentstatus").val(), "");
+                            }
+
+                        },
+                        error: function(XMLHttpRequest) {
+                            $('div.block1').unblock();
+                        }
+                    });
+                    break;
+                case 4:
+                    $('div.block1').block();
+                    console.log(items);
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo base_url('service/updateorderstatus'); ?>",
+                        data: JSON.stringify({
+                            'items': items,
+                            status: status
+                        }),
+                        dataType: "json",
+                        success: function(data) {
+                            $('div.block1').unblock();
+                            if (data.result != null) {
+
+                                swal("Good job!", "สถานะได้ถูกเปลี่ยนแล้ว.", "success");
+
+                                getorderstatus($("#currentstatus").val(), "");
+                            }
+
+                        },
+                        error: function(XMLHttpRequest) {
+                            $('div.block1').unblock();
+                        }
+                    });
+                    break;
+            }
 
 
         } else {

@@ -621,15 +621,36 @@ class Account extends CI_Controller
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["paidorder"] = $this->paidorder;
-       // $data["order"] = $this->get->v_order(array("merchantid" => $data["merchant"]->id, "closestatus != " => 1), array("0", "3"))->result();
- 
+        // $data["order"] = $this->get->v_order(array("merchantid" => $data["merchant"]->id, "closestatus != " => 1), array("0", "3"))->result();
+
         if (!$this->user->is_login()) {
             redirect('/');
         }
 
-         //$data["customer"] = $this->get->getcustomerlist($data["merchant"]->id);
+        //$data["customer"] = $this->get->getcustomerlist($data["merchant"]->id);
 
         $this->load->view('account/allorder', $data);
+    }
+
+
+    public function orderdetail($orderid = "")
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["obj"] = $this;
+        $data["token"] = $data["user"]['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
+        $order = $this->get->order(array('id' => $orderid))->row();
+        $orderdetail = $this->get->orderdetail(array('orderid' => $orderid))->result();
+
+        $data["obj"] = $this;
+        // $data["merchant"] = $this->get->merchant(array('id' => $merchantid))->row();
+        $data["order"] =  $order;
+        $data["custdetail"] = $this->get->customer(array('id' => $data["order"]->custid))->row();
+        $data["orderdetail"] = $orderdetail;
+        //  $data["items"] = $this->get->items(array('merchantid' => $merchantid))->result(); 
+
+        $this->load->view('account/orderdetail', $data);
     }
 
     public function getorderstatus($status)
@@ -661,10 +682,21 @@ class Account extends CI_Controller
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["paidorder"] = $this->paidorder;
+        $data['disabledadditem'] = 'false';
         if (!$this->user->is_login()) {
             redirect('/');
         }
+        $package = $this->get->package(array('id' => $data["user"]['packageid']))->row();
+
+        $data['package'] = $package;
+
         $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => '1'))->result();
+        if ($package->saleslot > 0) {
+            if (count($data["items"]) >= $package->saleslot) {
+                $data['disabledadditem'] = 'true';
+            }
+        }
+
 
         $this->load->view('account/products', $data);
     }
@@ -1166,7 +1198,7 @@ class Account extends CI_Controller
                 $input = array(
                     'name' => $name,
                     'startprice' =>  $startprice,
-                    'buyoutprice' => $buyout,
+                    // 'buyoutprice' => $buyout,
                     'minimumbidamount' => $minimumbidamount,
                     'description' => $inputcustomtext,
                     'dfrom' => date('Y-m-d H:i:s', strtotime($dfrom)),
@@ -1178,7 +1210,7 @@ class Account extends CI_Controller
                 );
 
                 if ($imageData != "") {
-                    $input["image"] = $imageData;
+                    $input["image"] = "data:image/jpeg;base64,$imageData";
                 }
 
                 if ($this->put->auctionlist($input)) {
@@ -1189,7 +1221,7 @@ class Account extends CI_Controller
                     'id' => $id,
                     'name' => $name,
                     'startprice' =>  $startprice,
-                    'buyoutprice' => $buyout,
+                    // 'buyoutprice' => $buyout,
                     'minimumbidamount' => $minimumbidamount,
                     'description' => $inputcustomtext,
                     'dfrom' => date('Y-m-d H:i:s', strtotime($dfrom)),
@@ -1355,6 +1387,34 @@ class Account extends CI_Controller
                 if ($this->set->shippingrate($input)) {
                     redirect(base_url("account/$acctoken/shippingrate"));
                 }
+            }
+        }
+    }
+
+
+    public function addnewdeliverydetail($acctoken = "")
+    {
+        if ($_POST) {
+            if (!$this->user->is_login()) {
+                redirect('/');
+            }
+            $id = $this->input->post("did");
+            $data["user"] = $this->user->get_account_cookie();
+            $trackid = $this->input->post("trackid");
+            $other = $this->input->post("other");
+            $comp = $this->input->post("comp");
+
+            $input = array(
+                'id' => $id,
+                'delivery_trackid' => $trackid,
+                'delivery_company' => $comp,
+                'delivery_other' => $other,
+                'delivery_other' => $other,
+                'deriverydate' =>  date('Y-m-d H:i:s'),
+                'status' => 3
+            );
+            if ($this->set->order($input)) {
+                redirect(base_url("account/$acctoken/order/all"));
             }
         }
     }

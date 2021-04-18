@@ -1,4 +1,4 @@
- <footer class="footer text-center"> 2021 &copy; Account panel by Petto.co </footer>
+ <footer class="footer text-center"> 2021 &copy; Account panel by Pettogo.co </footer>
 
  <script>
     //  for (const sheet of document.styleSheets) {

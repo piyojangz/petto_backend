@@ -22,6 +22,16 @@ class Insert_model extends CI_Model
         endif;
     }
 
+    function auctiontransaction($input)
+    {
+        if ($this->db->insert('auctiontransaction', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
+    
 
     function category($input)
     {
@@ -33,6 +43,16 @@ class Insert_model extends CI_Model
         endif;
     }
 
+
+    function review($input)
+    {
+        if ($this->db->insert('review', $input)):
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        else:
+            return false;
+        endif;
+    }
 
 
 
@@ -177,6 +197,9 @@ class Insert_model extends CI_Model
             return false;
         endif;
     }
+
+
+ 
 
     function ordertoken($input)
     {

@@ -612,7 +612,7 @@ class Service extends CI_Controller
         // $id = $post['id'];
         $post = json_decode(file_get_contents('php://input'), true);
         $id = $post['id'];
-        $cond = array('id' => $id);
+        $cond = array('id' => $id, 'status' => 1);
         $data['result'] = $this->get->items($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -633,8 +633,8 @@ class Service extends CI_Controller
 
     public function getpackagelist()
     {
-        // $packageid = $post['packageid'];
-        $packageid = 3;
+        $post = json_decode(file_get_contents('php://input'), true);
+        $packageid = $post['packageid'];
         $cond = array('id' => $packageid);
         $packagelist = $this->get->package($cond)->result();
         $html = "";
@@ -706,7 +706,7 @@ class Service extends CI_Controller
             $duration
             </td>
             <td style='vertical-align: middle;'>$row->price</td>
-            <td style='vertical-align: middle;'>$row->manageuser</td>
+      
             <td style='vertical-align: middle;'>$isbestseller</td>
          <td style='vertical-align: middle;'>$isrecommend</td>
         </tr>";
@@ -720,7 +720,9 @@ class Service extends CI_Controller
         $package_mapping = $this->get->package_mapping(array("packageid" => $packageid, 'merchantid' =>   $merchantid, 'status' => 1))->row();
 
         $totaldays = $package_mapping->duration  - $package_mapping->diffday;
-        if ($packageid == 0) {
+
+
+        if ($packageid == 1) {
             $html .= "";
         } else {
             $html .= "<tr><td  colspan='9' style='vertical-align: middle;'><code>แพคเกจคุณเหลืออายุอีก $totaldays วัน</code></td></tr>";
@@ -729,11 +731,113 @@ class Service extends CI_Controller
         echo  $html;
     }
 
+    public function job_updatemerchantpackage()
+    {
+
+        $packageoverduedate = $this->get->package_mapping_noneactive()->result();
+        foreach ($packageoverduedate as $key => $value) {
+            $input = array(
+                'id' => $value->id,
+                'status' => 0,
+            );
+            $this->set->package_mapping($input);
+            $package =   $this->get->package(array('packagename'  => 'STARTUP'))->row();
+            $input2 = array(
+                'merchantid' => $value->merchantid,
+                'packageid' => $package->id,
+                'status' => 1,
+                'duration' => $package->duration,
+            );
+            $this->put->packagemapping($input2);
+        }
+    }
+    public function job_updateauctionwinners()
+    {
+        // $cond = array('status' => 1, 'dto <' => date('Y-m-d H:i:s'), 'currentprice > ' => 0);
+        $cond = array('status' => 1, 'dto <' => date('Y-m-d H:i:s'));
+        $auctionlist = $this->get->v_auction($cond)->result();
+        print_r($auctionlist);
+
+        foreach ($auctionlist as $key => $value) {
+            // เพื่ม order + orderdetail 
+            $orderno = date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+
+            $gtotal = 0;
+            $price =  $value->currentprice;
+            $unit = 1;
+            $gtotal  =   $value->currentprice;
+
+
+            $shippingfee = $this->get->shippingrate($value->merchantid, $unit)->row();
+            $gtotal   =  $gtotal + (isset($shippingfee) ? $shippingfee->price : 0);
+            $customer = $this->get->customer(array('id' => $value->custid))->row();
+            $total = 0;
+
+            $input = array(
+                'orderno' => $orderno,
+                'merchantid' => $value->merchantid,
+                'shippingfee' => isset($shippingfee) ? $shippingfee->price : 0,
+                'status' => 1,
+                'custid' => $value->custid,
+                'total' => $gtotal,
+                'isauction' => 1,
+                'shippingaddress' => $customer->fulladdress,
+                'createdate' => date('Y-m-d H:i:s'),
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            $orderid  = $this->put->order($input);
+            $s_image = "";
+            $image = $this->base64_to_jpeg($value->image);
+            $s_image .= base_url("public/upload/review/") . $image["upload_data"]["file_name"];
+
+            $input2 = array(
+                'orderid' => $orderid,
+                'itemid' => 0,
+                'image' => $s_image,
+                'name' =>  $value->name,
+                'amount' => $unit,
+                'price' =>  $price,
+                'createdate' => date('Y-m-d H:i:s'),
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            $this->put->orderdetail($input2);
+
+
+
+            //update สถานะเป็นจบแล้ว
+            $input = array(
+                'id' => $value->id,
+                'status' => 2,
+                'updatedate' => date('Y-m-d H:i:s')
+            );
+            $this->set->auctionlist($input);
+
+            //email and line
+            $subject = "ผู้ชนะการประมูล";
+            $msg = "ยินดีด้วยคุณชนะการประมูลสินค้า $value->name กรุณาดูที่หน้าข้อมูลลส่วนตัว";
+            $this->msgnotifyCustomer($customer, $subject, $msg);
+        }
+    }
+
+    function msgnotifyCustomer($customer, $subject, $msg)
+    {
+        $this->sendtoLine($customer->lineid, $msg);
+        //$this->Semail->sendinfo($msg, $customer->email, $subject);
+    }
+    public function getauctionhistorybycustid()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $custid = $post['custid'];
+        $cond = array('custid' => $custid);
+        $data['result'] = $this->get->v_auctionhistory($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
 
     public function getauctionlist()
     {
         $cond = array('status' => 1);
-        $data['result'] = $this->get->auctionlist($cond)->result();
+        $data['result'] = $this->get->v_auction($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -793,8 +897,10 @@ class Service extends CI_Controller
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $limit = $post['limit'];
-        $cond = array('status' => 1);
-        $data['result'] = $this->get->v_product($cond, $limit)->result();
+        $pricelength = $post['pricelength'];
+        $pricesort = $post['pricesort'];
+        $cond = array('status' => 1, 'stock > ' => 0);
+        $data['result'] = $this->get->v_product($cond, $limit, $pricelength, $pricesort)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -805,6 +911,18 @@ class Service extends CI_Controller
         $id = $post['id'];
         $cond = array('status' => 1, 'id' => $id);
         $data['result'] = $this->get->v_product($cond)->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+
+    public function getauctionbyid()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('id' => 1, 'id' => $id);
+        $data['result'] = $this->get->v_auction($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -873,6 +991,40 @@ class Service extends CI_Controller
         return $this->get->getordersumbybilltoken($billtoken)->result();
     }
 
+    public function confirmOrderPayment()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $items = $post['items'];
+        $itemarr = array();
+        foreach (explode("|", $items) as $value) {
+            if ($value != "") {
+                array_push($itemarr, $value);
+            }
+        }
+        $input = array('isconfirm' => 1);
+
+        $data['result'] = $this->set->order($input, $itemarr);
+
+
+        foreach (explode("|", $items) as $value) {  
+            if($value){
+                $order = $this->get->order(array('id' => intval($value)))->row();
+            
+                $custid = $order->custid;
+                $customer = $this->get->customer(array('id' => $custid))->row(); 
+                $subject = "ยืนยันการชำระเงิน";
+                $msg = "รายการชำระ {$order->orderno} ของคุณถูกยืนยันแล้ว";
+    
+                $this->msgnotifyCustomer($customer, $subject, $msg);
+            } 
+        }
+
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
     public function updateorderstatus()
     {
         $post = json_decode(file_get_contents('php://input'), true);
@@ -888,6 +1040,19 @@ class Service extends CI_Controller
             $input = array('status' => $status);
         }
 
+        foreach ($itemarr as $orderid) {
+            $orderdetails = $this->get->orderdetail(array('orderid' => $orderid))->result();
+            foreach ($orderdetails as   $odetails) {
+                $itemdetail = $this->get->items(array('id' => $odetails->itemid))->row();
+                $inputstock = array(
+                    'id' => $odetails->itemid,
+                    'stock' => intval($itemdetail->stock) + intval($odetails->amount),
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+                $this->set->items($inputstock);
+            }
+        }
+
         $data['result'] = $this->set->order($input, $itemarr);
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -895,17 +1060,16 @@ class Service extends CI_Controller
 
     public function exportorderexcel()
     {
-        $post = json_decode(file_get_contents('php://input'), true);
-        $merchantid = $post['merchantid'];
-        $status = $post['exportorderstatus'];
+        $merchantid = $this->input->post('merchantid');
+        $status = $this->input->post('exportorderstatus');
         if ($status != "0") {
             if ($status == "4") {
-                $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => "1"), null, null);
+                $result = $this->get->orderexcel(array("merchantid" => $merchantid), null, null);
             } else {
-                $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), null, array($status));
+                $result = $this->get->orderexcel(array("merchantid" => $merchantid), null, array($status));
             }
         } else {
-            $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), null, null);
+            $result = $this->get->orderexcel(array("merchantid" => $merchantid), null, null);
             // $result = $this->get->orderexcel(array("merchantid" => $merchantid, "closestatus" => 0), array("0", "3"), null);
         }
         $date = date('YmdHis');
@@ -926,32 +1090,36 @@ class Service extends CI_Controller
         } else {
             $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, null)->result();
             // $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), array("0", "3"), null)->result();
-        } 
+        }
 
-        
+
 
         $html = "";
         foreach ($data['result'] as $item) {
             $statuslabel = $this->getorderstatuslabel($item->status, $item->closestatus);
+            $notideliver = $item->isconfirm == 1 ? $item->delivery_trackid != "" ? "" : "<button onclick=\"setdelivery($item->id)\" class=\"btn btn-rounded btn-danger\">แจ้งจัดส่ง</button>" : "";
+            $ischeckdisabled = $item->isconfirm == 1 ? "disabled" : "";
+            $isdelivery_complete = $item->delivery_iscomplete == 1 ? "<div class=\"label label-table label-success\">ได้รับสินค้าแล้ว</div>" : "";
             $submitdate = date("d/M/Y H:i:s", strtotime($item->submitdate));
             $html .= "<tr>";
             $html .= "<td>";
             $html .= "<div class=\"checkbox checkbox-success checkbox-order \">";
-            $html .= "<input id=\"orderid$item->id\" name=\"orderid\"  type=\"checkbox\" value=\"$item->id\">";
+            $html .= "<input  $ischeckdisabled id=\"orderid$item->id\" name=\"orderid\"  type=\"checkbox\" value=\"$item->id\">";
             $html .= "<label for=\"orderid$item->id\"> </label>";
             $html .= "</div>";
             $html .= "</td>";
-            $html .= "<td><a class=\"badge badge-info \" target=\"_blank\" href=\"" . base_url($item->id) . "\">$item->id</a></td>";
+            $html .= "<td><a class=\"badge badge-info \" target=\"_blank\" href=\"" . base_url("orderdetail/$item->id") . "\">$item->orderno</a></td>";
+            $html .= "<td>$notideliver</td> ";
             $html .= "<td> $submitdate</td>";
-            $html .= "<td>" . number_format($item->total) . "</td>";
-            $html .= "<td>$item->paymentinfo</td>";
+            $html .= "<td>$item->paydatetime</td>";
             $html .= "<td>$item->fullname</td>";
-            $html .= "<td>$item->billingaddress</td>";
-            $html .= "<td>-</td>";
-            $html .= "<td>$item->sumamount</td>";
+            $html .= "<td>$item->shippingaddress</td>";
+            // $html .= "<td>-</td>";
+            // $html .= "<td>$item->sumamount</td>";
             $html .= "<td>" . number_format($item->total) . "</td>";
-            $html .= "<td>" . number_format($item->shipingrate) . "</td>";
-            $html .= "<td>$statuslabel</td> ";
+            $html .= "<td><b style='color:red'>" . number_format($item->total) . "</b>(รวมค่าจัดส่ง " . $item->shippingfee . ")</td>";
+            // $html .= "<td>" . number_format($item->shipingrate) . "</td>";
+            $html .= "<td>$statuslabel $isdelivery_complete</td> ";
             $html .= "</tr>";
         }
 
@@ -965,14 +1133,14 @@ class Service extends CI_Controller
         } else {
             switch ($status) {
                 case "1":
-                    return " <div class=\"label label-table label-warning\">Waiting for confirm payment</div>";
+                    return " <div class=\"label label-table label-warning\">รอชำระเงิน</div>";
 
                     break;
                 case "2":
-                    return " <div class=\"label label-table label-success\">Paid</div>";
+                    return " <div class=\"label label-table label-success\">ชำระเงินแล้ว</div>";
                     break;
                 case "3":
-                    return " <div class=\"label label-table label-danger\">Shipped</div>";
+                    return " <div class=\"label label-table label-danger\">จัดส่งแล้ว</div>";
                     break;
                 default:
                     break;
@@ -1036,6 +1204,20 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+
+
+    public function getpaymentmethod()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $merchantid = $post['merchantid'];
+        $cond = array('merchantid' => $merchantid);
+        $data['result'] = $this->get->paymentmethod($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+
     public function getallcate()
     {
         // $merchantid = $post['merchantid'];
@@ -1050,6 +1232,111 @@ class Service extends CI_Controller
         // $merchantid = $post['merchantid'];
         $cond = array('status	' => '1', 'parentid' => 0);
         $data['result'] = $this->get->category($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+
+    public function getorderpendingpaid()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $custid = $post['custid'];
+        // $custid = 8;
+        $orderlist  = $this->get->orderdisplaylist(1, $custid, 0)->result();
+        foreach ($orderlist as   $value) {
+            $gtotal = 0;
+            $odetails = $this->get->orderdetail(array('orderid' => $value->id))->result();
+            $value->orderdetails =  $odetails;
+
+            foreach ($odetails as $od) {
+                $gtotal  =   $gtotal + ($od->price * $od->amount);
+            }
+            $value->grandtotal   =  $gtotal + $value->shippingfee;
+        }
+
+
+        $data['result'] = $orderlist;
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getorderpaid()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $custid = $post['custid'];
+        // $custid = 8;
+        $orderlist  = $this->get->orderdisplaylist('2,3', $custid, 0)->result();
+        foreach ($orderlist as   $value) {
+            $gtotal = 0;
+            $odetails = $this->get->orderdetail(array('orderid' => $value->id))->result();
+            $value->orderdetails =  $odetails;
+
+            foreach ($odetails as $od) {
+                $gtotal  =   $gtotal + ($od->price * $od->amount);
+            }
+            $value->grandtotal   =  $gtotal + $value->shippingfee;
+        }
+
+
+        $data['result'] = $orderlist;
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+
+    public function gethistory()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $custid = $post['custid'];
+        // $custid = 8;
+        $orderlist  = $this->get->orderhistory($custid)->result();
+        foreach ($orderlist as   $value) {
+            $gtotal = 0;
+            $odetails = $this->get->orderdetail(array('orderid' => $value->id))->result();
+            $value->orderdetails =  $odetails;
+
+            foreach ($odetails as $od) {
+                $gtotal  =   $gtotal + ($od->price * $od->amount);
+            }
+            $value->grandtotal   =  $gtotal + $value->shippingfee;
+        }
+
+
+        $data['result'] = $orderlist;
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+
+    public function getorderreview()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $custid = $post['custid'];
+        // $custid = 8;
+        $orderlist  = $this->get->orderreviewlist('2,3', $custid, 1)->result();
+        foreach ($orderlist as   $value) {
+            $gtotal = 0;
+            $review = $this->get->v_review(array('orderid' => $value->id))->result();
+            $notin = array();
+            foreach ($review as  $row) {
+                array_push($notin, $row->itemid);
+            }
+            $odetails = $this->get->orderdetail(array('orderid' => $value->id), $notin)->result();
+
+            $value->orderdetails =  $odetails;
+            $value->review =  $notin;
+
+            foreach ($odetails as $od) {
+                $gtotal  =   $gtotal + ($od->price * $od->amount);
+            }
+            $value->grandtotal   =  $gtotal + $value->shippingfee;
+        }
+
+
+        $data['result'] = $orderlist;
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -1143,6 +1430,7 @@ class Service extends CI_Controller
 
     public function createorder()
     {
+
         $post = json_decode(file_get_contents('php://input'), true);
 
         $cartItems =  $post['cartItems'];
@@ -1150,10 +1438,31 @@ class Service extends CI_Controller
         $userid =  $post['userid'];
 
         foreach ($merchantlist as $merchant) {
+
+            $orderno = date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+
+            $unit = 0;
+            $gtotal = 0;
+            foreach ($cartItems as $item) {
+                $price =  $item['discount'] != "" ? $item['discount']  :  $item['price'];
+                $unit = $unit + intval($item['qty']);
+                $gtotal  =   $gtotal + ($price * $item["qty"]);
+            }
+
+            $shippingfee = $this->get->shippingrate($merchant['id'], $unit)->row();
+            $gtotal   =  $gtotal + (isset($shippingfee) ? $shippingfee->price : 0);
+            $customer = $this->get->customer(array('id' => $userid))->row();
+            $total = 0;
+
             $input = array(
+                'orderno' => $orderno,
                 'merchantid' => $merchant['id'],
-                'status' => 0,
+                'shippingfee' => isset($shippingfee) ? $shippingfee->price : 0,
+                'status' => 1,
                 'custid' => $userid,
+                'total' => $gtotal,
+                'shippingaddress' => $customer->fulladdress,
+                'shippingtel' => $customer->tel,
                 'createdate' => date('Y-m-d H:i:s'),
                 'updatedate' => date('Y-m-d H:i:s'),
             );
@@ -1164,6 +1473,8 @@ class Service extends CI_Controller
                     $input = array(
                         'orderid' => $orderid,
                         'itemid' => $item['id'],
+                        'image' => $item['image'],
+                        'name' => $item['name'],
                         'amount' => $item['qty'],
                         'price' =>  $item['discount'] != "" ? $item['discount']  :  $item['price'],
                         'createdate' => date('Y-m-d H:i:s'),
@@ -1171,6 +1482,14 @@ class Service extends CI_Controller
                     );
                     $cond = array('orderid' => $input['orderid'], 'itemid' => $input['itemid']);
                     if ($this->get->orderdetail($cond)->num_rows() == 0) {
+
+                        $itemdetail = $this->get->items(array('id' => $item['id']))->row();
+                        $inputstock = array(
+                            'id' => $item['id'],
+                            'stock' => intval($itemdetail->stock) - intval($item['qty']),
+                            'updatedate' => date('Y-m-d H:i:s'),
+                        );
+                        $this->set->items($inputstock);
                         $this->put->orderdetail($input);
                     } else {
                         $this->set->orderdetail($input);
@@ -1178,6 +1497,8 @@ class Service extends CI_Controller
                 }
             }
         }
+
+        $this->Semail->sendinfo('คุณได้รับออเดอร์ กรุณาตรวจสอบที่ https://seller.pettogo.co/', $merchant['email'], "Petto.co - ยินดีด้วยคุณได้รับออเดอร์ กรุณาตรวจสอบ");
         // foreach ($cartItems as $value) {
         //     $item = explode(",", $value);
         //     $input = array(
@@ -1228,15 +1549,163 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function submitauction()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $auctionprice = $post['auctionprice'];
+        $auctionid = $post['auctionid'];
+        $custid = $post['custid'];
+        if ($auctionid != 0) {
+            $input = array(
+                'price' => intval($auctionprice),
+                'custid' => intval($custid),
+                'auctionid' => intval($auctionid),
+            );
+            $data['result'] = false;
+            if ($this->put->auctiontransaction($input)) {
+                $data['result'] = true;
+            }
+            $this->output->set_header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($data);
+        }
+    }
+
+
+    public function setcustomeraddress()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $fulladdress = $post['fulladdress'];
+        $tel = $post['tel'];
+        $custid = $post['custid'];
+        $input = array(
+            'id' => $custid,
+            'fulladdress' => $fulladdress,
+            'tel' => $tel,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+        $data['result'] = false;
+        if ($this->set->customer($input)) {
+            $data['result'] = true;
+        }
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+
+    public function addreview()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $custid = $post['custid'];
+        $itemid = $post['itemid'];
+        $orderid = $post['orderid'];
+        $itemname = $post['itemname'];
+        $rating = $post['rating'];
+        $message = $post['message'];
+        $pictures = $post['pictures'];
+
+
+        $s_image = "";
+        foreach ($pictures as $key => $pic) {
+            // $image = $this->base64_to_jpeg(str_replace("data:image/jpeg;base64,", "", $pic));
+            // $image = $this->base64_to_jpeg(str_replace("data:image/png;base64,", "", $pic)); 
+            $image = $this->base64_to_jpeg($pic);
+            $s_image .= base_url("public/upload/review/") . $image["upload_data"]["file_name"] . ",";
+        }
+
+
+        if ($itemid != 0) {
+            $input = array(
+                'itemid' =>  "$itemid",
+                'orderid' => "$orderid",
+                'message' => "$message",
+                'pictures' => rtrim($s_image, ","),
+                'star' => intval($rating),
+                'reviewby' => "$custid",
+                'createdate' => date('Y-m-d H:i:s'),
+            );
+            $data['result'] = false;
+            if ($this->put->review($input)) {
+                $data['result'] = true;
+            }
+            $this->output->set_header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($data);
+        }
+    }
+
+    function base64_to_jpeg($data)
+    {
+        $temp_file_path = tempnam(sys_get_temp_dir(), 'tempimage'); // might not work on some systems, specify your temp path if system temp dir is not writeable
+        file_put_contents($temp_file_path, file_get_contents($data));
+        $image_info = getimagesize($temp_file_path);
+        $_FILES['userfile'] = array(
+            'name' => uniqid() . '.' . preg_replace('!\w+/!', '', $image_info['mime']),
+            'tmp_name' => $temp_file_path,
+            'size' => filesize($temp_file_path),
+            'error' => UPLOAD_ERR_OK,
+            'type' => 'jpg',
+        );
+
+        $config['upload_path'] = 'public/upload/review/';
+        if (!is_dir($config['upload_path'])) {
+            mkdir("public/upload/review", 0777);
+        }
+
+        $config['allowed_types'] = '*';
+        $config['max_size'] = '0';
+        $config['max_width'] = '1024';
+        $config['max_height'] = '1024';
+        $config['overwrite'] = FALSE;
+        $config['encrypt_name'] = TRUE;
+        $config['remove_spaces'] = TRUE;
+
+        $this->upload->initialize($config);
+
+
+        if (!$this->upload->do_upload('userfile', true)) {
+            print_r($this->upload->display_errors());
+        } else {
+            return array('upload_data' => $this->upload->data());
+        }
+    }
+
+    public function confirmdeliver()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        // $grandtotal = $post['grandtotal']; 
+        $input = array(
+            'id' => $id,
+            'delivery_iscomplete' => 1,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+        $data['result'] = false;
+        if ($this->set->order($input)) {
+            $data['result'] = true;
+        }
+        //$this->lineapi->pushmsg($ordertoken->uid, "สถานะของคุณถูกเปลี่ยนแล้ว https://perdbill.co/track/$ordertoken->token");
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
 
     public function confirmpayment()
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $orderid = $post['orderid'];
-        $ordertoken = $this->get->ordertoken(array('orderid' => $orderid))->row();
+        $custid = $post['custid'];
+        $slipimg = $post['slipimg'];
+        $paydate = $post['paydate'];
+        $paytime = $post['paytime'];
+        $payamount = $post['payamount'];
+        $payacc = $post['payacc'];
+        // $grandtotal = $post['grandtotal']; 
         $input = array(
             'id' => $orderid,
             'status' => 2,
+            'paymentinfo' => $payacc,
+            'payamount' => $payamount,
+            'imgslip' => $slipimg,
+            // 'custid' => $custid,
+            'paydatetime' => date(($paydate . " " . $paytime)),
             'updatedate' => date('Y-m-d H:i:s'),
         );
         $data['result'] = false;

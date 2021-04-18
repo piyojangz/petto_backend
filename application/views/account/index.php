@@ -53,12 +53,12 @@
                                 <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/setting") ?>'">
                                     <h4><span>1</span>ตั้งค่าร้านค้า</h4>
                                 </li>
-                                <li style="cursor: pointer;" onclick="addmerchant()">
+                                <!-- <li style="cursor: pointer;" onclick="addmerchant()">
                                     <h4><span>2</span>เพิ่มรายชื่อผู้ใช้งาน</h4>
                                 </li>
                                 <li style="cursor: pointer;" onclick="genbill()">
                                     <h4><span>3</span>เพิ่มบิล</h4>
-                                </li>
+                                </li> -->
                                 <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/paymentmethod") ?>'">
                                     <h4><span>4</span>บัญชีธนาคาร</h4>
                                 </li>
@@ -133,7 +133,7 @@
                     <div class="row">
                         <div class="col-lg-3 col-sm-6 col-xs-12">
                             <div class="white-box analytics-info">
-                                <h3 class="box-title">บิลทั้งหมด</h3>
+                                <h3 class="box-title">ออเดอร์ทั้งหมด</h3>
                                 <ul class="list-inline">
                                     <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?= $dashboarddata->bills ?></span></li>
                                 </ul>
@@ -165,94 +165,7 @@
                         </div>
                     </div>
 
-                    <!-- row -->
-                    <div class="row block1">
-                        <!-- Left sidebar -->
-                        <div class="col-md-12">
-                            <div class="white-box">
-                                <!-- row -->
-                                <div class="row">
-                                    <div class="col-lg-3 col-md-4  col-sm-12 col-xs-12 inbox-panel">
-                                        <div class="row">
-                                            <table class="table no-paging">
-                                                <thead>
-                                                    <tr>
-                                                        <!--                                                        <th width="30">
-                                                                                                        <div class="checkbox m-t-0 m-b-0 ">
-                                                                                                            <input id="checkAll" type="checkbox" class="checkbox-toggle" value="check all">
-                                                                                                            <label for="checkAll"></label>
-                                                                                                        </div>
-                                                                                                    </th>-->
-                                                        <th>
-
-                                                            <div class="btn-group">
-                                                                <button id="btn-refreshbilltoken" type="button" class="btn btn-default waves-effect waves-light  dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-refresh"></i></button>
-                                                                <span type="hidden" id="billtokenhd" style="display: none;"></span>
-                                                            </div>
-                                                        </th>
-                                                        <th class="hidden-xs" width="100">
-                                                            <div class="btn-group pull-right">
-                                                                <button type="button" class="btn-genbill btn btn-default waves-effect"><i class="fa fa-plus"></i></button>
-                                                            </div>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="selected" id="billtokenlist">
-
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12 mail_listing">
-                                        <div class="inbox-center">
-
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-12 m-t-20" id="billtokenhead">
-                                                <h3 id="billtokenname"></h3>
-                                                <span id="animationlink" style="display: inline-block;">
-                                                    <a href="#" id="billink"></a></span>
-                                                <button class="btn btn-outline btn-default btn-xs" id="copyanim">copy</button>
-                                            </div>
-                                            <span type="hidden" id="billinkhd" style="display: none;"></span>
-                                        </div>
-                                        <div class="row" id="billtokengraph">
-                                            <div class="col-md-12 col-lg-12 col-xs-12">
-                                                <div class="white-box">
-                                                    <h3 class="box-title" id="billtotal"></h3>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <p>การแจ้งเตือนถึง <span id="billusernotification" class="text-purple"></span></p>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <button id="billtokenremove" class="pull-right btn btn-outline btn-danger waves-effect waves-light">
-                                                                ลบ
-                                                            </button>
-                                                            <button id="billtokenedit" class="pull-right btn btn-outline btn-default waves-effect waves-light" style="margin-right: 15px;">แก้ไข
-                                                            </button>
-                                                            <button id="billupdatestock" class="pull-right btn btn-outline btn-primary waves-effect waves-light" style="margin-right: 15px;">STOCK <span class="badge badge-info">new</span></button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="flot-chart">
-                                                        <div class="flot-chart-content" id="flot-bar-chart"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /.row -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.row -->
-
-
-                    <!--/.row -->
-                    <!-- <div class="row block2"> 
-            </div> -->
+                     
                 <?php endif; ?>
             </div>
 
