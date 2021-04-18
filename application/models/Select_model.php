@@ -105,6 +105,7 @@ class Select_model extends CI_Model
         $this->db->from('v_order');
         $this->db->where($cond);
         $this->db->order_by('id', 'desc');
+        $this->db->group_by('id');
         $query = $this->db->get();
         return $query;
     }
@@ -395,7 +396,7 @@ class Select_model extends CI_Model
 
     function package_mapping_noneactive()
     {
-        $query = $this->db->query("SELECT  *   from package_mapping p  where p.duration - datediff(curdate(),updatedate) < 0 and duration > 0");  
+        $query = $this->db->query("SELECT  *   from package_mapping p  where p.duration - datediff(curdate(),updatedate) < 0 and duration > 0 and status = 1");  
         return $query;
     }
 
@@ -598,7 +599,7 @@ class Select_model extends CI_Model
         ,m.image
         ,m.name
         ,m.webname
-        FROM `orders` O join merchant m on o.merchantid = m.id
+        FROM `orders` o join merchant m on o.merchantid = m.id
         where o.status  in ($status) AND
         o.closestatus  != 1 AND
         o.delivery_iscomplete  = $delivery_iscomplete AND
@@ -634,14 +635,14 @@ class Select_model extends CI_Model
                     ,m.webname
                     ,(SELECT count(r.id) FROM review r where r.orderid = o.id) as cntreview
                     ,(SELECT count(od.id) FROM orderdetail od where od.orderid = o.id) as cntorderdetail
-                    FROM `orders` O join merchant m on o.merchantid = m.id
+                    FROM `orders` o join merchant m on o.merchantid = m.id
                  where o.status  in ($status) AND
                     o.closestatus  != 1 AND
                     o.delivery_iscomplete  =  $delivery_iscomplete  AND
                     o.isauction != 1 AND
                  o.custid = '$custid'
             ) as tb
-            where tb.cntorderdetail != tb.cntreview");
+            where tb.cntorderdetail > tb.cntreview");
 
         return $query;
     }
@@ -672,7 +673,7 @@ class Select_model extends CI_Model
                     ,m.webname
                     ,(SELECT count(r.id) FROM review r where r.orderid = o.id) as cntreview
                     ,(SELECT count(od.id) FROM orderdetail od where od.orderid = o.id) as cntorderdetail
-                    FROM `orders` O join merchant m on o.merchantid = m.id
+                    FROM `orders` o join merchant m on o.merchantid = m.id
                  where o.closestatus  != 1 AND
                     o.delivery_iscomplete  =  1   
                     AND  o.custid = '$custid'

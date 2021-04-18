@@ -116,7 +116,7 @@ class Service extends CI_Controller
         $post = json_decode(file_get_contents('php://input'), true);
         $email = $post['email'];
         $password = $post['password'];
-        $cond = array('email' => $email, 'password' => $password);
+        $cond = array('email' => trim($email), 'password' => trim($password));
         $data['result'] = $this->get->customerdetail($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -773,36 +773,45 @@ class Service extends CI_Controller
             $customer = $this->get->customer(array('id' => $value->custid))->row();
             $total = 0;
 
-            $input = array(
-                'orderno' => $orderno,
-                'merchantid' => $value->merchantid,
-                'shippingfee' => isset($shippingfee) ? $shippingfee->price : 0,
-                'status' => 1,
-                'custid' => $value->custid,
-                'total' => $gtotal,
-                'isauction' => 1,
-                'shippingaddress' => $customer->fulladdress,
-                'createdate' => date('Y-m-d H:i:s'),
-                'updatedate' => date('Y-m-d H:i:s'),
-            );
-            $orderid  = $this->put->order($input);
-            $s_image = "";
-            $image = $this->base64_to_jpeg($value->image);
-            $s_image .= base_url("public/upload/review/") . $image["upload_data"]["file_name"];
-
-            $input2 = array(
-                'orderid' => $orderid,
-                'itemid' => 0,
-                'image' => $s_image,
-                'name' =>  $value->name,
-                'amount' => $unit,
-                'price' =>  $price,
-                'createdate' => date('Y-m-d H:i:s'),
-                'updatedate' => date('Y-m-d H:i:s'),
-            );
-            $this->put->orderdetail($input2);
+            if ($customer) {
 
 
+                $input = array(
+                    'orderno' => $orderno,
+                    'merchantid' => $value->merchantid,
+                    'shippingfee' => isset($shippingfee) ? $shippingfee->price : 0,
+                    'status' => 1,
+                    'custid' => $value->custid,
+                    'total' => $gtotal,
+                    'isauction' => 1,
+                    'shippingaddress' => $customer->fulladdress,
+                    'createdate' => date('Y-m-d H:i:s'),
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+                $orderid  = $this->put->order($input);
+                $s_image = "";
+                $image = $this->base64_to_jpeg($value->image);
+                $s_image .= base_url("public/upload/review/") . $image["upload_data"]["file_name"];
+
+                $input2 = array(
+                    'orderid' => $orderid,
+                    'itemid' => 0,
+                    'image' => $s_image,
+                    'name' =>  $value->name,
+                    'amount' => $unit,
+                    'price' =>  $price,
+                    'createdate' => date('Y-m-d H:i:s'),
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+                $this->put->orderdetail($input2); 
+
+                
+
+                //email and line
+                $subject = "ผู้ชนะการประมูล";
+                $msg = "ยินดีด้วยคุณชนะการประมูลสินค้า $value->name กรุณาดูที่หน้าข้อมูลลส่วนตัว";
+                $this->msgnotifyCustomer($customer, $subject, $msg);
+            }
 
             //update สถานะเป็นจบแล้ว
             $input = array(
@@ -811,18 +820,13 @@ class Service extends CI_Controller
                 'updatedate' => date('Y-m-d H:i:s')
             );
             $this->set->auctionlist($input);
-
-            //email and line
-            $subject = "ผู้ชนะการประมูล";
-            $msg = "ยินดีด้วยคุณชนะการประมูลสินค้า $value->name กรุณาดูที่หน้าข้อมูลลส่วนตัว";
-            $this->msgnotifyCustomer($customer, $subject, $msg);
         }
     }
 
     function msgnotifyCustomer($customer, $subject, $msg)
     {
         $this->sendtoLine($customer->lineid, $msg);
-        //$this->Semail->sendinfo($msg, $customer->email, $subject);
+        $this->Semail->sendinfo($msg, $customer->email, $subject);
     }
     public function getauctionhistorybycustid()
     {
@@ -1006,17 +1010,17 @@ class Service extends CI_Controller
         $data['result'] = $this->set->order($input, $itemarr);
 
 
-        foreach (explode("|", $items) as $value) {  
-            if($value){
+        foreach (explode("|", $items) as $value) {
+            if ($value) {
                 $order = $this->get->order(array('id' => intval($value)))->row();
-            
+
                 $custid = $order->custid;
-                $customer = $this->get->customer(array('id' => $custid))->row(); 
+                $customer = $this->get->customer(array('id' => $custid))->row();
                 $subject = "ยืนยันการชำระเงิน";
                 $msg = "รายการชำระ {$order->orderno} ของคุณถูกยืนยันแล้ว";
-    
+
                 $this->msgnotifyCustomer($customer, $subject, $msg);
-            } 
+            }
         }
 
 
@@ -1498,7 +1502,7 @@ class Service extends CI_Controller
             }
         }
 
-        $this->Semail->sendinfo('คุณได้รับออเดอร์ กรุณาตรวจสอบที่ https://seller.pettogo.co/', $merchant['email'], "Petto.co - ยินดีด้วยคุณได้รับออเดอร์ กรุณาตรวจสอบ");
+        $this->Semail->sendinfo('คุณได้รับออเดอร์ กรุณาตรวจสอบที่ https://seller.pettogo.co/', $merchant['email'], "Pettogo.co - ยินดีด้วยคุณได้รับออเดอร์ กรุณาตรวจสอบ");
         // foreach ($cartItems as $value) {
         //     $item = explode(",", $value);
         //     $input = array(
@@ -1652,8 +1656,8 @@ class Service extends CI_Controller
 
         $config['allowed_types'] = '*';
         $config['max_size'] = '0';
-        $config['max_width'] = '1024';
-        $config['max_height'] = '1024';
+        $config['max_width'] = '0';
+        $config['max_height'] = '0';
         $config['overwrite'] = FALSE;
         $config['encrypt_name'] = TRUE;
         $config['remove_spaces'] = TRUE;

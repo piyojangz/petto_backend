@@ -60,7 +60,7 @@
                                         </address>
                                         <tel>
                                             <h3> &nbsp;<b class="text-danger">เบอร์โทร</b></h3>
-                                            <p class="text-muted m-l-5"><?= $order->shipingtel ?></p>
+                                            <p class="text-muted m-l-5"><?= $order->shippingtel ?></p>
                                         </tel>
                                         <?php if ($order->payamount > 0) : ?>
                                             <h3>รายละเอียดการชำระเงิน</h3>
