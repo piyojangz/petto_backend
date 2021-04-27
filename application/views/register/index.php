@@ -110,19 +110,19 @@
                     <div class="form-group  m-t-20">
                         <div class="col-xs-12">
                             <label style="font-weight: bold;">ชื่อ</label>
-                            <input class="form-control" type="text" name="firstname" id="firstname" required placeholder="ชื่อจริง">  
+                            <input class="form-control" type="text" name="firstname" id="firstname" required placeholder="ชื่อจริง">
                         </div>
                     </div>
                     <div class="form-group  m-t-20">
                         <div class="col-xs-12">
                             <label style="font-weight: bold;">นามสกุล</label>
-                            <input class="form-control" type="text" name="lastname" id="lastname" required placeholder="นามสกุล">  
+                            <input class="form-control" type="text" name="lastname" id="lastname" required placeholder="นามสกุล">
                         </div>
                     </div>
                     <div class="form-group  m-t-20">
                         <div class="col-xs-12">
                             <label style="font-weight: bold;">เบอร์โทรศัพท์</label>
-                            <input class="form-control" type="text" name="tel" id="tel" required placeholder="เบอร์โทรศัพท์มือถือ">  
+                            <input class="form-control" type="text" name="tel" id="tel" required placeholder="เบอร์โทรศัพท์มือถือ">
                         </div>
                     </div>
                     <!-- <div class="form-group  m-t-20">
@@ -136,7 +136,7 @@
                     <div class="form-group  m-t-20">
                         <div class="col-xs-12">
                             <label style="font-weight: bold;">ชื่อร้าน(ไทย)</label>
-                            <input class="form-control" type="text" name="nameth" id="nameth" required placeholder="ชื่อร้าน">  
+                            <input class="form-control" type="text" name="nameth" id="nameth" required placeholder="ชื่อร้าน">
                         </div>
                     </div>
                     <!-- <div class="form-group  m-t-20">

@@ -122,11 +122,11 @@
                                             <th>อีเมลล์</th>
                                             <th>เบอร์โทร</th>
                                             <!-- <th>ไฟล์แนบ</th> -->
-                                            <th>สถานะ</th>
-                                            <th>การยืนยันตนผ่านไลน์</th>
+                                            <th>ตรวจสอบสถานะ</th>
+                                            <!-- <th>การยืนยันตนผ่านไลน์</th> -->
                                             <th>ระดับ</th>
                                             <th>token</th>
-                                            <th>ACTION</th>
+                                            <th>การระงับบัญชี</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -153,16 +153,16 @@
                                         ?>
                                             <tr>
                                                 <td class="text-center" style="vertical-align: middle;"><?= $index + 1 ?></td>
-                                                <td style="vertical-align: middle;"><?= $item->firstname ?> <?= $item->lastname ?></td>
+                                                <td style="vertical-align: middle;"><a href="javascript:;" onclick='openprofile(<?= json_encode($item) ?>)'><?= $item->firstname ?> <?= $item->lastname ?></a></td>
                                                 <td style="vertical-align: middle;"><?= $item->email ?></td>
                                                 <td style="vertical-align: middle;"><?= $item->tel ?></td>
                                                 <!-- <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-success' : 'badge-success' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">view</a></td> -->
                                                 <td style="vertical-align: middle;"><span class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-info' ?> "><?= $item->status == 0 ? 'รออนุมัติ' : 'อนุมัติ' ?></span> </td>
-                                                <td style="vertical-align: middle;"><?= $item->islineverify == 0 ? '<span class="badge" style="background:#cccccc">Unverify</span>' : '<span class="badge" style="background:#1aef6f">Verified</span>' ?></td>
+                                                <!-- <td style="vertical-align: middle;"><?= $item->islineverify == 0 ? '<span class="badge" style="background:#cccccc">Unverify</span>' : '<span class="badge" style="background:#1aef6f">Verified</span>' ?></td> -->
                                                 <td style="vertical-align: middle;"><a onclick="openpack('<?= $item->id ?>','<?= $item->packageid ?>')" href="javascript:;"><?= $PACKICON ?></a></td>
                                                 <td style="vertical-align: middle;"><?= $item->token ?></td>
                                                 <?php if ($item->islineverify == 1) : ?>
-                                                    <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-success' : 'badge-success' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">view</a></td>
+                                                    <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-success' : 'badge-success' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">คลิก</a></td>
 
                                                 <?php else : ?>
                                                     <td style="vertical-align: middle;"></td>
@@ -234,7 +234,7 @@
 
                 <form action="<?= base_url("account/$token/changeuserstatus") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" id="form-submit">
                     <div class="panel panel-default">
-                        <div class="panel-heading">ไฟล์แนบ</div>
+                        <div class="panel-heading"> การระงับบัญชี</div>
                         <div class="panel-wrapper collapse in">
                             <div class="panel-body">
                                 <div class="row">
@@ -242,17 +242,15 @@
                                         <div class="panel panel-info ">
                                             <div class="panel-body">
 
-                                                <div class="form-body">
-                                                    <div class="form-group">
-                                                        <img id="fileattached" src="" style="width:100%" class="img img-rounded" />
-                                                    </div>
+                                                <div class="form-body"> 
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">สถานะ</label>
                                                         <div class="col-md-9">
-                                                            <select class="form-control" name="status" id="status">
+                                                            <select class="form-control" name="status" id="status" required>
+                                                                <option value="">กรุณาเลือก</option>
                                                                 <option value="9">ระงับบัญชี</option>
-                                                                <!-- <option value="0">ไม่อนุมัติ</option> -->
-                                                                <option value="1">อนุมัติ</option>
+                                                                <option value="0">ยกเลิกการระงับบัญชี</option>
+                                                                <!-- <option value="1">อนุมัติ</option> -->
                                                             </select>
                                                         </div>
                                                     </div>
@@ -278,6 +276,84 @@
                                                     </div>
                                                 </div>
                                                 <input type="hidden" id="merchantid" name="merchantid" />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </form>
+
+
+                <form action="<?= base_url("account/$token/doapprove") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" id="form-profile">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">รายละเอียดบัญชี</div>
+                        <div class="panel-wrapper collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-info ">
+                                            <div class="panel-body">
+
+                                                <div class="form-body">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">ชื่อ-สกุล</label>
+                                                        <label class="control-label col-md-9" style="text-align: left;" id="pf-name">-</label>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">เบอร์โทร</label>
+                                                        <label class="control-label col-md-9" style="text-align: left;" id="pf-tel">-</label>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">ที่อยู่</label>
+                                                        <label class="control-label col-md-9" style="text-align: left;" id="pf-address">-</label>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">รูปบัตรประชาชน</label>
+                                                        <img src="" style="width:300px" class="img img-rounded" id="pf-image" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">สถานะ</label>
+                                                        <div class="col-md-9">
+                                                            <select class="form-control" name="status" id="status" required onchange="statuschange()">
+                                                                <option value="">กรุณาเลือก</option>
+                                                                <option value="0">ไม่อนุมัติ</option>
+                                                                <option value="1">อนุมัติ</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" id="reason-dev">
+                                                        <label class="control-label col-md-3">หมายเหตุ</label>
+                                                        <div class="col-md-9">
+                                                            <select class="form-control" name="pf-reson" id="pf-reson" required onchange="statuschange()">
+                                                                <option value="">กรุณาเลือก</option>
+                                                                <option value="กรุณาระบุบัตรประชาชนเพื่อตรวจสอบ">กรุณาระบุบัตรประชาชนเพื่อตรวจสอบ</option>
+                                                                <option value="บัตรประชาชนไม่ชัด">บัตรประชาชนไม่ชัด</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-actions">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-9 col-md-3">
+                                                                        <button type="submit" id="btnsubmit" class="btn btn-success"> <i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" id="merchantid2" name="merchantid2" />
 
                                             </div>
                                         </div>
@@ -331,7 +407,7 @@
 </body>
 <script>
     $(document).ready(function() {
-
+        $('#reason-dev').hide();
         $('.popup-with-form').magnificPopup({
             type: 'inline',
             preloader: true,
@@ -346,10 +422,21 @@
                 }
             }
         });
-
-
-
     });
+
+    function openprofile(profile) { 
+        $('#merchantid2').val(profile.id);
+        $('#pf-name').html(profile.firstname + " " + profile.lastname);
+        $('#pf-tel').html(profile.tel);
+        $('#pf-address').html(profile.address);
+        $('#pf-image').attr("src", profile.fileattached);
+        $.magnificPopup.open({
+            items: {
+                src: '#form-profile'
+            },
+            type: 'inline'
+        }, 0);
+    }
 
     function openpack(id, packid) {
         $("#id").val(id);
@@ -364,8 +451,6 @@
 
     function openfile(id, _file) {
         $("#fileattached").attr("src", _file);
-
-
         $("#merchantid").val(id);
         $.magnificPopup.open({
             items: {
@@ -373,6 +458,17 @@
             },
             type: 'inline'
         }, 0);
+    }
+
+    function statuschange() {
+        var status = $('#status').val();
+        if (status == 0) {
+            $('#reason-dev').show();
+            $("#pf-reson").attr("required", "true");
+        } else {
+            $('#reason-dev').hide();
+            $("#pf-reson").removeAttr("required");
+        }
     }
 </script>
 

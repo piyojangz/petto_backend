@@ -23,7 +23,7 @@ class User_model extends CI_Model
                 $expires = (60 * 60 * 24);
             }
 
-            if ($row->status == 1) {
+            // if ($row->status == 1) {
                 $set_cm_account['id'] = $row->id;
                 $set_cm_account['name'] = $row->name;
                 $set_cm_account['webname'] = $row->webname;
@@ -47,9 +47,9 @@ class User_model extends CI_Model
                 $set_cm_account = $this->encryption->encrypt(serialize($set_cm_account));
                 set_cookie('useraccount', $set_cm_account, $expires);
                 return array('login' => 'success', 'data' => $row);
-            } else {
-                return array('login' => 'failed', 'data' => $row);
-            }
+            // } else {
+            //     return array('login' => 'failed', 'data' => $row);
+            // }
         } else {
             return array('login' => 'failed', 'data' => null);
         }

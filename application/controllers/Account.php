@@ -37,6 +37,17 @@ class Account extends CI_Controller
         }
     }
 
+    function checkuserVerify()
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"]['token'];
+        $merchant = $this->get->merchant(array("token" => $data["token"]))->row();
+
+        if ($merchant->status == 0) {
+            redirect(base_url("account/$merchant->token/setting"));
+        }
+    }
+
     public function index($acctoken = "")
     {
 
@@ -44,7 +55,8 @@ class Account extends CI_Controller
         if (!$this->user->is_login()) {
             redirect(base_url("login"));
         } else {
-            redirect(base_url("account/$acctoken/dashboard"));
+            $this->checkuserVerify();
+            redirect(base_url("dashboard"));
         }
     }
 
@@ -85,6 +97,7 @@ class Account extends CI_Controller
 
     public function setting_home($acctoken = "")
     {
+        $this->checkuserVerify();
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -168,6 +181,7 @@ class Account extends CI_Controller
     {
         if ($_POST) {
             $image = "";
+            $_imageidcard = "";
             $data["user"] = $this->user->get_account_cookie();
             $imageData = $this->input->post("imageData");
             $name = $this->input->post("name");
@@ -176,14 +190,19 @@ class Account extends CI_Controller
             $detail = $this->input->post("detail");
             $lineid = $this->input->post("lineid");
             $lineaddurl = $this->input->post("lineaddurl");
-
-
+            $email = $this->input->post("hemail");
+            $imageidcard = $this->input->post("imageidcard");
             if (!empty($imageData)) {
                 $image = $this->base64_to_jpeg_acc($imageData, $data["user"]["token"]);
                 $image = base_url("public/upload/acc/$acctoken/") . $image["upload_data"]["file_name"];
             }
+            // print_r( $imageidcard);
+            // if (!empty($imageidcard)) {
+            //     $_imageidcard = $this->base64_to_jpeg_acc($imageidcard, $data["user"]["token"]);
+            //     $_imageidcard = base_url("public/upload/acc/$acctoken/") . $image["upload_data"]["file_name"];
+            // }
 
-
+            // print_r($imageidcard);
             $input = array(
                 'token' => $data["user"]["token"],
                 'tel' => $tel,
@@ -194,6 +213,12 @@ class Account extends CI_Controller
                 'lineid' => $lineid,
                 'updatedate' => date('Y-m-d H:i:s'),
             );
+            if ($imageidcard != "") {
+                $input["fileattached"] = $imageidcard;
+                $input["reason"] = "";
+
+                $this->pushMsgNotifyMerchant(1, "ผู้ใช้บัญชี $email ได้มีการอัพโหลดเอกสารสำเนาบัตรประชาชนมาเพื่อตรวจสอบ");
+            }
             if ($image != "") {
                 $input["image"] = $image;
             }
@@ -454,17 +479,21 @@ class Account extends CI_Controller
         if (!$this->user->is_login()) {
             redirect(base_url("login"));
         }
+
+        $this->checkuserVerify();
+
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
-        // $data["lineadmin"] = $this->get->v_adminsummary(array("token" => $data["token"], "status" => 1))->result();
         $data["paidorder"] = $this->paidorder;
         $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"], "status" => 1))->result();
-        $data["dashboarddata"] = $this->get->getdashboarddata($data["merchant"]->id)->row();
-        // $data["dashboarddata"] = new stdClass();
-        // $data["dashboarddata"]->bills = 10;
-        // $data["dashboarddata"]->paid = 10;
-        // $data["dashboarddata"]->unpaid = 2;
-        // $data["dashboarddata"]->monthlytotal = 70990;
+
+
+        if ($data["user"]["isadmin"] == 1) {
+            $data["dashboarddata"] = $this->get->getdashboarddataforadmin()->row();
+        } else {
+            $data["dashboarddata"] = $this->get->getdashboarddata($data["merchant"]->id)->row();
+        }
+
         if ($_POST) {
             if (isset($_POST["btnupdateamount"])) {
                 $isstockenable = $this->input->post("isstockenable") == 'on' ? 1 : 0;
@@ -616,6 +645,7 @@ class Account extends CI_Controller
 
     public function orderall($acctoken = "")
     {
+        $this->checkuserVerify();
         $data["user"] = $this->user->get_account_cookie();
         $data["obj"] = $this;
         $data["token"] = $data["user"]['token'];
@@ -678,6 +708,7 @@ class Account extends CI_Controller
 
     public function products($acctoken = "")
     {
+        $this->checkuserVerify();
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -703,6 +734,7 @@ class Account extends CI_Controller
 
     public function auction($acctoken = "")
     {
+        $this->checkuserVerify();
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -715,6 +747,57 @@ class Account extends CI_Controller
         $this->load->view('account/auction', $data);
     }
 
+    public   function shopmanage($acctoken = "")
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"]['token'];
+        $data["paidorder"] = $this->paidorder;
+        $data["searchtxt"] = "";
+
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+
+
+        if ($_POST) {
+            $searchtxt = $this->input->post("searchtxt");
+            $data["searchtxt"] = trim($searchtxt);
+            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9, 'isadmin' => false), $searchtxt)->result();
+        } else {
+            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9, 'isadmin' => false))->result();
+        }
+        // print_r($data["merchant"]);
+        $this->load->view('account/shopmanage', $data);
+    }
+
+
+    public   function itemmanage($acctoken = "")
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"]['token'];
+        $data["paidorder"] = $this->paidorder;
+        $data["searchtxt"] = "";
+        $shopid = null;
+        $cond = array("status != " => 0);
+
+        if (!$this->user->is_login()) {
+            redirect('/');
+        }
+        if ($_GET) {
+            $shopid = $this->input->get("shopid");
+            $cond['merchantid'] = $shopid;
+        }
+
+        if ($_POST) {
+            $searchtxt = $this->input->post("searchtxt");
+            $data["searchtxt"] = trim($searchtxt);
+            $data["product"] = $this->get->v_product($cond, "", "", "", $searchtxt)->result();
+        } else {
+            $data["product"] = $this->get->v_product($cond)->result();
+        }
+        // print_r($data["merchant"]);
+        $this->load->view('account/itemmanage', $data);
+    }
 
     public   function shopslot($acctoken = "")
     {
@@ -927,6 +1010,43 @@ class Account extends CI_Controller
         $this->load->view('account/settinglang', $data);
     }
 
+
+
+    public function doapprove($acctoken = "")
+    {
+        if ($_POST) {
+            if (!$this->user->is_login()) {
+                redirect('/');
+            }
+            $id = $this->input->post("merchantid2");
+            $data["user"] = $this->user->get_account_cookie();
+            $status = $this->input->post("status");
+            $reason  = $this->input->post("pf-reson");
+            $data["token"] = $data["user"]["token"];
+
+            if (empty($id)) {
+            } else {
+                $input = array(
+                    'id' => $id,
+                    'status' => $status,
+                    'reason' => $reason,
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+
+                if ($this->set->merchantbyid($input)) {
+                    if ($status == 0) {
+                        $this->pushMsgNotifyMerchant($id, "เจ้าหน้าที่ไม่สามารถอนุมัติบัญชีได้ เนื่องจาก $reason");
+                    }
+                    if ($status == 1) {
+                        $this->pushMsgNotifyMerchant($id, "เจ้าหน้าที่อนุมัติแล้ว ยินดีตอนรับเข้าใช้งาน Pettogo.co ขอให้สนุกกับการช๊อปปิ้งค่ะ");
+                    }
+
+                    redirect("account/$acctoken/userlist");
+                }
+            }
+        }
+    }
+
     public function changeuserstatus($acctoken = "")
     {
         if ($_POST) {
@@ -961,6 +1081,69 @@ class Account extends CI_Controller
         }
     }
 
+    public function changemerchantrecommend($acctoken = "")
+    {
+        if ($_POST) {
+            if (!$this->user->is_login()) {
+                redirect('/');
+            }
+            $id = $this->input->post("merchantid");
+            $data["user"] = $this->user->get_account_cookie();
+            $status = $this->input->post("status");
+            $data["token"] = $data["user"]["token"];
+
+            if (empty($id)) {
+            } else {
+                $input = array(
+                    'id' => $id,
+                    'isrecommend' => $status,
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+
+                if ($this->set->merchantbyid($input)) {
+                    if ($status == 1) {
+                        $this->pushMsgNotifyMerchant($id, "ยินดีด้วยคุณได้เป็นร้านค้าแนะนำแล้ว");
+                    }
+                    if ($status == 0) {
+                        // $this->pushMsgNotifyMerchant($id, "");
+                    }
+                    redirect("account/$acctoken/shopmanage");
+                }
+            }
+        }
+    }
+
+    public function changeitemrecommend($acctoken = "")
+    {
+        if ($_POST) {
+            if (!$this->user->is_login()) {
+                redirect('/');
+            }
+            $id = $this->input->post("merchantid");
+            $data["user"] = $this->user->get_account_cookie();
+            $status = $this->input->post("status");
+            $data["token"] = $data["user"]["token"];
+
+            if (empty($id)) {
+            } else {
+                $input = array(
+                    'id' => $id,
+                    'isoffer' => $status,
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+
+                if ($this->set->items($input)) {
+                    if ($status == 1) {
+                        // $this->pushMsgNotifyMerchant($id, "ยินดีด้วยคุณได้เป็นร้านค้าแนะนำแล้ว");
+                    }
+                    if ($status == 0) {
+                        // $this->pushMsgNotifyMerchant($id, "");
+                    }
+                    redirect("account/$acctoken/itemmanage");
+                }
+            }
+        }
+    }
 
     public function changeuserpackage($acctoken = "")
     {
@@ -1318,6 +1501,7 @@ class Account extends CI_Controller
 
     public function paymentmethod($acctoken = "")
     {
+        $this->checkuserVerify();
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -1333,6 +1517,7 @@ class Account extends CI_Controller
 
     public function shippingrate($acctoken = "")
     {
+        $this->checkuserVerify();
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
@@ -1422,8 +1607,9 @@ class Account extends CI_Controller
     function pushMsgNotifyMerchant($merchantid, $text)
     {
         $merchant = $this->get->merchant(array("id" => $merchantid))->row();
-
-
+        if (!$this->isLocalhost()) {
+            $this->Semail->sendinfo($text, $merchant->email, 'Pettogo.co - แจ้งเตือน');
+        }
         if ($merchant->lineuserid != "") {
             // push message block
             $pushmessages = [];
@@ -1442,5 +1628,10 @@ class Account extends CI_Controller
         $datas['type'] = 'text';
         $datas['text'] = $text;
         return $datas;
+    }
+
+    function isLocalhost($whitelist = ['127.0.0.1', '::1'])
+    {
+        return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
     }
 }

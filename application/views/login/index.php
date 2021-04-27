@@ -69,16 +69,16 @@
                             <div class="alert alert-warning" id="passwordnotmath">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                 รอการอนุมัติจากเจ้าหน้าที่
-                            </div>
+                            </div> 
                         <?php endif; ?>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($register) : ?>
                     <div class="alert alert-warning" id="passwordnotmath">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        สมัครสมาชิกเรียบร้อย <br/>ระบบได้ส่งวิธียืนยันตนให้ท่านที่อีเมลล์<br/> กรุณาตรวจสอบและทำตามขั้นตอน
+                        สมัครสมาชิกเรียบร้อย <br />ระบบได้ส่งวิธียืนยันตนให้ท่านที่อีเมลล์<br /> กรุณาตรวจสอบและทำตามขั้นตอน
                     </div>
-                <?php endif; ?> 
+                <?php endif; ?>
                 <h3 class="box-title m-b-0" style="font-weight: bold;">เข้าสู่ระบบจัดการร้าน</h3>
                 <form class="form-horizontal new-lg-form" id="loginform" action="" method="post" enctype="multipart/form-data">
                     <div class="form-group  m-t-20">

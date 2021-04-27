@@ -108,7 +108,9 @@ class Service extends CI_Controller
     function sendregisteremail($token, $firstname, $email)
     {
         $msg =  "สวัสดีคุณ $firstname คุณได้ทำการสมัครสมาชิก Pettogo.co เรียบร้อยแล้ว ขอบคุณค่ะ";
-        $this->Semail->sendinfo($msg, $email, 'ยืนยันการสมัครสมาชิก Pettogo.co');
+        if (!$this->isLocalhost()) {
+            $this->Semail->sendinfo($msg, $email, 'ยืนยันการสมัครสมาชิก Pettogo.co');
+        }
     }
 
     public function customerlogin()
@@ -325,25 +327,50 @@ class Service extends CI_Controller
     public function getsalehistory()
     {
         $post = json_decode(file_get_contents('php://input'), true);
-        $merchantid = $post['merchantid'];
-        $lineuid = $post['lineuid'];
+        // $merchantid = $post['merchantid'];
+
         $limit = $post['limit'];
         $offset = $post['offset'];
-        $result = $this->get->v_salehistory($lineuid, $merchantid, $offset, $limit)->result();
+        $searchtxt = $post['searchtxt'];
+        $merchantid = $post['merchantid'];
+        $cond = array('status !=' => 3);
+        if ($merchantid != 1) {
+            $cond = array('status !=' => 3, 'merchantid' => $merchantid);
+        }
+        $result = $this->get->v_order($cond, null, null, $limit, $offset, $searchtxt)->result();
 
         $html = "";
         foreach ($result as $key => $value) {
-            $list = $this->get_orderitemslist($value->orderitems);
+            $list = $this->get_orderdetailDisplay($value->id);
+            $merchant = $this->get->merchant(array("id" => $value->merchantid))->row();
+            $statuslabel = $this->getorderstatuslabel($value->status, $value->closestatus);
             $i = $key + 1 + $offset;
             $total = number_format($value->total);
             $html .= "<tr>";
             $html .= "<td>$i</td>";
-            $html .= "<td>$value->date</td>";
+            if ($merchantid == 1) {
+                $html .= "<td><a target=\"_blank\"  href=" . base_url("/account/$value->merchantid/itemmanage?shopid=$merchant->id") . " ><img src=\"$merchant->image\" style=\"width:30px;float:left;margin:1px\" /></a></td>";
+            } else {
+                $html .= "<td><img src=\"$merchant->image\" style=\"width:30px;float:left;margin:1px\" /></td>";
+            }
+            $html .= "<td><a target=\"_blank\" href=" . base_url("/orderdetail/$value->id") . " >$value->orderno</a></td>";
             $html .= "<td>$list</td>";
+            $html .= "<td>$statuslabel</td>";
             $html .= "<td>$total</td>";
+            $html .= "<td>$value->createdate</td>";
             $html .= "</tr>";
         }
         echo $html;
+    }
+
+    public function get_orderdetailDisplay($orderid)
+    {
+        $html = "";
+        $orderitems = $this->get->orderdetail(array("orderid" => $orderid))->result();
+        foreach ($orderitems as $item) {
+            $html .= "<img src=\"$item->image\" style=\"width:30px;float:left;margin:1px\" />";
+        }
+        return rtrim($html, ",");
     }
 
     public function get_orderitemslist($items)
@@ -730,7 +757,17 @@ class Service extends CI_Controller
 
         echo  $html;
     }
-
+    public function job_updateauctionovertime()
+    { 
+        $v_auctionend = $this->get->v_auctionend(array())->result();
+        foreach ($v_auctionend as $key => $value) {
+            $input = array(
+                'id' => $value->id,
+                'status' => 2,
+            );
+            $this->set->auctionlist($input);
+        }
+    }
     public function job_updatemerchantpackage()
     {
 
@@ -803,9 +840,9 @@ class Service extends CI_Controller
                     'createdate' => date('Y-m-d H:i:s'),
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
-                $this->put->orderdetail($input2); 
+                $this->put->orderdetail($input2);
 
-                
+
 
                 //email and line
                 $subject = "ผู้ชนะการประมูล";
@@ -826,8 +863,17 @@ class Service extends CI_Controller
     function msgnotifyCustomer($customer, $subject, $msg)
     {
         $this->sendtoLine($customer->lineid, $msg);
-        $this->Semail->sendinfo($msg, $customer->email, $subject);
+        if (!$this->isLocalhost()) {
+            $this->Semail->sendinfo($msg, $customer->email, $subject);
+        }
     }
+
+
+    function isLocalhost($whitelist = ['127.0.0.1', '::1'])
+    {
+        return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
+    }
+
     public function getauctionhistorybycustid()
     {
         $post = json_decode(file_get_contents('php://input'), true);
@@ -1087,12 +1133,12 @@ class Service extends CI_Controller
         $status = $post['status'];
         if ($status != "0") {
             if ($status == "4") {
-                $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "1"), null, null)->result();
+                $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "1"), null, null, 0, 0, "")->result();
             } else {
-                $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, array($status))->result();
+                $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, array($status),0,0,"")->result();
             }
         } else {
-            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, null)->result();
+            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, null,0,0,"")->result();
             // $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), array("0", "3"), null)->result();
         }
 
@@ -1105,6 +1151,9 @@ class Service extends CI_Controller
             $ischeckdisabled = $item->isconfirm == 1 ? "disabled" : "";
             $isdelivery_complete = $item->delivery_iscomplete == 1 ? "<div class=\"label label-table label-success\">ได้รับสินค้าแล้ว</div>" : "";
             $submitdate = date("d/M/Y H:i:s", strtotime($item->submitdate));
+            $list = $this->get_orderdetailDisplay($item->id);
+
+
             $html .= "<tr>";
             $html .= "<td>";
             $html .= "<div class=\"checkbox checkbox-success checkbox-order \">";
@@ -1114,6 +1163,7 @@ class Service extends CI_Controller
             $html .= "</td>";
             $html .= "<td><a class=\"badge badge-info \" target=\"_blank\" href=\"" . base_url("orderdetail/$item->id") . "\">$item->orderno</a></td>";
             $html .= "<td>$notideliver</td> ";
+            $html .= "<td>$list</td> ";
             $html .= "<td> $submitdate</td>";
             $html .= "<td>$item->paydatetime</td>";
             $html .= "<td>$item->fullname</td>";
@@ -1502,7 +1552,9 @@ class Service extends CI_Controller
             }
         }
 
-        $this->Semail->sendinfo('คุณได้รับออเดอร์ กรุณาตรวจสอบที่ https://seller.pettogo.co/', $merchant['email'], "Pettogo.co - ยินดีด้วยคุณได้รับออเดอร์ กรุณาตรวจสอบ");
+        if (!$this->isLocalhost()) {
+            $this->Semail->sendinfo('คุณได้รับออเดอร์ กรุณาตรวจสอบที่ https://seller.pettogo.co/', $merchant['email'], "Pettogo.co - ยินดีด้วยคุณได้รับออเดอร์ กรุณาตรวจสอบ");
+        }
         // foreach ($cartItems as $value) {
         //     $item = explode(",", $value);
         //     $input = array(

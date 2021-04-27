@@ -111,17 +111,19 @@ switch ($user['packageid']) {
                 <li class="devider"></li>
                 <li><a href="javascript:;"><i class="ti-target fa-fw"></i> <span class="hide-menu">การตลาด<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level">
-                        <li><a href="<?= base_url("account/$token/setting_ads_banner") ?>"><i class=" ti-layout-slider fa-fw"></i><span class="hide-menu">แบนเนอร์</span></a></li>
-                        <li><a href="<?= base_url("account/$token/shopslot") ?>"><i class="ti-eye fa-fw"></i><span class="hide-menu">Shop Slot</span></a></li>
+                        <li><a href="<?= base_url("account/$token/setting_ads_banner") ?>"><i class="ti-bolt fa-fw"></i><span class="hide-menu">โปรโมชั่น</span></a></li>
+                        <!-- <li><a href="<?= base_url("account/$token/shopslot") ?>"><i class="ti-eye fa-fw"></i><span class="hide-menu">Shop Slot</span></a></li> -->
+                        <li><a href="<?= base_url("account/$token/shopmanage") ?>"><i class="ti-flag  fa-fw"></i><span class="hide-menu">ร้านค้าแนะนำ</span></a></li>
+                        <li><a href="<?= base_url("account/$token/itemmanage") ?>"><i class="ti-pin-alt  fa-fw"></i><span class="hide-menu">สินค้าแนะนำ</span></a></li>
                         <!-- <li><a href="<?= base_url("account/$token/products") ?>"><i class="ti-ticket fa-fw"></i><span class="hide-menu">คูปอง</span></a></li> -->
                     </ul>
                 </li>
                 <li>
                     <a href="<?= base_url("account/$token/setting_post") ?>"><i class="fa   fa-pencil  fa-fw" data-icon="v"></i> โพส <span class="fa arrow"></span></a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="<?= base_url("account/$token/setting_gganalytic") ?>"><i class="fa   fa-google  fa-fw" data-icon="v"></i> Google Analytic <span class="fa arrow"></span></a>
-                </li>
+                </li> -->
                 <li>
                     <a href="<?= base_url("account/$token/setting_about") ?>"><i class="fa   fa-fw" data-icon="v"></i> เกี่ยวกับเรา <span class="fa arrow"></span></a>
                 </li>

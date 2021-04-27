@@ -124,7 +124,7 @@
                                             <th>หมายเหตุ</th>
                                             <!-- <th>ไฟล์แนบ</th> -->
                                             <th>สถานะ</th>
-                                            <th>ACTION</th>
+                                            <th>การยกเลิกการระงับบัญชี</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -137,7 +137,7 @@
                                                 <td style="vertical-align: middle;color:red"><?= $item->reason ?></td>
                                                 <!-- <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-danger' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">view</a></td> -->
                                                 <td style="vertical-align: middle;"><span class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-danger' ?> " href="#"><?= 'ถูกระงับบัญชี' ?></span> </td>
-                                                <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-danger' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">view</a></td>
+                                                <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-danger' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">คลิก</a></td>
                                             </tr>
                                         <?php endforeach; ?>
 

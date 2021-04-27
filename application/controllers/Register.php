@@ -12,7 +12,7 @@ class Register extends CI_Controller
         $this->load->model('Select_model', 'get');
         $this->load->model('Update_model', 'set');
         $this->load->model('User_model', 'user');
-        $this->load->model('Email','Semail');
+        $this->load->model('Email', 'Semail');
         $this->load->library('upload');
         $this->load->library('common');
         $this->load->library('lineapi');
@@ -53,7 +53,7 @@ class Register extends CI_Controller
                 );
                 $this->put->merchant($input);
 
-                $this->sendemail($token, $firstname,$email);
+                $this->sendemail($token, $firstname, $email);
 
                 $data["register"] = true;
                 redirect(base_url("login?register=success"));
@@ -68,15 +68,11 @@ class Register extends CI_Controller
         $this->load->view('register/index', $data);
     }
 
-    function sendemail($token, $firstname,$email)
+    function sendemail($token, $firstname, $email)
     {
         $msg =  "สวัสดีคุณ $firstname<br/>
-        คุณได้ทำการสมัครสมาชิก Pettogo.co เรียบร้อยแล้ว<br/>
-        โปรดทำตามขั้นตอนเพื่อยืนยันตนของท่านดังนี้<br/>
-        1.ทำการ Add Line : @232ruaun หรือ แสกน QR code<br/>
-        2.จากนั้น copy ข้อความ 'ลงทะเบียน $token' ในช่องแชท<br/>
-        3.เสร็จสิ้นขั้นตอนจะมีข้อความยืนยัน และรอระบบอนุมัติ<br/>
+        คุณได้ทำการสมัครสมาชิก Pettogo.co เรียบร้อยแล้ว กรุณาทำการเข้าสู่ระบบด้วยอีเมลล์ $email และ รหัสผ่านที่ท่านตั้งเอาไว้<br/> 
         ขอบคุณค่ะ";
-        $this->Semail->sendinfo($msg,$email,'ยืนยันการสมัครสมาชิก Pettogo.co'); 
+        $this->Semail->sendinfo($msg, $email, 'ยืนยันการสมัครสมาชิก Pettogo.co');
     }
 }

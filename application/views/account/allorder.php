@@ -118,6 +118,7 @@
                                             <tr>
                                                 <th colspan="2" style="min-width: 80px; text-align: center;">บิลสั่งซื้อ</th>
                                                 <th>#</th>
+                                                <th>สินค้า</th>
                                                 <th style="min-width:120px;">timestamp</th>
                                                 <th style="min-width:140px;">วันเวลาที่โอน</th>
                                                 <th style="min-width:150px;">ชื่อ</th>
@@ -130,27 +131,7 @@
                                             </tr>
                                         </thead>
                                         <tbody id="orderlist">
-                                            <!-- <?php foreach ($order as $index => $item) : ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="checkbox checkbox-success checkbox-order ">
-                                                            <input id="orderid<?= $item->id ?>" name="orderid" type="checkbox" value="<?= $item->id ?>">
-                                                            <label for="orderid<?= $item->id ?>"> </label>
-                                                        </div>
-                                                    </td>
-                                                    <td><a class="badge badge-info " target="_blank" href="<?= base_url($item->token) ?>"><?= $item->token ?></a></td>
-                                                    <td><?= date("d/M/Y H:i:s", strtotime($item->submitdate)) ?></td>
-                                                    <td><?= number_format($item->total) ?></td>
-                                                    <td><?= $item->paymentinfo ?></td>
-                                                    <td><?= $item->fullname ?></td>
-                                                    <td><?= $item->billingaddress ?></td>
-                                                    <td><?= $item->orderitems ?></td>
-                                                    <td><?= $item->sumamount ?></td>
-                                                    <td>
-                                                        <?= $obj->getorderstatus($item->status, $item->closestatus); ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?> -->
+                                            
                                         </tbody>
                                     </table>
                                 </div>

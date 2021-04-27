@@ -94,8 +94,14 @@ else {
     $route['account/(:any)'] = "account/index/$1";
     $route['account/(:any)/userlist'] = "account/userlist";
     $route['account/(:any)/banlist'] = "account/banlist";
+    $route['account/(:any)/shopmanage'] = "account/shopmanage";
+    $route['account/(:any)/itemmanage'] = "account/itemmanage";
+    
     $route['account/(:any)/package'] = "account/package/$1"; 
     $route['account/(:any)/changeuserstatus'] = "account/changeuserstatus/$1";
+    $route['account/(:any)/doapprove'] = "account/doapprove/$1";
+    $route['account/(:any)/changemerchantrecommend'] = "account/changemerchantrecommend/$1";
+    $route['account/(:any)/changeitemrecommend'] = "account/changeitemrecommend/$1";
     $route['account/(:any)/setting_lang'] = "account/setting_lang/$1"; 
     $route['account/(:any)/changeuserpackage'] = "account/changeuserpackage/$1";
     $route['account/(:any)/dashboard'] = "account/dashboard/$1";

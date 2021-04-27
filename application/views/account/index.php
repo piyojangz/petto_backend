@@ -44,34 +44,73 @@
                 <!-- Different data widgets -->
                 <!-- ============================================================== -->
                 <!-- .row -->
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="white-box">
-                            <h3 class="box-title m-b-0">Quick Start Guide</h3>
+                <?php if ($user['isadmin'] != 1) :  ?>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="white-box">
+                                <h3 class="box-title m-b-0">Quick Start Guide</h3>
 
-                            <div class="wizard-steps">
-                                <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/setting") ?>'">
-                                    <h4><span>1</span>ตั้งค่าร้านค้า</h4>
-                                </li>
-                                <!-- <li style="cursor: pointer;" onclick="addmerchant()">
+                                <div class="wizard-steps">
+                                    <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/setting") ?>'">
+                                        <h4><span>1</span>ตั้งค่าร้านค้า</h4>
+                                    </li>
+                                    <!-- <li style="cursor: pointer;" onclick="addmerchant()">
                                     <h4><span>2</span>เพิ่มรายชื่อผู้ใช้งาน</h4>
                                 </li>
                                 <li style="cursor: pointer;" onclick="genbill()">
                                     <h4><span>3</span>เพิ่มบิล</h4>
                                 </li> -->
-                                <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/paymentmethod") ?>'">
-                                    <h4><span>4</span>บัญชีธนาคาร</h4>
-                                </li>
-                                <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/shippingrate") ?>'">
-                                    <h4><span>5</span>ค่าจัดส่ง</h4>
-                                </li>
+                                    <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/paymentmethod") ?>'">
+                                        <h4><span>4</span>บัญชีธนาคาร</h4>
+                                    </li>
+                                    <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/shippingrate") ?>'">
+                                        <h4><span>5</span>ค่าจัดส่ง</h4>
+                                    </li>
+                                </div>
+
+
                             </div>
-
-
                         </div>
                     </div>
-                </div>
+                <?php endif ?>
 
+                <?php if ($user['isadmin'] == 1) :  ?>
+                    <div class="row">
+                        <div class="col-lg-3 col-sm-6 col-xs-12">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">ออเดอร์ทั้งหมด</h3>
+                                <ul class="list-inline">
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?= $dashboarddata->bills ?></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-xs-12">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">ออเดอร์เดือนนี้</h3>
+                                <ul class="list-inline">
+                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?= $dashboarddata->ordermonth ?></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-xs-12">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">ออเดอร์วันนี้</h3>
+                                <ul class="list-inline two-part">
+                                    <li class="text-right"><i class="ti-arrow-up text-danger"></i> <span class="counter text-danger"><?= $dashboarddata->ordertoday ?></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 col-xs-12">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">จำนวนผู้ใช้</h3>
+                                <ul class="list-inline">
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="text-success"></span><span class="counter text-success"><?= $dashboarddata->usercount ?></span>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                <?php endif ?>
                 <!-- <?php if ($user['isadmin'] == 1) :  ?>
                     <div class="col-md-12 col-sm-12">
                         <div class="white-box panel-wrapper collapse in  p-b-0">
@@ -126,47 +165,101 @@
                             </div>
                         </div>
                     </div> -->
-                <?php endif; ?>
-                <!-- /.row -->
-                <?php if ($user['isadmin'] == 0) :  ?>
-                    <!-- .row -->
-                    <div class="row">
-                        <div class="col-lg-3 col-sm-6 col-xs-12">
-                            <div class="white-box analytics-info">
-                                <h3 class="box-title">ออเดอร์ทั้งหมด</h3>
-                                <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?= $dashboarddata->bills ?></span></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-xs-12">
-                            <div class="white-box analytics-info">
-                                <h3 class="box-title">ชำระเงินแล้ว</h3>
-                                <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?= $dashboarddata->paid ?></span></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-xs-12">
-                            <div class="white-box analytics-info">
-                                <h3 class="box-title">ยังไม่ได้ชำระเงิน</h3>
-                                <ul class="list-inline two-part">
-                                    <li class="text-right"><i class="ti-arrow-up text-danger"></i> <span class="counter text-danger"><?= $dashboarddata->unpaid ?></span></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6 col-xs-12">
-                            <div class="white-box analytics-info">
-                                <h3 class="box-title">รายได้เดือนนี้</h3>
-                                <ul class="list-inline">
-                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="text-success">฿</span><span class="counter text-success"><?= number_format($dashboarddata->monthlytotal) ?></span>
-                                </ul>
-                            </div>
+            <?php endif; ?>
+            <!-- /.row -->
+            <?php if ($user['isadmin'] == 0) :  ?>
+                <!-- .row -->
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <div class="white-box analytics-info">
+                            <h3 class="box-title">ออเดอร์ทั้งหมด</h3>
+                            <ul class="list-inline">
+                                <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?= $dashboarddata->bills ?></span></li>
+                            </ul>
                         </div>
                     </div>
+                    <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <div class="white-box analytics-info">
+                            <h3 class="box-title">ชำระเงินแล้ว</h3>
+                            <ul class="list-inline">
+                                <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?= $dashboarddata->paid ?></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <div class="white-box analytics-info">
+                            <h3 class="box-title">ยังไม่ได้ชำระเงิน</h3>
+                            <ul class="list-inline two-part">
+                                <li class="text-right"><i class="ti-arrow-up text-danger"></i> <span class="counter text-danger"><?= $dashboarddata->unpaid ?></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-xs-12">
+                        <div class="white-box analytics-info">
+                            <h3 class="box-title">รายได้เดือนนี้</h3>
+                            <ul class="list-inline">
+                                <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="text-success">฿</span><span class="counter text-success"><?= number_format($dashboarddata->monthlytotal) ?></span>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-                     
-                <?php endif; ?>
+
+            <?php endif; ?>
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-info ">
+                        <div class="col-sm-12">
+                            <div class="panel-header">
+                                <h3>รายการขาย</h3>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="input-group m-t-10">
+                                    <input type="text" id="searchtxt" name="searchtxt" class="form-control" placeholder="Orderno"> <span class="input-group-btn">
+                                        <button type="submit" onclick="searchorder()" style="   margin-top: 0px;" class="btn waves-effect waves-light btn-info">ค้นหา</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <table class="table table-hover manage-u-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70px;" class="text-center">#</th>
+                                        <th>ร้านค้า</th>
+                                        <th>Orderno</th>
+                                        <th>สินค้า</th>
+                                        <th>สถานะสินค้า</th>
+                                        <th>ยอดขาย</th>
+                                        <th>วันที่</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsalehistory">
+
+                                </tbody>
+                                <tfoot id="tsalehistoryfoot">
+                                    <tr>
+                                        <td colspan="7">
+                                            <button type="button" onclick="loadmore()" class="btn btn-outline btn-default" style="width: 100%;">Loadmore
+                                            </button>
+
+                                            <input type="hidden" id="lineuid" />
+                                            <input type="hidden" id="offset" value="0" />
+                                            <input type="hidden" id="limit" value="10" />
+                                        </td>
+                                    </tr>
+
+                                </tfoot>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             </div>
 
             <form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft form-update-stock block1" id="form-update-stock">
@@ -230,51 +323,7 @@
     </div>
     </form>
 
-    <form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft   block1" id="form-sale-history">
-        <div class="panel panel-default">
-            <div class="panel-heading">รายการขายย้อนหลัง</div>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-info ">
-                        <div class="panel-body">
-                            <table class="table table-hover manage-u-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 70px;" class="text-center">#</th>
-                                        <th>วันที่</th>
-                                        <th>รายการขาย</th>
-                                        <th>ยอดขาย</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="itemsalehistory">
-
-                                </tbody>
-                                <tfoot id="tsalehistoryfoot">
-                                    <tr>
-                                        <td colspan="4">
-                                            <button type="button" onclick="loadmore()" class="btn btn-outline btn-default" style="width: 100%;">Loadmore
-                                            </button>
-
-                                            <input type="hidden" id="lineuid" />
-                                            <input type="hidden" id="offset" value="0" />
-                                            <input type="hidden" id="limit" value="30" />
-                                        </td>
-                                    </tr>
-
-                                </tfoot>
-                            </table>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-
-        </div>
-    </form>
     <form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" id="form-submit-billtoken">
         <div class="panel panel-default">
             <div class="panel-heading">เพิ่ม / แก้ไข</div>
@@ -729,9 +778,8 @@
 
         $(function() {
 
-            //        $("#tch3_22").TouchSpin({
-            //            initval: 0
-            //        });
+            opensalehistory();
+
 
             $("#checkAll").click(function() {
                 $('input:checkbox').not(this).prop('checked', this.checked);
@@ -1028,40 +1076,50 @@
 
 
         function loadmore() {
-            var lineuid = $("#lineuid").val();
             var offset = $("#offset").val();
-            var limit = $("#limit").val();
-            opensalehistory(lineuid, parseInt(offset) + 30, limit);
+            $("#offset").val(parseInt(offset) + 10);
+            opensalehistory();
         }
 
-        function opensalehistory(lineuid, offset, limit) {
-            $("#offset").val(offset);
-            $("#lineuid").val(lineuid);
-            $.magnificPopup.open({
-                items: {
-                    src: '#form-sale-history'
-                },
-                type: 'inline'
-            }, 0);
+        function searchorder() {
+            $("#offset").val(0);
+            if (searchtxt != "") {
+                $('#itemsalehistory').html("");
+            }
+            opensalehistory();
+        }
+
+
+        function opensalehistory() {
+
+            var searchtxt = $("#searchtxt").val();
+            var offset = $("#offset").val();
+            var limit = $("#limit").val();
+
             $.ajax({
                 type: "POST",
                 url: "<?php echo base_url('service/getsalehistory'); ?>",
-                data: {
-                    'lineuid': lineuid,
+                data: JSON.stringify({
                     'merchantid': <?= $merchant->id ?>,
+                    'searchtxt': searchtxt,
                     'offset': offset,
                     'limit': limit
-                },
+                }),
                 dataType: "html",
                 success: function(data) {
-                    $("#tsalehistoryfoot").show();
-                    if (data == '') {
+                    if (searchtxt != "") {
+                        $('#itemsalehistory').append(data);
                         $("#tsalehistoryfoot").hide();
+                    } else {
+                        $("#tsalehistoryfoot").show();
+                        if (data == '') {
+                            $("#tsalehistoryfoot").hide();
+                        }
+                        if (offset == 0) {
+                            $('#itemsalehistory').html('');
+                        }
+                        $('#itemsalehistory').append(data);
                     }
-                    if (offset == 0) {
-                        $('#itemsalehistory').html('');
-                    }
-                    $('#itemsalehistory').append(data);
                 },
                 error: function(XMLHttpRequest) {
                     $('div.block1').unblock();

@@ -194,8 +194,8 @@
                                                             <tr>
                                                                 <td class="text-center" style="vertical-align: middle;"><?= $index + 1 ?></td>
                                                                 <td style="vertical-align: middle;"><img src="<?= $item->image ?>" class="img img-rouned" style="height: 100px;" /></td>
-                                                                <td style="vertical-align: middle;"><?= $item->webname ?></td>
-                                                                <td style="vertical-align: middle;"><?=$PACKICON?></td>
+                                                                <td style="vertical-align: middle;"><?= $item->name != '' ? $item->name : $item->webname ?></td>
+                                                                <td style="vertical-align: middle;"><?= $PACKICON ?></td>
                                                                 </td>
                                                                 <td>
                                                                     <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5" onclick="addtem('<?= $item->id ?>');"><i class="ti-plus"></i></button>

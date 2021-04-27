@@ -93,7 +93,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function v_order($cond, $notin = null, $in = null)
+    function v_order($cond, $notin = null, $in = null, $limit = 0, $offset = 0, $searchtxt)
     {
         if ($notin != null) {
             $this->db->where_not_in('status', $notin);
@@ -101,11 +101,18 @@ class Select_model extends CI_Model
         if ($in != null) {
             $this->db->where_in('status', $in);
         }
+
         $this->db->select('*');
         $this->db->from('v_order');
         $this->db->where($cond);
+        if ($searchtxt != '') {
+            $this->db->like('orderno', $searchtxt);
+        }
         $this->db->order_by('id', 'desc');
         $this->db->group_by('id');
+        if ($limit != 0) {
+            $this->db->limit($limit, $offset);
+        }
         $query = $this->db->get();
         return $query;
     }
@@ -293,7 +300,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function v_product($cond, $limit = "", $pricelength = "", $pricesort = "")
+    function v_product($cond, $limit = "", $pricelength = "", $pricesort = "", $searchtxt = "")
     {
         $plength = '';
         switch ($pricelength) {
@@ -327,10 +334,17 @@ class Select_model extends CI_Model
         } else {
             $this->db->order_by('updatedate', 'desc');
         }
-
+        if ($searchtxt != "") {
+            $this->db->like('id', $searchtxt);
+            $this->db->or_like('name', $searchtxt);
+            $this->db->or_like('merchantname', $searchtxt);
+        }
 
         $this->db->select('*');
         $this->db->from('v_product');
+
+
+
         $this->db->where($cond);
         $query = $this->db->get();
         return $query;
@@ -396,13 +410,21 @@ class Select_model extends CI_Model
 
     function package_mapping_noneactive()
     {
-        $query = $this->db->query("SELECT  *   from package_mapping p  where p.duration - datediff(curdate(),updatedate) < 0 and duration > 0 and status = 1");  
+        $query = $this->db->query("SELECT  *   from package_mapping p  where p.duration - datediff(curdate(),updatedate) < 0 and duration > 0 and status = 1");
         return $query;
     }
 
+    
 
-  
-
+    function v_auctionend($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_auctionend');
+        $this->db->where($cond);
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
 
     function v_merchantwithpackage($cond)
     {
@@ -454,11 +476,15 @@ class Select_model extends CI_Model
         $query = $this->db->get();
         return $query;
     }
-    function v_merchantwithshopslot($cond)
+    function v_merchantwithshopslot($cond, $searchtxt = "")
     {
         $this->db->select('*');
         $this->db->from('v_merchantwithshopslot');
         $this->db->where($cond);
+        if ($searchtxt != "") {
+            $this->db->like('webname', $searchtxt);
+            $this->db->or_like('name', $searchtxt);
+        }
         $this->db->order_by('status , id', 'desc');
         $query = $this->db->get();
         return $query;
@@ -524,9 +550,12 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function v_salehistory($lineuid, $merchantid, $limit = 0, $offset = 10)
+    function v_salehistory($limit = 0, $offset = 10)
     {
-        $query = $this->db->query("select sum(`a`.`total`) AS `total`,cast(`a`.`submitdate` as date) AS `date`,`b`.`uid` AS `uid`,(select group_concat(concat(`a`.`id`) separator ', ')) AS `orderitems`,`b`.`merchantid` AS `merchantid` from (`order` `a` join `ordertoken` `b` on((`a`.`id` = `b`.`orderid`))) where ((`a`.`status` in (2,3)) and (`a`.`closestatus` = 0) and (b.uid = '$lineuid') and (`b`.`merchantid` = $merchantid)) group by cast(`a`.`submitdate` as date)  order by a.submitdate desc limit $limit , $offset");
+        $this->db->select('*');
+        $this->db->from('v_salehistory');
+        $this->db->limit(100);
+        $query = $this->db->get();
         return $query;
     }
 
@@ -736,7 +765,7 @@ sum(oo.amount) as sum
 from orderdetail  oo
 JOIN
 items ii
-on oo.itemsid = ii.id
+on oo.itemid = ii.id
 where orderid  in ($orderid)
  group by ii.id");
 
@@ -759,13 +788,28 @@ limit 0,30");
         return $query;
     }
 
+    function getdashboarddataforadmin()
+    {
+        $query = $this->db->query("SELECT
+    (select count(id)  from  `orders`  where status not in(3) ) as bills
+    ,(select count(id)  from  `orders` where  status not in(3) and  MONTH(createdate) = MONTH(CURRENT_DATE())) as ordermonth
+    ,(select count(id)  from  `orders` where  status not in(3) and DATE(createdate) = CURDATE()) as ordertoday 
+, (select count(id)  from  `orders` where status in(2)  and closestatus = 0) as paid
+, (select count(id)  from  `orders` where status in(1)   and closestatus = 0) as unpaid
+, (select count(id)  from  `customer`  ) as usercount
+, (select sum(total)  from  `orders` where status in(2) and MONTH(updatedate) = MONTH(CURRENT_DATE())  and closestatus = 0) as monthlytotal
+FROM dual");
+
+        return $query;
+    }
+
     function getdashboarddata($merchantid)
     {
         $query = $this->db->query("SELECT
-    (select count(id)  from  `orders` where merchantid = $merchantid and closestatus = 0) as bills
-, (select count(id)  from  `orders` where status in(2, 3) and merchantid = $merchantid and closestatus = 0) as paid
+    (select count(id)  from  `orders` where status not in(3) and merchantid = $merchantid and closestatus = 0) as bills
+, (select count(id)  from  `orders` where status in(2) and merchantid = $merchantid and closestatus = 0) as paid
 , (select count(id)  from  `orders` where status in(1) and merchantid = $merchantid and closestatus = 0) as unpaid
-, (select sum(total)  from  `orders` where status in(2, 3) and MONTH(updatedate) = MONTH(CURRENT_DATE()) and merchantid = $merchantid and closestatus = 0) as monthlytotal
+, (select sum(total)  from  `orders` where status in(2) and MONTH(updatedate) = MONTH(CURRENT_DATE()) and merchantid = $merchantid and closestatus = 0) as monthlytotal
 FROM dual");
 
         return $query;

@@ -35,7 +35,7 @@ class Login extends CI_Controller
                 $user = $this->user->get_account_cookie();
                 $token = $user['token'];
                 redirect(base_url("account/$token/dashboard"));
-            } else {
+            } else { 
                 $data["login"] = $result['data'];
             }
         } else {
