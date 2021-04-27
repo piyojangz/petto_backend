@@ -131,9 +131,9 @@ switch ($user['packageid']) {
                     <a href="<?= base_url("account/$token/setting_contact") ?>"><i class="fa    fa-fw" data-icon="v"></i> ติดต่อเรา <span class="fa arrow"></span></a>
                 </li>
 
-                <li>
+                <!-- <li>
                     <a href="<?= base_url("account/$token/setting_lang") ?>"><i class="fa fa-language    fa-fw" data-icon="v"></i> ภาษา <span class="fa arrow"></span></a>
-                </li>
+                </li> -->
             <?php endif; ?>
         </ul>
     </div>
