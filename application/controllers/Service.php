@@ -797,7 +797,7 @@ class Service extends CI_Controller
 
         foreach ($auctionlist as $key => $value) {
             // เพื่ม order + orderdetail 
-            $orderno = date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+            $orderno = date('Ymd') . substr(implode(array(), array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
 
             $gtotal = 0;
             $price =  $value->currentprice;
@@ -1497,7 +1497,7 @@ class Service extends CI_Controller
 
         foreach ($merchantlist as $merchant) {
 
-            $orderno = date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+            $orderno = date('Ymd') . substr(implode(array(), array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
 
             $unit = 0;
             $gtotal = 0;
@@ -1541,7 +1541,7 @@ class Service extends CI_Controller
                     $cond = array('orderid' => $input['orderid'], 'itemid' => $input['itemid']);
                     if ($this->get->orderdetail($cond)->num_rows() == 0) {
 
-                        $itemdetail = $this->get->items(array('id' => $item['id']))->row();
+                        $itemdetail = $this->get->items(array('id' => $item['id']),0,"")->row();
                         $inputstock = array(
                             'id' => $item['id'],
                             'stock' => intval($itemdetail->stock) - intval($item['qty']),

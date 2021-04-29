@@ -287,7 +287,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function items($cond, $pricelength, $pricesort)
+    function items($cond, $pricelength = 0, $pricesort = "")
     {
 
         $plength = '';
