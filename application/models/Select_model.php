@@ -267,6 +267,15 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function v_banner($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_banner');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function itemswithstock($cond, $billtokenid)
     {
         $this->db->select('a.*,sum(b.amount) as itemstock');
@@ -278,8 +287,39 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function items($cond)
+    function items($cond, $pricelength, $pricesort)
     {
+
+        $plength = '';
+        switch ($pricelength) {
+            case '0':
+                break;
+            case '1':
+                if ($plength != '') {
+                    $this->db->where('discount >=', 100);
+                    $this->db->where('discount <=', 0);
+                }
+                break;
+            case '2':
+                $this->db->where('discount >=', 1000);
+                $this->db->where('discount <=', 101);
+                break;
+            case '3':
+                $this->db->where('discount >=', 5000);
+                $this->db->where('discount <=', 1001);
+            case '4':
+                $this->db->where('discount >=', 10000);
+                $this->db->where('discount <=', 5001);
+            case '5':
+                $this->db->where('discount >=', 10000);
+                break;
+        }
+        if ($pricesort != "") {
+            $this->db->order_by('discount', $pricesort);
+        } else {
+            $this->db->order_by('updatedate', 'desc');
+        }
+
         $this->db->select('*');
         $this->db->from('items');
         $this->db->where($cond);
@@ -289,8 +329,38 @@ class Select_model extends CI_Model
 
 
 
-    function itemsbycateid($cond)
+    function itemsbycateid($cond, $pricelength, $pricesort)
     {
+        $plength = '';
+        switch ($pricelength) {
+            case '0':
+                break;
+            case '1':
+                if ($plength != '') {
+                    $this->db->where('discount >=', 100);
+                    $this->db->where('discount <=', 0);
+                }
+                break;
+            case '2':
+                $this->db->where('discount >=', 1000);
+                $this->db->where('discount <=', 101);
+                break;
+            case '3':
+                $this->db->where('discount >=', 5000);
+                $this->db->where('discount <=', 1001);
+            case '4':
+                $this->db->where('discount >=', 10000);
+                $this->db->where('discount <=', 5001);
+            case '5':
+                $this->db->where('discount >=', 10000);
+                break;
+        }
+        if ($pricesort != "") {
+            $this->db->order_by('discount', $pricesort);
+        } else {
+            $this->db->order_by('updatedate', 'desc');
+        }
+
         $this->db->select('*');
         $this->db->from('items');
         $this->db->where($cond);
@@ -414,7 +484,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    
+
 
     function v_auctionend($cond)
     {

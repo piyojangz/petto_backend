@@ -762,9 +762,9 @@ class Account extends CI_Controller
         if ($_POST) {
             $searchtxt = $this->input->post("searchtxt");
             $data["searchtxt"] = trim($searchtxt);
-            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9, 'isadmin' => false), $searchtxt)->result();
+            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9,"status = " => 1, 'isadmin' => false), $searchtxt)->result();
         } else {
-            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9, 'isadmin' => false))->result();
+            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9,"status = " => 1, 'isadmin' => false))->result();
         }
         // print_r($data["merchant"]);
         $this->load->view('account/shopmanage', $data);

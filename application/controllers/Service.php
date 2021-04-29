@@ -33,7 +33,7 @@ class Service extends CI_Controller
 
     public function getbanner()
     {
-        $data['result'] = $this->get->imagescover(array('status' => 1))->result();
+        $data['result'] = $this->get->v_banner(array('status' => 1))->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -758,7 +758,7 @@ class Service extends CI_Controller
         echo  $html;
     }
     public function job_updateauctionovertime()
-    { 
+    {
         $v_auctionend = $this->get->v_auctionend(array())->result();
         foreach ($v_auctionend as $key => $value) {
             $input = array(
@@ -981,8 +981,10 @@ class Service extends CI_Controller
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $limit = $post['limit'];
+        $pricelength = $post['pricelength'];
+        $pricesort = $post['pricesort'];
         $cond = array('status' => 1, 'isoffer' => 1);
-        $data['result'] = $this->get->v_product($cond, $limit)->result();
+        $data['result'] = $this->get->v_product($cond, $limit, $pricelength, $pricesort)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -991,12 +993,14 @@ class Service extends CI_Controller
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $id = $post['id'];
+        $pricelength = $post['pricelength'];
+        $pricesort = $post['pricesort'];
         if ($id == '0') {
             $cond = array('status' => 1);
-            $data['result'] = $this->get->items($cond)->result();
+            $data['result'] = $this->get->items($cond, $pricelength, $pricesort)->result();
         } else {
             $cond = array('status' => 1, 'cateid' => $id);
-            $data['result'] = $this->get->itemsbycateid($cond)->result();
+            $data['result'] = $this->get->itemsbycateid($cond, $pricelength, $pricesort)->result();
         }
 
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
@@ -1135,10 +1139,10 @@ class Service extends CI_Controller
             if ($status == "4") {
                 $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "1"), null, null, 0, 0, "")->result();
             } else {
-                $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, array($status),0,0,"")->result();
+                $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, array($status), 0, 0, "")->result();
             }
         } else {
-            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, null,0,0,"")->result();
+            $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), null, null, 0, 0, "")->result();
             // $data['result'] = $this->get->v_order(array("merchantid" => $merchantid, "closestatus" => "0"), array("0", "3"), null)->result();
         }
 
