@@ -53,8 +53,9 @@ class Register extends CI_Controller
                 );
                 $this->put->merchant($input);
 
-                $this->sendemail($token, $firstname, $email);
-
+                if ($this->isLocalhost()) {
+                    $this->sendemail($token, $firstname, $email);
+                } 
                 $data["register"] = true;
                 redirect(base_url("login?register=success"));
             }
@@ -74,5 +75,10 @@ class Register extends CI_Controller
         คุณได้ทำการสมัครสมาชิก Pettogo.co เรียบร้อยแล้ว กรุณาทำการเข้าสู่ระบบด้วยอีเมลล์ $email และ รหัสผ่านที่ท่านตั้งเอาไว้<br/> 
         ขอบคุณค่ะ";
         $this->Semail->sendinfo($msg, $email, 'ยืนยันการสมัครสมาชิก Pettogo.co');
+    }
+
+    function isLocalhost($whitelist = ['127.0.0.1', '::1'])
+    {
+        return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
     }
 }

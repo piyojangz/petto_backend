@@ -797,7 +797,7 @@ class Service extends CI_Controller
 
         foreach ($auctionlist as $key => $value) {
             // เพื่ม order + orderdetail 
-            $orderno = date('Ymd') . substr(implode(array(), array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+            $orderno = date('Ymd') . substr(implode(null, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
 
             $gtotal = 0;
             $price =  $value->currentprice;
@@ -1497,7 +1497,7 @@ class Service extends CI_Controller
 
         foreach ($merchantlist as $merchant) {
 
-            $orderno = date('Ymd') . substr(implode(array(), array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+            $orderno = date('Ymd') . substr(implode(null, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
 
             $unit = 0;
             $gtotal = 0;

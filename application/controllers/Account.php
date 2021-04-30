@@ -192,6 +192,9 @@ class Account extends CI_Controller
             $lineaddurl = $this->input->post("lineaddurl");
             $email = $this->input->post("hemail");
             $imageidcard = $this->input->post("imageidcard");
+
+            $password = $this->input->post("password");
+
             if (!empty($imageData)) {
                 $image = $this->base64_to_jpeg_acc($imageData, $data["user"]["token"]);
                 $image = base_url("public/upload/acc/$acctoken/") . $image["upload_data"]["file_name"];
@@ -213,6 +216,11 @@ class Account extends CI_Controller
                 'lineid' => $lineid,
                 'updatedate' => date('Y-m-d H:i:s'),
             );
+            if ($password != "") {
+                $input["password"] = md5($password);
+                $input["password_revoke"] = "";
+                $this->pushMsgNotifyMerchant($data["user"]["id"], "ท่านได้เปลี่ยนรหัสผ่านเรียบร้อยแล้ว");
+            }
             if ($imageidcard != "") {
                 $input["fileattached"] = $imageidcard;
                 $input["reason"] = "";
@@ -762,9 +770,9 @@ class Account extends CI_Controller
         if ($_POST) {
             $searchtxt = $this->input->post("searchtxt");
             $data["searchtxt"] = trim($searchtxt);
-            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9,"status = " => 1, 'isadmin' => false), $searchtxt)->result();
+            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9, "status = " => 1, 'isadmin' => false), $searchtxt)->result();
         } else {
-            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9,"status = " => 1, 'isadmin' => false))->result();
+            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9, "status = " => 1, 'isadmin' => false))->result();
         }
         // print_r($data["merchant"]);
         $this->load->view('account/shopmanage', $data);

@@ -57,6 +57,12 @@
         </div>
         <div class="new-login-box">
             <div class="white-box">
+                <?php if ($this->input->get('resetpassword') == true) : ?>
+                    <div class="alert alert-success" id="passwordnotmath">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        กรุณาตรวจสอบอีเมลล์ รหัสผ่านชั่วคราวได้ส่งไปที่อีเมลล์ที่ท่านระบุแล้ว
+                    </div>
+                <?php endif; ?>
                 <?php if ($login == null) : ?>
                     <div class="alert alert-success" id="passwordnotmath">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -69,7 +75,7 @@
                             <div class="alert alert-warning" id="passwordnotmath">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                 รอการอนุมัติจากเจ้าหน้าที่
-                            </div> 
+                            </div>
                         <?php endif; ?>
                     <?php endif; ?>
                 <?php endif; ?>
@@ -117,21 +123,21 @@
                         </div>
                     </div>
                 </form>
-                <form class="form-horizontal" id="recoverform" action="index.html">
+                <form class="form-horizontal" method="post" id="recoverform" action="<?= base_url('login/forgotpassword') ?>">
                     <div class="form-group ">
                         <div class="col-xs-12">
-                            <h3>Recover Password</h3>
-                            <p class="text-muted">Enter your Email and instructions will be sent to you! </p>
+                            <h3>ลืมรหัสผ่าน</h3>
+                            <p class="text-muted">กรุณาระบุอีเมลล์ที่ใช้ลงทะเบียน เราจะส่งรหัสผ่านใหม่ให้คุณ! </p>
                         </div>
                     </div>
                     <div class="form-group ">
                         <div class="col-xs-12">
-                            <input class="form-control" type="text" required="" placeholder="Email">
+                            <input class="form-control" name="email" type="email" required placeholder="Email">
                         </div>
                     </div>
                     <div class="form-group text-center m-t-20">
                         <div class="col-xs-12">
-                            <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset
+                            <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">ยืนยัน
                             </button>
                         </div>
                     </div>

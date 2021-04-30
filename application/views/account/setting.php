@@ -146,7 +146,13 @@
                                             <label class="col-md-12">อีเมลล์</label>
                                             <div class="col-md-12">
                                                 <input disabled type="text" name="email" class="form-control form-control-line" value="<?= $merchant->email ?>">
-                                                <input   type="hidden" name="hemail" class="form-control form-control-line" value="<?= $merchant->email ?>">
+                                                <input type="hidden" name="hemail" class="form-control form-control-line" value="<?= $merchant->email ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-12">เปลี่ยนพาสเวิร์ด</label>
+                                            <div class="col-md-12">
+                                                <input type="password" name="password" id="password" class="form-control form-control-line">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -160,7 +166,7 @@
                                             <img id="img" src="<?= $merchant->fileattached ?>" style="width: 200px;margin-bottom:20px;" />
                                             <div class="col-md-12">
                                                 <input id="inp" type='file' accept=".jpg,.png">
-                                                <input type="hidden" id="b64" name="imageidcard" /> 
+                                                <input type="hidden" id="b64" name="imageidcard" />
                                             </div>
                                         </div>
 
@@ -252,6 +258,8 @@
 
 
     $(document).ready(function() {
+
+
         $('.select-image-btn').click(function() {
             $('.cropit-image-input').click();
         });
@@ -271,7 +279,15 @@
         $('.rotate-ccw').click(function() {
             $('.image-editor').cropit('rotateCCW');
         });
-        $('#form-submit').submit(function() {
+        $('#form-submit').submit(function() { 
+            if ($("#password").val() != "") {
+                if (confirm("ยืนยันการเปลี่ยนพาสเวิร์ด?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             var imageData = $('.image-editor').cropit('export');
 
             if (imageData != null) {

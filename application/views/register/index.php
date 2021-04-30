@@ -223,11 +223,13 @@
             init();
             $("#formsubmit").submit(function() {
                 if ($("#password").val() != $("#confirmpassword").val()) {
-                    $("#passwordnotmath").show();
+                    // $("#passwordnotmath").show();
+                    alert('กรุณาระบุพาสเวิร์ดให้ตรงกัน')
                     return false;
                 }
                 if (!checkPassword($("#password").val())) {
-                    $("#passwordincorrectformat").show();
+                    //$("#passwordincorrectformat").show();
+                    alert('พาสเวิร์ดต้องมีมากกว่า 8 ตัวอักษร\nและต้องมีอย่างน้อย 1 ตัวเลข, ตัวอักษรภาษาอังกฤษพิมพ์เล็กหรือพิมพ์ใหญ่')
                     return false;
                 }
                 // if (!$("#checkbox-signup").is(':checked')) {

@@ -134,6 +134,17 @@ class Update_model extends CI_Model
     }
 
 
+    public function merchantbyemail($input)
+    {
+        $this->db->where('email', $input['email']);
+        if ($this->db->update('merchant', $input)) :
+            return true;
+        else :
+            return false;
+        endif;
+    }
+
+
     public function language($input)
     {
         $this->db->where('id', $input['id']);
@@ -179,7 +190,7 @@ class Update_model extends CI_Model
             return false;
         endif;
     }
-    
+
 
     function customer($input)
     {
@@ -252,9 +263,9 @@ class Update_model extends CI_Model
             return false;
         endif;
     }
-    
 
-    
+
+
     function auctionlist($input)
     {
         $this->db->where('id', $input['id']);
