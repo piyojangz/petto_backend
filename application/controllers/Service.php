@@ -746,7 +746,13 @@ class Service extends CI_Controller
         $merchantid = $merchant->id;
         $package_mapping = $this->get->package_mapping(array("packageid" => $packageid, 'merchantid' =>   $merchantid, 'status' => 1))->row();
 
-        $totaldays = $package_mapping->duration  - $package_mapping->diffday;
+        if(isset($package_mapping)){
+            $totaldays = $package_mapping->duration  - $package_mapping->diffday;
+        }
+        else{
+            $totaldays = 0;
+        }
+        
 
 
         if ($packageid == 1) {

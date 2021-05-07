@@ -152,7 +152,7 @@
                                         <div class="form-group">
                                             <label class="col-md-12">เปลี่ยนพาสเวิร์ด</label>
                                             <div class="col-md-12">
-                                                <input type="password" name="password" id="password" class="form-control form-control-line">
+                                                <input type="password" name="password" id="password" class="form-control form-control-line" autocomplete="new-password"  value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
