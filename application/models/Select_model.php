@@ -13,6 +13,19 @@ class Select_model extends CI_Model
     }
 
 
+
+    function customerlogin($email, $password)
+    {
+        $this->db->select('*');
+        $this->db->from('customer');
+        $this->db->where('email', $email);
+        $this->db->where('password', $password);
+        $this->db->or_where('password_revoke', $password);
+        $query = $this->db->get();
+        return $query;
+    }
+
+
     function billnotificationusers($cond)
     {
         $this->db->select('*');

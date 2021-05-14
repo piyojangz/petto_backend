@@ -70,7 +70,7 @@ class Service extends CI_Controller
             $data['result'] = false;
         } else {
             $data['result'] = $this->put->customer($input);
-            $this->sendtoLine($userLineID, "ยินดีตอนรับสู่ Pettogo.co ท่านสามารถเข้าใช้งานระบบได้เลยที่ https://cd259cde582f.ngrok.io/");
+            $this->sendtoLine($userLineID, "ยินดีตอนรับสู่ Pettogo.co ท่านสามารถเข้าใช้งานระบบได้เลยที่ https://pettogo.co/");
             $whitelist = array(
                 '127.0.0.1',
                 '::1'
@@ -80,6 +80,47 @@ class Service extends CI_Controller
             }
         }
 
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data['result']);
+    }
+
+    function randomPassword()
+    {
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $pass = array(); //remember to declare $pass as an array
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < 6; $i++) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
+        return implode($pass); //turn the array into a string
+    }
+
+    public function customerresetpassword()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $email = $post['email'];
+        $customer = $this->get->customer(array('email' => $email))->row();
+        $data['result'] = null;
+        if (isset($customer)) {
+            $temppassword  = $this->randomPassword();
+            $input = array(
+                'password_revoke' => md5($temppassword),
+                'email' => $email,
+                'updatedate' => date('Y-m-d H:i:s')
+            );
+
+            $this->set->customerbyemail($input);
+
+            //email and line
+            $subject = "Pettogo.co รหัสผ่านชั่วคราว";
+            $msg = "รหัสผ่านชั่วคราวของคุณคือ   $temppassword  เมื่อทำการเข้าสู่ระบบแล้ว อย่าลืมไปเปลี่ยนรหัสผ่านด้วยนะคะ";
+            $this->msgnotifyCustomer($customer, $subject, $msg);
+
+            $data['result'] = true;
+        } else {
+            $data['result'] = null;
+        }
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data['result']);
     }
@@ -118,8 +159,18 @@ class Service extends CI_Controller
         $post = json_decode(file_get_contents('php://input'), true);
         $email = $post['email'];
         $password = $post['password'];
-        $cond = array('email' => trim($email), 'password' => trim($password));
-        $data['result'] = $this->get->customerdetail($cond)->row();
+        $data['result'] = $this->get->customerlogin(trim($email), trim($password))->row();
+
+        if (isset($data['result'])) {
+            $input = array(
+                'password' => $password,
+                'password_revoke' => "",
+                'email' => $email,
+                'updatedate' => date('Y-m-d H:i:s')
+            );
+            $this->set->customerbyemail($input);
+        }
+
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -335,7 +386,8 @@ class Service extends CI_Controller
         $merchantid = $post['merchantid'];
         $cond = array('status !=' => 3);
         if ($merchantid != 1) {
-            $cond = array('status !=' => 3, 'merchantid' => $merchantid);
+            // $cond = array('status !=' => 3, 'merchantid' => $merchantid);
+            $cond = array('merchantid' => $merchantid);
         }
         $result = $this->get->v_order($cond, null, null, $limit, $offset, $searchtxt)->result();
 
@@ -746,13 +798,12 @@ class Service extends CI_Controller
         $merchantid = $merchant->id;
         $package_mapping = $this->get->package_mapping(array("packageid" => $packageid, 'merchantid' =>   $merchantid, 'status' => 1))->row();
 
-        if(isset($package_mapping)){
+        if (isset($package_mapping)) {
             $totaldays = $package_mapping->duration  - $package_mapping->diffday;
-        }
-        else{
+        } else {
             $totaldays = 0;
         }
-        
+
 
 
         if ($packageid == 1) {
@@ -1241,7 +1292,7 @@ class Service extends CI_Controller
 
     public function getshoprecommend()
     {
-        $cond = array('status' => 1, 'isrecommend' => 1);
+        $cond = array('status' => 1, 'isrecommend' => 1, 'isadmin' => false);
         $data['result'] = $this->get->v_merchantwithpackage($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -1547,7 +1598,7 @@ class Service extends CI_Controller
                     $cond = array('orderid' => $input['orderid'], 'itemid' => $input['itemid']);
                     if ($this->get->orderdetail($cond)->num_rows() == 0) {
 
-                        $itemdetail = $this->get->items(array('id' => $item['id']),0,"")->row();
+                        $itemdetail = $this->get->items(array('id' => $item['id']), 0, "")->row();
                         $inputstock = array(
                             'id' => $item['id'],
                             'stock' => intval($itemdetail->stock) - intval($item['qty']),
@@ -1635,6 +1686,32 @@ class Service extends CI_Controller
             echo json_encode($data);
         }
     }
+
+
+    public function savenewpassword()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $password = $post['password'];
+        $custid = $post['custid'];
+        $customer = $this->get->customer(array('id' => $custid))->row();
+        $input = array(
+            'id' => $custid,
+            'password' => $password,
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+        $data['result'] = false;
+        if ($this->set->customer($input)) {
+            $data['result'] = true;
+
+            //email and line
+            $subject = "Pettogo.co เปลี่ยนรหัสผ่าน";
+            $msg = "คุณได้ทำการเปลี่ยนรหัสผ่านสำเร็จ";
+            $this->msgnotifyCustomer($customer, $subject, $msg);
+        }
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
 
 
     public function setcustomeraddress()

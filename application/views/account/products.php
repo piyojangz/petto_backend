@@ -199,19 +199,19 @@
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ราคา</label>
                                                     <div class="col-md-9">
-                                                        <input type="number" name="price" id="price" required class="form-control">
+                                                        <input type="number" name="price" id="price" required class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" >
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ราคาลด</label>
                                                     <div class="col-md-9">
-                                                        <input type="number" name="discount" id="discount" required class="form-control">
+                                                        <input type="number" name="discount" id="discount" required class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">คลัง</label>
                                                     <div class="col-md-9">
-                                                        <input type="number" name="stock" id="stock" required class="form-control">
+                                                        <input type="number" name="stock" id="stock" required class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

@@ -183,9 +183,9 @@
                                                     </div>
                                                 </div> -->
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-3">ราคา bid ขั้นต่ำ <code>เช่น 50 , 100 , 150 , n</code></label>
+                                                    <label class="control-label col-md-3">ราคา bid ขั้นต่ำ</label>
                                                     <div class="col-md-9">
-                                                        <input type="number" name="minimumbidamount" id="minimumbidamount" required class="form-control">
+                                                        <input type="number" name="minimumbidamount" id="minimumbidamount" required class="form-control" placeholder="เช่น 50 , 100 , 150 , n">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">

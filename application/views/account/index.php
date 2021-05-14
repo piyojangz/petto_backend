@@ -61,10 +61,10 @@
                                     <h4><span>3</span>เพิ่มบิล</h4>
                                 </li> -->
                                     <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/paymentmethod") ?>'">
-                                        <h4><span>4</span>บัญชีธนาคาร</h4>
+                                        <h4><span>2</span>บัญชีธนาคาร</h4>
                                     </li>
                                     <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/shippingrate") ?>'">
-                                        <h4><span>5</span>ค่าจัดส่ง</h4>
+                                        <h4><span>3</span>ค่าจัดส่ง</h4>
                                     </li>
                                 </div>
 
@@ -225,36 +225,39 @@
                                     </span>
                                 </div>
                             </div>
-                            <table class="table table-hover manage-u-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 70px;" class="text-center">#</th>
-                                        <th>ร้านค้า</th>
-                                        <th>Orderno</th>
-                                        <th>สินค้า</th>
-                                        <th>สถานะสินค้า</th>
-                                        <th>ยอดขาย</th>
-                                        <th>วันที่</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="itemsalehistory">
+                            <div style="    overflow-x: scroll;
+    display: block;
+    min-width: 100%;">
+                                <table class="table table-hover manage-u-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 70px;" class="text-center">#</th>
+                                            <th>ร้านค้า</th>
+                                            <th>Orderno</th>
+                                            <th>สินค้า</th>
+                                            <th>สถานะสินค้า</th>
+                                            <th>ยอดขาย</th>
+                                            <th>วันที่</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="itemsalehistory">
 
-                                </tbody>
-                                <tfoot id="tsalehistoryfoot">
-                                    <tr>
-                                        <td colspan="7">
-                                            <button type="button" onclick="loadmore()" class="btn btn-outline btn-default" style="width: 100%;">Loadmore
-                                            </button>
+                                    </tbody>
+                                    <tfoot id="tsalehistoryfoot">
+                                        <tr>
+                                            <td colspan="7">
+                                                <button type="button" onclick="loadmore()" class="btn btn-outline btn-default" style="width: 100%;">Loadmore
+                                                </button>
 
-                                            <input type="hidden" id="lineuid" />
-                                            <input type="hidden" id="offset" value="0" />
-                                            <input type="hidden" id="limit" value="10" />
-                                        </td>
-                                    </tr>
+                                                <input type="hidden" id="lineuid" />
+                                                <input type="hidden" id="offset" value="0" />
+                                                <input type="hidden" id="limit" value="10" />
+                                            </td>
+                                        </tr>
 
-                                </tfoot>
-                            </table>
-
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
 
                     </div>

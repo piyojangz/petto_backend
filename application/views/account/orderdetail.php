@@ -54,6 +54,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="pull-left">
+                                        <user>
+                                            <h3> &nbsp;<b class="text-danger">ชื่อผู้สั่ง</b></h3>
+                                            <p class="text-muted m-l-5"><?= $custdetail->firstname ?> <?= $custdetail->lastname ?></p>
+                                        </user>
                                         <address>
                                             <h3> &nbsp;<b class="text-danger">ที่อยู่สำหรับจัดส่ง</b></h3>
                                             <p class="text-muted m-l-5"><?= $order->shippingaddress ?></p>

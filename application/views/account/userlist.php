@@ -161,12 +161,13 @@
                                                 <!-- <td style="vertical-align: middle;"><?= $item->islineverify == 0 ? '<span class="badge" style="background:#cccccc">Unverify</span>' : '<span class="badge" style="background:#1aef6f">Verified</span>' ?></td> -->
                                                 <td style="vertical-align: middle;"><a onclick="openpack('<?= $item->id ?>','<?= $item->packageid ?>')" href="javascript:;"><?= $PACKICON ?></a></td>
                                                 <td style="vertical-align: middle;"><?= $item->token ?></td>
-                                                <?php if ($item->islineverify == 1) : ?>
+                                                <!-- <?php if ($item->islineverify == 1) : ?>
                                                     <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-success' : 'badge-success' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">คลิก</a></td>
-
                                                 <?php else : ?>
                                                     <td style="vertical-align: middle;"></td>
-                                                <?php endif; ?>
+                                                <?php endif; ?> -->
+
+                                                <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-success' : 'badge-success' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">คลิก</a></td>
 
                                             </tr>
                                         <?php endforeach; ?>

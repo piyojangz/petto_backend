@@ -202,6 +202,16 @@ class Update_model extends CI_Model
         endif;
     }
 
+    function customerbyemail($input)
+    {
+        $this->db->where('email', $input['email']);
+        if ($this->db->update('customer', $input)) :
+            return true;
+        else :
+            return false;
+        endif;
+    }
+
     function paymentmethod($input)
     {
         $this->db->where('id', $input['id']);

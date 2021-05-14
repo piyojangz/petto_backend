@@ -230,8 +230,8 @@ class Account extends CI_Controller
             if ($image != "") {
                 $input["image"] = $image;
             }
-            if ($this->set->merchant($input)) {
-                redirect(base_url("account/$acctoken/setting"));
+            if ($this->set->merchant($input)) { 
+                redirect(base_url("account/$acctoken/setting?update=success"));
             }
         }
     }
@@ -770,9 +770,9 @@ class Account extends CI_Controller
         if ($_POST) {
             $searchtxt = $this->input->post("searchtxt");
             $data["searchtxt"] = trim($searchtxt);
-            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9, "status = " => 1, 'isadmin' => false), $searchtxt)->result();
+            $data["merchant"] = $this->get->v_merchantwithpackage(array("status != " => 9, "status = " => 1, 'isadmin' => false), $searchtxt)->result();
         } else {
-            $data["merchant"] = $this->get->v_merchantwithshopslot(array("status != " => 9, "status = " => 1, 'isadmin' => false))->result();
+            $data["merchant"] = $this->get->v_merchantwithpackage(array("status != " => 9, "status = " => 1, 'isadmin' => false))->result();
         }
         // print_r($data["merchant"]);
         $this->load->view('account/shopmanage', $data);
@@ -1014,7 +1014,7 @@ class Account extends CI_Controller
 
             redirect("account/$acctoken/setting_lang");
         }
-
+        
         $this->load->view('account/settinglang', $data);
     }
 

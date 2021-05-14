@@ -97,7 +97,12 @@
                         <?php endif; ?>
                     <?php endif; ?>
                 <?php endif; ?>
-
+                <?php if ($this->input->get('update') == 'success') : ?>
+                    <div class="alert alert-success" id="passwordnotmath">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        อัพเดทข้อมูลเรียบร้อย
+                    </div>
+                <?php endif; ?>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="white-box p-l-20 p-r-20">
@@ -133,13 +138,13 @@
                                         <div class="form-group">
                                             <label class="col-md-12">Title</label>
                                             <div class="col-md-12">
-                                                <input type="text" name="title" id="title" class="form-control form-control-line" value="<?= $merchant->title ?>">
+                                                <input required type="text" name="title" id="title" class="form-control form-control-line" value="<?= $merchant->title ?>">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-12">รายละเอียด (Meta description)</label>
                                             <div class="col-md-12">
-                                                <textarea rows="4" name="detail" class="form-control form-control-line"><?= $merchant->description ?></textarea>
+                                                <textarea required rows="4" name="detail" class="form-control form-control-line"><?= $merchant->description ?></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -152,13 +157,13 @@
                                         <div class="form-group">
                                             <label class="col-md-12">เปลี่ยนพาสเวิร์ด</label>
                                             <div class="col-md-12">
-                                                <input type="password" name="password" id="password" class="form-control form-control-line" autocomplete="new-password"  value="">
+                                                <input type="password" name="password" id="password" class="form-control form-control-line" autocomplete="new-password" value="">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-12">เบอร์โทรศัพท์</label>
                                             <div class="col-md-12">
-                                                <input type="text" name="tel" class="form-control form-control-line" value="<?= $merchant->tel ?>">
+                                                <input required type="text" name="tel" class="form-control form-control-line" value="<?= $merchant->tel ?>">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -279,7 +284,7 @@
         $('.rotate-ccw').click(function() {
             $('.image-editor').cropit('rotateCCW');
         });
-        $('#form-submit').submit(function() { 
+        $('#form-submit').submit(function() {
             if ($("#password").val() != "") {
                 if (confirm("ยืนยันการเปลี่ยนพาสเวิร์ด?")) {
                     return true;
