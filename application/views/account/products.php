@@ -115,105 +115,114 @@
                 <!-- Different data widgets -->
                 <!-- ============================================================== -->
 
-                <div class="row el-element-overlay m-b-40 block1">
+                <?php if ($needpayment == true) :  ?>
                     <div class="col-md-12">
-                        <?php if ($disabledadditem == 'false') : ?>
-                            <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
-                        <?php else : ?>
-                            <p style="color: #f55252;
+                        <div class="alert alert-warning" id="passwordnotmath">
+                            <h4>กรุณาแนบบเพิ่มบัญชีรับเงิน</h4> <a href="<?= base_url("account/$token/paymentmethod") ?>" class=" btn   btn-primary waves-effect waves-light">ไปที่หน้า เพิ่มบัญชี</a>
+                        </div>
+                    <?php else :  ?>
+                     
+                    <div class="row el-element-overlay m-b-40 block1">
+                        <div class="col-md-12">
+                            <?php if ($disabledadditem == 'false') : ?>
+                                <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
+                            <?php else : ?>
+                                <p style="color: #f55252;
     font-size: 16px;">ไม่สามารถเพิ่มสินค้าได้เนื่องจากเกินกำหนดตามแพคเก็จ (จำนวนที่ขายได้ตามแพคเก็จ = <?= $package->saleslot ?>)</p>
-                        <?php endif; ?>
-                        <hr>
-                    </div>
-                    <div class="col-md-12 text-right">
-                        <a href="?display=row"><i style="font-size: 20px;" class="ti-layout-list-thumb"></i></a> / <a href="?display=column"><i style="font-size: 20px;" class="ti-layout-grid3"></i></a>
-                    </div>
+                            <?php endif; ?>
+                            <hr>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <a href="?display=row"><i style="font-size: 20px;" class="ti-layout-list-thumb"></i></a> / <a href="?display=column"><i style="font-size: 20px;" class="ti-layout-grid3"></i></a>
+                        </div>
 
-                    <?php if ($display == 'column') : ?>
-                        <?php foreach ($items as $item) : ?>
+                        <?php if ($display == 'column') : ?>
+                            <?php foreach ($items as $item) : ?>
 
-                            <!-- /.usercard -->
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                <div class="white-box" style="height:450px;max-height: 450px;
+                                <!-- /.usercard -->
+                                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                                    <div class="white-box" style="height:450px;max-height: 450px;
     overflow-y: scroll;">
-                                    <div class="el-card-item">
-                                        <?php if ($item->status == 2) : ?>
+                                        <div class="el-card-item">
+                                            <?php if ($item->status == 2) : ?>
 
-                                            <form action="<?= base_url("account/$token/unlockproduct") ?>" method="post">
-                                                <div class="overlay-box">
-                                                    <div style="width: 100%;align-items: center; text-align: center;">
-                                                        <h3>สินค้าปิดใช้งาน</h3>
-                                                        <?php if ($disabledunlock == 'false') : ?>
-                                                            <button class="btn">ปลดล๊อครายการนี้</button>
-                                                        <?php endif; ?>
-                                                        <input type="hidden" name="productid" id="productid" value="<?= $item->id ?>">
+                                                <form action="<?= base_url("account/$token/unlockproduct") ?>" method="post">
+                                                    <div class="overlay-box">
+                                                        <div style="width: 100%;align-items: center; text-align: center;">
+                                                            <h3>สินค้าปิดใช้งาน</h3>
+                                                            <?php if ($disabledunlock == 'false') : ?>
+                                                                <button class="btn">ปลดล๊อครายการนี้</button>
+                                                            <?php endif; ?>
+                                                            <input type="hidden" name="productid" id="productid" value="<?= $item->id ?>">
+                                                        </div>
                                                     </div>
+                                                </form>
+                                            <?php endif; ?>
+                                            <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;min-height:100px"><img src="<?= $item->image ?>" />
+                                                <div class="el-overlay">
+                                                    <ul class="el-info">
+                                                        <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
+                                                        <li><a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a></li>
+                                                    </ul>
                                                 </div>
-                                            </form>
-                                        <?php endif; ?>
-                                        <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;min-height:100px"><img src="<?= $item->image ?>" />
-                                            <div class="el-overlay">
-                                                <ul class="el-info">
-                                                    <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
-                                                    <li><a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a></li>
-                                                </ul>
                                             </div>
-                                        </div>
-                                        <div class="el-card-content">
-                                            <h4 class="box-title text-info"><?= $item->name ?></h4>
-                                            <small>฿<?= number_format($item->price) ?></small>
-                                            <br>
-                                            <code>คลัง <?= $item->stock ?></code>
-                                            <br>
-                                        </div>
+                                            <div class="el-card-content">
+                                                <h4 class="box-title text-info"><?= $item->name ?></h4>
+                                                <small>฿<?= number_format($item->price) ?></small>
+                                                <br>
+                                                <code>คลัง <?= $item->stock ?></code>
+                                                <br>
+                                            </div>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- /.usercard-->
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
-                <?php if ($display != 'column') : ?>
-                    <div class="white-box">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th colspan="1" style="width: 250px; text-align: left;">ชื่อสินค้า</th>
-                                        <th style="min-width:120px;">คลัง</th>
-                                        <th style="min-width:140px;">ราคา</th>
-                                        <th style="min-width:150px;">วันที่สร้าง</th>
-                                        <th>#</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="items">
-                                    <?php foreach ($items as $item) : ?>
-                                        <tr>
-                                            <td>
-                                                <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;max-height:50px"><img style="width: 50px;" src="<?= $item->image ?>" />
-                                            </td>
-                                            <td colspan="1" style="min-width: 80px; text-align: left;">
-                                                <h4 class="box-title "><?= $item->name ?></h4>
-                                            </td>
-                                            <td><?= $item->stock ?></td>
-                                            <td style="min-width:120px;">฿<?= number_format($item->price) ?></td>
-                                            <td style="min-width:140px;"><?= $item->updatedate ?></td>
-                                            <td>
-                                                <a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a>
-                                                <a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a>
-
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                <!-- /.usercard-->
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
-                <?php endif; ?>
+                    <?php if ($display != 'column') : ?>
+                        <div class="white-box">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th colspan="1" style="width: 250px; text-align: left;">ชื่อสินค้า</th>
+                                            <th style="min-width:120px;">คลัง</th>
+                                            <th style="min-width:140px;">ราคา</th>
+                                            <th style="min-width:150px;">วันที่สร้าง</th>
+                                            <th>#</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="items">
+                                        <?php foreach ($items as $item) : ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;max-height:50px"><img style="width: 50px;" src="<?= $item->image ?>" />
+                                                </td>
+                                                <td colspan="1" style="min-width: 80px; text-align: left;">
+                                                    <h4 class="box-title "><?= $item->name ?></h4>
+                                                </td>
+                                                <td><?= $item->stock ?></td>
+                                                <td style="min-width:120px;">฿<?= number_format($item->price) ?></td>
+                                                <td style="min-width:140px;"><?= $item->updatedate ?></td>
+                                                <td>
+                                                    <a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a>
+                                                    <a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a>
+
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                <?php endif;  ?>
             </div>
-            <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit"  enctype="multipart/form-data">
+            <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit" enctype="multipart/form-data">
                 <div class="panel panel-default">
                     <div class="panel-heading">เพิ่ม / แก้ไข</div>
                     <div class="panel-wrapper collapse in">
@@ -302,7 +311,7 @@
                                                             <source id="vdosrc2" type="video/ogg">
                                                             Your browser does not support the video tag.
                                                         </video>
-                                                        <input type="file" name="uploadan" id="uploadan"  onchange="return validateSize(this)" accept="video/mp4,video/x-m4v,video/*">
+                                                        <input type="file" name="uploadan" id="uploadan" onchange="return validateSize(this)" accept="video/mp4,video/x-m4v,video/*">
                                                     </div>
                                                 </div>
 

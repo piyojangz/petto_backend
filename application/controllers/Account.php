@@ -729,9 +729,20 @@ class Account extends CI_Controller
         $data['disabledadditem'] = 'false';
         $data['disabledunlock'] = 'false';
         $data['display'] = $this->input->get("display");
+        $data['needpayment'] = false;
         if (!$this->user->is_login()) {
             redirect('/');
         }
+
+
+        $bankacc = $this->get->paymentmethod(array("merchantid" => $data["merchant"]->id))->result();
+        //print_r($bankacc);
+        if (count($bankacc) == 0) {
+            $data['needpayment'] = true;
+            //redirect('account/' . $data["token"] . '/paymentmethod?needpayment=true');
+        }
+
+
         $package = $this->get->package(array('id' => $data["user"]['packageid']))->row();
 
         $data['package'] = $package;

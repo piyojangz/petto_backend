@@ -334,9 +334,11 @@ class Select_model extends CI_Model
             case '3':
                 $this->db->where('discount <=', 5000);
                 $this->db->where('discount >=', 1001);
+                break;
             case '4':
                 $this->db->where('discount <=', 10000);
                 $this->db->where('discount >=', 5001);
+                break;
             case '5':
                 $this->db->where('discount >=', 10000);
                 break;
@@ -379,9 +381,11 @@ class Select_model extends CI_Model
             case '3':
                 $this->db->where('discount <=', 5000);
                 $this->db->where('discount >=', 1001);
+                break;
             case '4':
                 $this->db->where('discount <=', 10000);
                 $this->db->where('discount >=', 5001);
+                break;
             case '5':
                 $this->db->where('discount >=', 10000);
                 break;
@@ -420,13 +424,16 @@ class Select_model extends CI_Model
             case '3':
                 $this->db->where('discount <=', 5000);
                 $this->db->where('discount >=', 1001);
+                break;
             case '4':
                 $this->db->where('discount <=', 10000);
                 $this->db->where('discount >=', 5001);
+                break;
             case '5':
                 $this->db->where('discount >=', 10000);
                 break;
         }
+
         if ($limit != "") {
             $this->db->limit($limit, 0);
         }
@@ -562,13 +569,13 @@ class Select_model extends CI_Model
         $this->db->select('*');
         $this->db->from('v_merchantwithpackage');
         $this->db->where($cond);
-        if($searchtxt != ""){
+        if ($searchtxt != "") {
             $this->db->like('firstname', $searchtxt);
             $this->db->or_like('lastname', $searchtxt);
             $this->db->or_like('email', $searchtxt);
             $this->db->or_like('tel', $searchtxt);
         }
-      
+
         $this->db->order_by('id', 'desc');
         $query = $this->db->get();
         return $query;
