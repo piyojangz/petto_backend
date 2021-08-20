@@ -5,7 +5,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url("res/account/plugins/images/favicon.png") ?>">
-    <title>Petto | เข้าสู่ระบบ</title>
+    <title>Pettogo.co | เข้าสู่ระบบ</title>
     <!-- Bootstrap Core CSS -->
     <link href="<?= base_url("res/account/bootstrap/dist/css/bootstrap.min.css") ?>" rel="stylesheet">
     <!-- Menu CSS -->
@@ -44,14 +44,20 @@
         <div class="cssload-speeding-wheel"></div>
     </div>
     <section id="wrapper" class="new-login-register" style="overflow-y: scroll;">
+        <div style="    position: absolute;
+    right: 20;
+    top: 20;">
+            <h5><strong><span style="color:#0073bf">บัญชีผู้ขาย</span></strong> / <a style="color: #151515;
+    text-decoration: underline;" href="https://pettogo.co/">สลับไปเป็นผู้ซื้อ</a></h5>
+        </div>
         <div class="lg-info-panel">
             <div class="inner-panel">
                 <a href="<?= base_url() ?>" class="p-20 di"><img src="https://pettodemo.web.app/assets/images/icon/logo/petto_logo.png" style="width: 150px;"> </a>
                 <div class="lg-content">
-                    <h2>Petto.co</h2>
+                    <h2>Pettogo.co</h2>
                     <p class="text-muted">บริการร้านค้าออนไลน์สำหรับซื้อขายสัตว์เลี้ยง</p>
-                    <a href="<?= base_url("register") ?>" class="btn btn-rounded   p-l-20 p-r-20 btn-success" style="background: #21bf64;
-    border: 1px solid #1db15c;">ต้องการสมัครสามาชิก?</a>
+                    <a href="<?= base_url("register") ?>" class="btn btn-rounded   p-l-20 p-r-20 btn-success" style="background: #41b3f9;
+    border: 1px solid #41b3f9;">ต้องการสมัครสามาชิก?</a>
                 </div>
             </div>
         </div>

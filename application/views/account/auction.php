@@ -54,6 +54,22 @@
     button {
         margin-top: 10px;
     }
+
+    .removeimg {
+        background: rgb(237, 60, 32);
+        padding: 5px;
+        border-radius: 5px 5px 5px 5px;
+        width: 30px;
+        position: absolute;
+        text-align: center;
+        align-items: center;
+        top: 0px;
+        right: -20px;
+        color: #fff !important;
+        z-index: 999;
+        display: block;
+        cursor: pointer;
+    }
 </style>
 
 <body class="fix-header">
@@ -123,6 +139,7 @@
                                             <th>ระยะเวลา</th>
                                             <th>สถานะ</th>
                                             <th>ACTION</th>
+                                            <th>#</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -140,6 +157,7 @@
                                                     <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5" onclick="edititem('<?= $item->id ?>');"><i class="ti-pencil-alt"></i></button>
                                                     <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></button>
                                                 </td>
+                                                <td style="vertical-align: middle"><a class="btn" href="javascript:;" onclick="viewlog('<?= $item->id ?>')">ดู log</a></td>
                                             </tr>
                                         <?php endforeach; ?>
 
@@ -150,10 +168,44 @@
                         </div>
                     </div>
 
+
+                    <div class="col-md-12">
+                        <div class="panel">
+                            <div class="panel-heading">ประวัติการประมูล</div>
+                            <table class="table table-hover manage-u-table">
+                                <thead>
+                                    <tr>
+                                        <th width="70" class="text-center">#</th>
+                                        <th>รูป</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th>ราคาสุดท้าย</th>
+                                        <th>ผู้ชนะ</th>
+                                        <th>ระยะเวลา</th>
+                                        <th>สถานะ</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="packbody">
+                                    <?php foreach ($auctionhistory as $index => $item) : ?>
+                                        <tr>
+                                            <td class="text-center" style="vertical-align: middle;"><?= $index + 1 ?></td>
+                                            <td style="vertical-align: middle;"><img src="<?= $item->image ?>" style="width:50px" /></td>
+                                            <td style="vertical-align: middle;"><?= $item->name ?></td>
+                                            <td style="vertical-align: middle;"><?= number_format($item->lastprice) ?></td>
+                                            <td style="vertical-align: middle;color:red"><?= $item->bidder ?></td>
+                                            <td style=" vertical-align: middle;"><?= date('d/m/Y เวลา H:i', strtotime($item->dfrom)) ?><br /><i class="fa fa-long-arrow-down"></i></br /><?= date('d/m/Y เวลา H:i', strtotime($item->dto)) ?></td>
+                                            <td style="vertical-align: middle;color:red">สิ้นสุดแล้ว</td>
+                                            <td style="vertical-align: middle"><a class="btn" href="javascript:;" onclick="viewlog('<?= $item->id ?>')">ดู log</a></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
             </div>
-            <form action="<?= base_url("account/$token/addnewauction") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit">
+            <form action="<?= base_url("account/$token/addnewauction") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit" enctype="multipart/form-data">
                 <div class="panel panel-default">
                     <div class="panel-heading">เพิ่ม / แก้ไข</div>
                     <div class="panel-wrapper collapse in">
@@ -208,11 +260,21 @@
                                                         <input required type="text" name="daterange" id="daterange" class="form-control input-daterange-timepicker" name="daterange" value="">
                                                     </div>
                                                 </div>
-
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">วีดีโอ (ไม่เกิน25MB)</label>
+                                                    <div class="col-md-9">
+                                                        <video width="320" height="240" controls id="vdo">
+                                                            <source id="vdosrc1" type="video/mp4">
+                                                            <source id="vdosrc2" type="video/ogg">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                        <input type="file" name="uploadan" id="uploadan" onchange="return validateSize(this)" accept="video/mp4,video/x-m4v,video/*">
+                                                    </div>
+                                                </div>
 
                                                 <div class="form-group">
 
-                                                    <label class="control-label col-md-3">รูปภาพ</label>
+                                                    <label class="control-label col-md-3">รูปภาพปก</label>
                                                     <div class="col-md-9">
                                                         <div class="cropit-preview-edit"><img id="imgedit" src="" /></div>
                                                         <button class="btn-edit-img btn btn-warning waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>แก้ไขรูปภาพ
@@ -232,7 +294,19 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">รูปอื่นๆ</label>
+                                                        <div class="col-md-8">
+                                                            <div class="row">
+                                                                <div id="imagesother"></div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div id="coba"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
                                                 <div class="form-actions">
                                                     <div class="row">
@@ -261,6 +335,37 @@
 
             </form>
 
+
+
+            <form method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-log">
+                <div class="panel panel-default">
+                    <div class="panel-heading">รายการ</div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel panel-info ">
+                                        <div class="panel-body">
+                                            <table class="table table-hover manage-u-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="70" class="text-center">#</th>
+                                                        <th>ราคาบิด</th>
+                                                        <th>เวลา</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tblog">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
             <!-- /.container-fluid -->
 
             <?php $this->load->view('account/template/footer'); ?>
@@ -296,12 +401,64 @@
     <script src="<?= base_url("res/account/plugins/bower_components/blockUI/jquery.blockUI.js") ?>"></script>
     <script src="<?= base_url("res/account/plugins/bower_components/summernote/dist/summernote.min.js") ?>"></script>
     <!-- Magnific popup JavaScript -->
-    <script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script>
     <script src="<?= base_url("res/account/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js") ?>"></script>
+    <script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script>
+    <script src="<?= base_url("res/js/spartan-multi-image-picker.js") ?>"></script>
 </body>
 <script>
+    function viewlog(id) {
+        $('div.block1').block({
+            message: '<h3>กรุณารอสักครู่...</h3>',
+            css: {
+                border: '1px solid #fff'
+            }
+        });
+
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getauctionlog'); ?>",
+            data: JSON.stringify({
+                'id': id
+            }),
+            dataType: "html",
+            success: function(data) {
+                $('div.block1').unblock();
+                console.log(data);
+                $('#tblog').html(data);
+
+                $.magnificPopup.open({
+                    items: {
+                        src: '#form-log'
+                    },
+                    type: 'inline'
+                }, 0);
+            }
+        })
+
+    }
+
+    function validateSize(input) {
+        const fileSize = input.files[0].size / 1024 / 1024; // in MiB
+        if (fileSize > 25) {
+            alert('File size exceeds 25 MiB');
+            $('#uploadan').val(''); //for clearing with Jquery
+        } else {
+            // Proceed further
+        }
+    }
+
     $(document).ready(function() {
 
+
+
+        $("#coba").spartanMultiImagePicker({
+            fieldName: 'fileUpload[]',
+            maxCount: 4,
+            rowHeight: '200px',
+            groupClassName: 'col-md-6 col-sm-6 col-xs-6',
+            allowedExt: 'png|jpg|jpeg',
+        });
         // Daterange picker
         $('.input-daterange-datepicker').daterangepicker({
             buttonClasses: ['btn', 'btn-sm'],
@@ -397,7 +554,21 @@
             var text = $('textarea[name="customtext"]').html($('#customtext').code());
             $("#inputcustomtext").val(text.val());
 
-            return true;
+            var elements = $(".img_");
+            elements.each(function(i, e) {
+                var val = $(e).attr('src');
+                if (val != undefined) {
+                    console.log(val);
+                    $('<input>').attr({
+                        type: 'hidden',
+                        id: 'multipleimages' + i,
+                        name: 'multipleimages[]',
+                        value: val
+                    }).appendTo('#form-submit');
+                }
+
+            });
+
 
             return true;
         });
@@ -407,10 +578,14 @@
         });
 
         $('.btn-item-modal').click(function() {
+            $("#imagesother").html("")
             $("#id").val("");
             $("#name").val("");
             $("#price").val("");
             $("#category").val("");
+            $("#vdo").hide();
+            $("#vdosrc1").attr('src', '');
+            $("#vdosrc2").attr('src', '');
             $(".summernote").code("");
             $(".cropit-preview-edit").hide();
             $(".btn-edit-img").hide();
@@ -427,7 +602,13 @@
 
     });
 
+    function removeimage(index) {
+        $('#imagesother' + index).remove();
+        $('#multipleimages' + index).remove();
+    }
+
     function edititem(id) {
+        $('#imagesother').html("");
         $('div.block1').block({
             message: '<h3>กรุณารอสักครู่...</h3>',
             css: {
@@ -448,18 +629,57 @@
                     $("#name").val(data.result.name);
                     $("#buyout").val(data.result.buyoutprice);
                     $("#startprice").val(data.result.startprice);
-                    $("#minimumbidamount").val(data.result.minimumbidamount); 
+                    $("#minimumbidamount").val(data.result.minimumbidamount);
                     $("#daterange").val(moment(data.result.dfrom).format('DD/MM/YYYY H:mm') + " - " + moment(data.result.dto).format('DD/MM/YYYY H:mm'));
                     $("#stock").val(data.result.stock);
                     $(".summernote").code(data.result.description);
                     $("#category").val(data.result.cateid);
+                    if (data.result.vdourl != "") {
+                        $("#vdosrc1").attr('src', data.result.vdourl);
+                        $("#vdosrc2").attr('src', data.result.vdourl);
+                        $("#vdo").show();
+                    } else {
+                        $("#vdosrc1").attr('src', '');
+                        $("#vdosrc2").attr('src', '');
+                        $("#vdo").hide();
+                    }
+
+                    // if (data.result.image != "") {
+                    //     $("#imgedit").attr("src", data.result.image);
+                    //     $(".image-editor").hide();
+                    //     $(".cropit-preview-edit").show();
+                    //     $(".btn-edit-img").show();
+                    //     $("#imgedit").show();
+                    // } else {
+                    //     $("#imgedit").attr("src", "");
+                    //     $(".image-editor").show();
+                    //     $(".cropit-preview-edit").hide();
+                    //     $(".btn-edit-img").hide();
+                    //     $("#imgedit").hide();
+                    // }
 
                     if (data.result.image != "") {
-                        $("#imgedit").attr("src", data.result.image);
+                        var images = data.result.image.split('#');
+                        console.log(images);
+                        $("#imgedit").attr("src", images[0]);
+                        $("#imageData").val(images[0]);
                         $(".image-editor").hide();
                         $(".cropit-preview-edit").show();
                         $(".btn-edit-img").show();
                         $("#imgedit").show();
+
+                        for (var i = 0; i < images.length; i++) {
+                            if (i > 0) {
+                                $('#imagesother').append('<div  id="imagesother' + i + '" class="col-xs-4 imagesother" style="margin:5px; min-height: 210px;"><a onclick="removeimage(' + i + ')" class="removeimg"><i class="fa fa-times"></i></a><img id="imgedit" src="' + images[i] + '" style="width:150px"></div>');
+                                $('<input>').attr({
+                                    type: 'hidden',
+                                    id: 'multipleimages' + i,
+                                    class: 'multipleimages',
+                                    name: 'multipleimages[]',
+                                    value: images[i]
+                                }).appendTo('#form-submit');
+                            }
+                        }
                     } else {
                         $("#imgedit").attr("src", "");
                         $(".image-editor").show();

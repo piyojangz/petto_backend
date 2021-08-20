@@ -274,6 +274,16 @@ class Update_model extends CI_Model
         endif;
     }
 
+    
+    function itemsbymerchant($input)
+    {
+        $this->db->where('merchantid', $input['merchantid']);
+        if ($this->db->update('items', $input)) :
+            return true;
+        else :
+            return false;
+        endif;
+    }
 
 
     function auctionlist($input)

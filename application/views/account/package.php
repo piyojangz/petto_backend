@@ -122,9 +122,9 @@
                                                 <th>ประเภท</th>
                                                 <th width="120">Sale slot <br><code>0 = unlimit</code></th>
                                                 <th>Bidding</th>
-                                                <th>Duration</th>
+                                                <th width="120">Duration <br><code>0 = Life time</code></th>
                                                 <th width="120">Price <br><code>0 = free</code></th>
-                                                <th width="80">Manage Users</th>
+                                                <!-- <th width="80">Manage Users</th> -->
                                                 <th>ร้านขายดี</th>
                                                 <th>ร้านค้าแนะนำ</th>
                                             </tr>
@@ -166,17 +166,18 @@
                                                         </select>
                                                     </td>
                                                     <td style="vertical-align: middle;">
-                                                        <select id="duration[]" name="duration[]" class="form-control">
+                                                    <input id="duration[]" name="duration[]" type="number" class="form-control" value="<?= $row->duration ?>">
+                                                        <!-- <select id="duration[]" name="duration[]" class="form-control">
                                                             <option value="0" <?= $row->duration == 0 ? 'selected' : '' ?>>Life time</option>
                                                             <option value="15" <?= $row->duration == 15 ? 'selected' : '' ?>>15 วัน</option>
                                                             <option value="30" <?= $row->duration == 30 ? 'selected' : '' ?>>30 วัน</option>
                                                             <option value="45" <?= $row->duration == 45 ? 'selected' : '' ?>>45 วัน</option>
                                                             <option value="60" <?= $row->duration == 60 ? 'selected' : '' ?>>60 วัน</option>
                                                             <option value="120" <?= $row->duration == 120 ? 'selected' : '' ?>>120 วัน</option>
-                                                        </select>
+                                                        </select> -->
                                                     </td>
                                                     <td style="vertical-align: middle;"><input id="price[]" name="price[]" type="number" class="form-control" value="<?= $row->price ?>"></td>
-                                                    <td style="vertical-align: middle;"><input id="manageuser[]" name="manageuser[]" type="number" class="form-control" value="<?= $row->manageuser ?>"></td>
+                                                    <!-- <td style="vertical-align: middle;"><input id="manageuser[]" name="manageuser[]" type="number" class="form-control" value="<?= $row->manageuser ?>"></td> -->
                                                     <td style="vertical-align: middle;">
                                                         <select id="isbestseller[]" name="isbestseller[]" class="form-control">
                                                             <option value="0" <?= $row->isbestseller == 0 ? 'selected' : '' ?>>ไม่มีสิทธิ์</option>

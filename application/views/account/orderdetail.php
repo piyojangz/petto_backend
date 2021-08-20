@@ -108,7 +108,7 @@
                                     <div class="pull-right m-t-30 text-right">
                                         <p>ค่าจัดส่ง <?= number_format($order->shippingfee, 2) ?> บาท</p>
                                         <hr>
-                                        <h3><b>รวม :</b> <?= number_format($order->total, 2) ?> บาท</h3>
+                                        <h3><b>รวม :</b> <?= number_format($order->total + $order->shippingfee, 2) ?> บาท</h3>
                                     </div>
                                     <div class="clearfix"></div>
                                     <hr>

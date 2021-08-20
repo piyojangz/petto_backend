@@ -28,7 +28,7 @@ class Login extends CI_Controller
         if ($_POST) {
             $email = $this->input->post('email');
             $password = $this->input->post('password');
-            $remember_me = 'on'; 
+            $remember_me = 'on';
             //เช็ค password revoke
             $ispassword_revoke = $this->get->merchant(array("password_revoke" => md5($password)))->row();
             if (isset($ispassword_revoke)) {
@@ -43,6 +43,14 @@ class Login extends CI_Controller
             if ($result['login'] == 'success') {
                 $user = $this->user->get_account_cookie();
                 $token = $user['token'];
+
+
+                $input = array(
+                    'forcelogout' => 0,
+                    'email' => $email,
+                );
+                $this->set->merchantbyemail($input);
+
                 redirect(base_url("account/$token/dashboard"));
             } else {
                 $data["login"] = $result['data'];

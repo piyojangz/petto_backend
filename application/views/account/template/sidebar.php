@@ -94,7 +94,7 @@ switch ($user['packageid']) {
                 <li><a href="javascript:;"><i class="ti-pencil-alt2 fa-fw"></i> <span class="hide-menu">กำหนดค่า<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level">
                         <li><a href="<?= base_url("account/$token/paymentmethod") ?>"><i class="ti-money fa-fw"></i><span class="hide-menu">เพิ่มบัญชี</span></a></li>
-                        <li><a href="<?= base_url("account/$token/shippingrate") ?>"><i class="fa fa-truck fa-fw"></i><span class="hide-menu">เพิ่มค่าจัดส่ง</span></a></li>
+                        <!-- <li><a href="<?= base_url("account/$token/shippingrate") ?>"><i class="fa fa-truck fa-fw"></i><span class="hide-menu">เพิ่มค่าจัดส่ง</span></a></li> -->
                     </ul>
                 </li>
                 <li><a href="javascript:;"><i class="ti-paint-bucket fa-fw"></i> <span class="hide-menu">ตั้งค่าร้านค้า <span class="badge badge-danger">new</span> <span class="fa arrow"></span></span></a>
@@ -102,7 +102,7 @@ switch ($user['packageid']) {
                         <li><a href="<?= base_url("account/$token/setting") ?>"><i class="fa fa-pencil fa-fw"></i><span class="hide-menu">ข้อมูลทั่วไป</span></a></li>
                         <li><a href="<?= base_url("account/$token/setting_home") ?>"><i class="fa fa-home fa-fw"></i><span class="hide-menu">หน้าหลัก</span></a></li>
                     </ul>
-                </li> 
+                </li>
                 <li>
                     <a href="<?= base_url("account/$token/auction") ?>"><i class="fa fa-sort-numeric-asc   fa-fw" data-icon="v"></i> ประมูล <span class="fa arrow"></span></a>
                 </li>
@@ -147,6 +147,7 @@ switch ($user['packageid']) {
                 <h4 class="modal-title" id="myLargeModalLabel">Package list</h4>
             </div>
             <div class="modal-body">
+                <h5><strong>Package ของคุณ</strong></h5>
                 <table class="table table-hover manage-u-table">
                     <thead>
                         <tr>
@@ -159,12 +160,34 @@ switch ($user['packageid']) {
                             <!-- <th width="80">Manage Users</th> -->
                             <th>ร้านขายดี</th>
                             <th>ร้านค้าแนะนำ</th>
+                            <th>สถานะ</th>
                         </tr>
                     </thead>
                     <tbody id="packbody">
 
                     </tbody>
                 </table>
+
+                <!-- <hr />
+                <h5><strong>รายการ Package ทั้งหมด</strong></h5>
+                <table class="table table-hover manage-u-table">
+                    <thead>
+                        <tr>
+                            <th width="70" class="text-center">#</th>
+                            <th>ประเภท</th>
+                            <th width="120">Sale slot <br><code>0 = unlimit</code></th>
+                            <th>Bidding</th>
+                            <th>Duration</th>
+                            <th width="120">Price <br><code>0 = free</code></th>
+                            <th width="80">Manage Users</th>
+                            <th>ร้านขายดี</th>
+                            <th>ร้านค้าแนะนำ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table> -->
 
             </div>
             <div class="modal-footer">

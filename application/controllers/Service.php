@@ -384,12 +384,42 @@ class Service extends CI_Controller
         $offset = $post['offset'];
         $searchtxt = $post['searchtxt'];
         $merchantid = $post['merchantid'];
-        $cond = array('status !=' => 3);
+        $status = $post['status'];
+
+
+
+
         if ($merchantid != 1) {
             // $cond = array('status !=' => 3, 'merchantid' => $merchantid);
-            $cond = array('merchantid' => $merchantid);
+            if ($status != '0') {
+                $cond = array('merchantid' => $merchantid, 'status' => $status, 'closestatus !=' => 1);
+            } else {
+                $cond = array('merchantid' => $merchantid, 'status!=' => 3);
+            }
+        } else {
+            if ($status != '0') {
+                $cond = array('status' => $status, 'closestatus !=' => 1);
+            } else {
+                $cond = array('status !=' => 3);
+            }
         }
-        $result = $this->get->v_order($cond, null, null, $limit, $offset, $searchtxt)->result();
+
+        $daterange = $post['daterangeval'];
+        if ($daterange != '') {
+            $daterange   = explode(" - ", $daterange);
+            $dfrom = str_replace('/', '-', $daterange[0]);
+            $dto = str_replace('/', '-', $daterange[1]);
+
+            $dfrom = date('Y-m-d H:i:s', strtotime($dfrom));
+            $dto = date('Y-m-d H:i:s', strtotime($dto));
+
+            $result = $this->get->v_order($cond, null, null, $limit, $offset, $searchtxt, $dfrom, $dto)->result();
+        } else {
+            $result = $this->get->v_order($cond, null, null, $limit, $offset, $searchtxt)->result();
+        }
+
+
+
 
         $html = "";
         foreach ($result as $key => $value) {
@@ -714,7 +744,9 @@ class Service extends CI_Controller
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $packageid = $post['packageid'];
-        $cond = array('id' => $packageid);
+        // $cond = array('id' => $packageid);
+
+        $cond = array();
         $packagelist = $this->get->package($cond)->result();
         $html = "";
         foreach ($packagelist as $index => $row) {
@@ -741,6 +773,16 @@ class Service extends CI_Controller
             $isbestseller =   $row->isbestseller == 0 ? 'ไม่มีสิทธิ์' : 'มีสิทธิ์';
             $isrecommend = $row->isrecommend == 0 ? 'ไม่มีสิทธิ์' : 'มีสิทธิ์';
             $isbiding = $row->isbiding == 0 ? 'FALSE' : 'TRUE';
+            $isactive = "";
+            if ($row->packagename != 'STARTUP') {
+                $isactive = "<button onclick='alert(\"แอดไลน์ @pettogo แจ้งชื่อร้าน และแจ้งเปลี่ยนเป็นแพคเก็จ $row->packagename\")' class='btn btn-primary'>เปลี่ยนเป็นแพคเกจนี้</button>";
+            }
+
+
+            if ($row->id == $packageid) {
+                $isactive = "<h5 style='color: #f33155;'>แพคเกจของคุณ</h5>";
+            }
+
 
 
             $duration = "";
@@ -772,7 +814,12 @@ class Service extends CI_Controller
                     $duration = "Life time";
                     break;
             }
-            $html .= "<tr>
+            if ($isactive != '') {
+                $html .= "<tr style='background: #f3f3f3;'>";
+            } else {
+                $html .= "<tr>";
+            }
+            $html .= "
             <td class='text-center' style='vertical-align: middle;'>$rownum</td>
             <td style='vertical-align: middle;'>$PACKICON </td>
             <td style='vertical-align: middle;'>
@@ -788,8 +835,33 @@ class Service extends CI_Controller
       
             <td style='vertical-align: middle;'>$isbestseller</td>
          <td style='vertical-align: middle;'>$isrecommend</td>
+         <td style='vertical-align: middle;'>$isactive</td>
         </tr>";
         }
+
+
+
+        // $packagelist = $this->get->package(array())->result();
+        // foreach ($packagelist as $key => $value) {
+        //     $rownum ++ ;
+        //     $html .= "<tr>
+        //     <td class='text-center' style='vertical-align: middle;'>$rownum</td>
+        //     <td style='vertical-align: middle;'>$PACKICON </td>
+        //     <td style='vertical-align: middle;'>
+        //     $row->saleslot
+        //     </td>
+        //     <td style='vertical-align: middle;'>
+        //     $isbiding
+        //     </td>
+        //     <td style='vertical-align: middle;'>
+        //     $duration
+        //     </td>
+        //     <td style='vertical-align: middle;'>$row->price</td>
+
+        //     <td style='vertical-align: middle;'>$isbestseller</td>
+        //  <td style='vertical-align: middle;'>$isrecommend</td>
+        // </tr>";
+        // }
 
 
         $data["user"] = $this->user->get_account_cookie();
@@ -843,8 +915,74 @@ class Service extends CI_Controller
                 'duration' => $package->duration,
             );
             $this->put->packagemapping($input2);
+
+
+            $input3 = array(
+                'merchantid' => $value->merchantid,
+                'status' => 2,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+
+            $this->set->itemsbymerchant($input3);
         }
     }
+    public function job_monitorwinners()
+    {
+        //เช็คผู้ชนะว่าจ่ายตังไหม
+        $cond = array('isauction' => 1, 'status' => 1, 'isconfirm' => 0, 'auction_dudate <' => date('Y-m-d H:i:s'));
+        $v_order = $this->get->v_order($cond, null, null, null, null, null)->result();
+        //print_r($v_order);
+
+        foreach ($v_order as $key => $value) {
+            print_r($value->custid);
+
+
+            $input = array(
+                'id' => $value->id,
+                'status' => 3,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            $this->set->order($input);
+
+
+            $input = array(
+                'id' => $value->custid,
+                'issuspend' => 1,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            $this->set->customer($input);
+
+
+
+            $customer = $this->get->customer(array('id' => $value->custid))->row();
+            $subject = "แจ้งการระงับบัญชี";
+            $msg = "ท่านถูกยกเลิกรายการชนะประมูล และถูกระงับบัญชี กรุณาติดต่อเจ้าหน้าที่ค่ะ";
+            $this->msgnotifyCustomer($customer, $subject, $msg);
+
+
+
+            $this->pushMsgNotifyMerchant($value->merchantid, "รายการประมูล #orderno $value->orderno ถูกยกเลิกเนื่องจากผู้ซื้อไม่ชำระเงินภายในเวลาที่กำหนด");
+        }
+    }
+
+    function pushMsgNotifyMerchant($merchantid, $text)
+    {
+        $merchant = $this->get->merchant(array("id" => $merchantid))->row();
+        if (!$this->isLocalhost()) {
+            $this->Semail->sendinfo($text, $merchant->email, 'Pettogo.co - แจ้งเตือน');
+        }
+        if ($merchant->lineuserid != "") {
+            // push message block
+            $pushmessages = [];
+            $pushmessages['to'] = $merchant->lineuserid;
+            $pushmessages['messages'][0] = $this->getFormatTextMessage("$text");
+            $encodeJson2 = json_encode($pushmessages);
+            // push message block
+
+            $results = $this->lineapi->pushMessage($encodeJson2);
+        }
+    }
+
     public function job_updateauctionwinners()
     {
         // $cond = array('status' => 1, 'dto <' => date('Y-m-d H:i:s'), 'currentprice > ' => 0);
@@ -868,7 +1006,8 @@ class Service extends CI_Controller
             $total = 0;
 
             if ($customer) {
-
+                $date = strtotime("+1 day");
+                $notidate =  date('d/m/Y เวลา H:i', $date);
 
                 $input = array(
                     'orderno' => $orderno,
@@ -879,6 +1018,7 @@ class Service extends CI_Controller
                     'total' => $gtotal,
                     'isauction' => 1,
                     'shippingaddress' => $customer->fulladdress,
+                    'auction_dudate' => date('Y-m-d H:i:s', $date),
                     'createdate' => date('Y-m-d H:i:s'),
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
@@ -901,10 +1041,27 @@ class Service extends CI_Controller
 
 
 
-                //email and line
-                $subject = "ผู้ชนะการประมูล";
-                $msg = "ยินดีด้วยคุณชนะการประมูลสินค้า $value->name กรุณาดูที่หน้าข้อมูลลส่วนตัว";
+                //email and line 
+                $subject = "คุณคือผู้ชนะผู้ชนะการประมูล $value->name";
+                $msg = "ยินดีด้วยคุณชนะการประมูลสินค้า $value->name กรุณาดูที่หน้าข้อมูลลส่วนตัว http://pettogo.co/pages/user";
+                $msg .= "\nกรุณาเข้าไปจ่ายเงินก่อนวันที่ $notidate ไม่เช่นนั้นจะทำการยกเลิกการซื้อ และ ยกเลิกสิทธิการซื้อของ";
                 $this->msgnotifyCustomer($customer, $subject, $msg);
+
+
+
+
+
+                $cond = array('auctionid' => $value->id, 'custid !=' => $value->custid);
+                $auctiontransaction = $this->get->auctiontransactionUniqCustid($cond)->result();
+                foreach ($auctiontransaction as $key => $act) {
+                    $customer = $this->get->customer(array('id' => $act->custid))->row();
+                    //email and line 
+                    $subject = "รายการประมูล $value->name สิ้นสุดลงแล้ว";
+                    $msg = "เสียใจด้วยการประมูล $value->name ได้สิ้นสุดลงแล้ว";
+                    $msg .= "\nมีผู้ชนะประมูลได้ในราคา " . number_format($gtotal, 2) . " บาท";
+                    $msg .= "\nดูเพิ่มเติมได้ที่ http://pettogo.co/auctiondetail/$value->id";
+                    $this->msgnotifyCustomer($customer, $subject, $msg);
+                }
             }
 
             //update สถานะเป็นจบแล้ว
@@ -1022,6 +1179,16 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function getproductsbysearch()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $limit = $post['limit'];
+        $searchtext = $post['searchtext'];
+        $cond = array('status' => 1, 'stock > ' => 0);
+        $data['result'] = $this->get->v_product($cond, $limit, "", "", $searchtext)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
 
 
     public function getauctionbyid()
@@ -1136,6 +1303,35 @@ class Service extends CI_Controller
     }
 
 
+    public function getaboutus()
+    {
+        $data['result'] = $this->get->aboutus(array('id' => 1))->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getcontractus()
+    {
+        $data['result'] =  $this->get->contractus(array('id' => 1))->row();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getsusspendcustomerbyid()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $customer = $this->get->customer(array('id' => $id))->row();
+        $data['result'] = false;
+        if ($customer->issuspend == 1) {
+            $data['result'] = true;
+        }
+
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
     public function updateorderstatus()
     {
         $post = json_decode(file_get_contents('php://input'), true);
@@ -1232,7 +1428,7 @@ class Service extends CI_Controller
             // $html .= "<td>-</td>";
             // $html .= "<td>$item->sumamount</td>";
             $html .= "<td>" . number_format($item->total) . "</td>";
-            $html .= "<td><b style='color:red'>" . number_format($item->total) . "</b>(รวมค่าจัดส่ง " . $item->shippingfee . ")</td>";
+            $html .= "<td><b style='color:red'>" . number_format($item->total + $item->shippingfee) . "</b>(รวมค่าจัดส่ง " . $item->shippingfee . ")</td>";
             // $html .= "<td>" . number_format($item->shipingrate) . "</td>";
             $html .= "<td>$statuslabel $isdelivery_complete</td> ";
             $html .= "</tr>";
@@ -1240,6 +1436,29 @@ class Service extends CI_Controller
 
         echo $html;
     }
+
+
+    public function getauctionlog()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $data['result'] = $this->get->auctiontransaction(array("auctionid" => $id))->result();
+
+
+        $html = "";
+        foreach ($data['result'] as $i => $item) {
+            $html .= "<tr>";
+            $html .= "<td>" . ($i + 1) . "</td>";
+            $html .= "<td>" . number_format($item->price) . "</td>";
+            $html .= "<td>" . date('d/m/Y เวลา H:i', strtotime($item->createdate)) . "</td>";
+            $html .= "</tr>";
+        }
+
+        echo $html;
+    }
+
+
+
 
     public function getorderstatuslabel($status, $closestatus)
     {
@@ -1293,6 +1512,14 @@ class Service extends CI_Controller
     public function getshoprecommend()
     {
         $cond = array('status' => 1, 'isrecommend' => 1, 'isadmin' => false);
+        $data['result'] = $this->get->v_merchantwithpackage($cond)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getallshop()
+    {
+        $cond = array('status' => 1,   'isadmin' => false);
         $data['result'] = $this->get->v_merchantwithpackage($cond)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -1558,21 +1785,23 @@ class Service extends CI_Controller
 
             $unit = 0;
             $gtotal = 0;
+            $shippingfee = 0;
             foreach ($cartItems as $item) {
                 $price =  $item['discount'] != "" ? $item['discount']  :  $item['price'];
+                $shippingfee =  $shippingfee + $item['shippingfee'];
                 $unit = $unit + intval($item['qty']);
                 $gtotal  =   $gtotal + ($price * $item["qty"]);
             }
 
-            $shippingfee = $this->get->shippingrate($merchant['id'], $unit)->row();
-            $gtotal   =  $gtotal + (isset($shippingfee) ? $shippingfee->price : 0);
+            // $shippingfee = $this->get->shippingrate($merchant['id'], $unit)->row();
+            // $gtotal   =  $gtotal + (isset($shippingfee) ? $shippingfee->price : 0);
             $customer = $this->get->customer(array('id' => $userid))->row();
-            $total = 0;
+            // $total = 0;
 
             $input = array(
                 'orderno' => $orderno,
                 'merchantid' => $merchant['id'],
-                'shippingfee' => isset($shippingfee) ? $shippingfee->price : 0,
+                'shippingfee' => $shippingfee,
                 'status' => 1,
                 'custid' => $userid,
                 'total' => $gtotal,
@@ -1728,7 +1957,7 @@ class Service extends CI_Controller
         );
         $data['result'] = false;
         if ($this->set->customer($input)) {
-            $data['result'] = true;
+            $data['result'] = $this->get->customerbyid($custid)->row();
         }
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);

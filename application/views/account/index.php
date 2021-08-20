@@ -63,9 +63,9 @@
                                     <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/paymentmethod") ?>'">
                                         <h4><span>2</span>บัญชีธนาคาร</h4>
                                     </li>
-                                    <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/shippingrate") ?>'">
+                                    <!-- <li style="cursor: pointer;" onclick="location.href = '<?= base_url("account/$token/shippingrate") ?>'">
                                         <h4><span>3</span>ค่าจัดส่ง</h4>
-                                    </li>
+                                    </li> -->
                                 </div>
 
 
@@ -171,28 +171,34 @@
                 <!-- .row -->
                 <div class="row">
                     <div class="col-lg-3 col-sm-6 col-xs-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">ออเดอร์ทั้งหมด</h3>
-                            <ul class="list-inline">
-                                <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?= $dashboarddata->bills ?></span></li>
-                            </ul>
-                        </div>
+                        <a style="display: block;" href="javascript:;" onclick="filterstatus(0)">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">ออเดอร์ทั้งหมด</h3>
+                                <ul class="list-inline">
+                                    <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success"><?= $dashboarddata->bills ?></span></li>
+                                </ul>
+                            </div>
+                        </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-xs-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">ชำระเงินแล้ว</h3>
-                            <ul class="list-inline">
-                                <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?= $dashboarddata->paid ?></span></li>
-                            </ul>
-                        </div>
+                        <a style="display: block;" href="javascript:;" onclick="filterstatus(2)">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">ชำระเงินแล้ว</h3>
+                                <ul class="list-inline">
+                                    <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple"><?= $dashboarddata->paid ?></span></li>
+                                </ul>
+                            </div>
+                        </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-xs-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">ยังไม่ได้ชำระเงิน</h3>
-                            <ul class="list-inline two-part">
-                                <li class="text-right"><i class="ti-arrow-up text-danger"></i> <span class="counter text-danger"><?= $dashboarddata->unpaid ?></span></li>
-                            </ul>
-                        </div>
+                        <a style="display: block;" href="javascript:;" onclick="filterstatus(1)">
+                            <div class="white-box analytics-info">
+                                <h3 class="box-title">ยังไม่ได้ชำระเงิน</h3>
+                                <ul class="list-inline two-part">
+                                    <li class="text-right"><i class="ti-arrow-up text-danger"></i> <span class="counter text-danger"><?= $dashboarddata->unpaid ?></span></li>
+                                </ul>
+                            </div>
+                        </a>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-xs-12">
                         <div class="white-box analytics-info">
@@ -218,7 +224,14 @@
                             </div>
                         </div>
                         <div class="panel-body">
-                            <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <div class="input-group m-t-10">
+                                    <input type="text" name="daterange" id="daterange" class="form-control input-daterange-timepicker" class="form-control" placeholder="กรองข้อมูลตามช่วงเวลา"> <span class="input-group-btn">
+                                        <button type="submit" onclick="searchorderbydate()" style="   margin-top: 0px;" class="btn waves-effect waves-light btn-info">กรองข้อมูล</button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
                                 <div class="input-group m-t-10">
                                     <input type="text" id="searchtxt" name="searchtxt" class="form-control" placeholder="Orderno"> <span class="input-group-btn">
                                         <button type="submit" onclick="searchorder()" style="   margin-top: 0px;" class="btn waves-effect waves-light btn-info">ค้นหา</button>
@@ -250,6 +263,8 @@
                                                 </button>
 
                                                 <input type="hidden" id="lineuid" />
+                                                <input type="hidden" id="status" />
+                                                <input type="hidden" id="daterangeval" />
                                                 <input type="hidden" id="offset" value="0" />
                                                 <input type="hidden" id="limit" value="10" />
                                             </td>
@@ -755,6 +770,7 @@
     <script src="<?= base_url("res/account/plugins/bower_components/switchery/dist/switchery.min.js") ?>"></script>
     <script src="<?= base_url("res/account/plugins/bower_components/toast-master/js/jquery.toast.js") ?>"></script>
     <script src="<?= base_url("res/account/plugins/bower_components/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js") ?>" type="text/javascript"></script>
+    <script src="<?= base_url("res/account/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js") ?>"></script>
     <script>
         var $Multi = $(".select2").select2();
 
@@ -782,7 +798,29 @@
         $(function() {
 
             opensalehistory();
+            $("#status").val(0);
 
+            // Daterange picker
+            $('.input-daterange-datepicker').daterangepicker({
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-danger',
+                cancelClass: 'btn-inverse'
+            });
+            $('.input-daterange-timepicker').daterangepicker({
+                timePicker: true,
+                format: 'DD/MM/YYYY h:mm A',
+                // startDate: moment().startOf('hour'),
+                // endDate: moment().startOf('hour').add(24, 'hour'),
+                timePickerIncrement: 15,
+                timePicker24Hour: true,
+                timePickerSeconds: false,
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-danger',
+                cancelClass: 'btn-inverse',
+                locale: {
+                    format: 'DD/MM/YYYY H:mm'
+                }
+            });
 
             $("#checkAll").click(function() {
                 $('input:checkbox').not(this).prop('checked', this.checked);
@@ -1080,8 +1118,20 @@
 
         function loadmore() {
             var offset = $("#offset").val();
+            var status = $("#status").val();
             $("#offset").val(parseInt(offset) + 10);
-            opensalehistory();
+            opensalehistory(status);
+        }
+
+        function searchorderbydate() {
+            $("#offset").val(0);
+            var daterangeval = $("#daterange").val();
+            var status = $("#status").val();
+            $("#daterangeval").val(daterangeval);
+            if (searchtxt != "") {
+                $('#itemsalehistory').html("");
+            }
+            opensalehistory(status);
         }
 
         function searchorder() {
@@ -1092,12 +1142,22 @@
             opensalehistory();
         }
 
+        function filterstatus(status = 0) {3
+            $("#daterangeval").val("");
+            $("#offset").val(0);
+            $("#status").val(status);
+            if (searchtxt != "") {
+                $('#itemsalehistory').html("");
+            }
+            opensalehistory(status);
+        }
 
-        function opensalehistory() {
 
+        function opensalehistory(status = 0) {
             var searchtxt = $("#searchtxt").val();
             var offset = $("#offset").val();
             var limit = $("#limit").val();
+            var daterangeval = $("#daterangeval").val();
 
             $.ajax({
                 type: "POST",
@@ -1105,8 +1165,10 @@
                 data: JSON.stringify({
                     'merchantid': <?= $merchant->id ?>,
                     'searchtxt': searchtxt,
+                    'status': status,
                     'offset': offset,
-                    'limit': limit
+                    'limit': limit,
+                    'daterangeval': daterangeval
                 }),
                 dataType: "html",
                 success: function(data) {

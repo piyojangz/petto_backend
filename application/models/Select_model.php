@@ -25,6 +25,15 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function customerbyid($id)
+    {
+        $this->db->select('*');
+        $this->db->from('customer');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query;
+    }
+
 
     function billnotificationusers($cond)
     {
@@ -106,13 +115,18 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function v_order($cond, $notin = null, $in = null, $limit = 0, $offset = 0, $searchtxt)
+    function v_order($cond, $notin = null, $in = null, $limit = 0, $offset = 0, $searchtxt, $dfrom = null, $dto = null)
     {
         if ($notin != null) {
             $this->db->where_not_in('status', $notin);
         }
         if ($in != null) {
             $this->db->where_in('status', $in);
+        }
+
+        if ($dfrom != null && $dto != null) {
+            $this->db->where('createdate >=', $dfrom);
+            $this->db->where('createdate <=', $dto);
         }
 
         $this->db->select('*');
@@ -300,7 +314,7 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function items($cond, $pricelength = 0, $pricesort = "")
+    function items($cond, $pricelength = 0, $pricesort = "", $ids = array())
     {
 
         $plength = '';
@@ -308,24 +322,28 @@ class Select_model extends CI_Model
             case '0':
                 break;
             case '1':
-                if ($plength != '') {
-                    $this->db->where('discount >=', 100);
-                    $this->db->where('discount <=', 0);
-                }
+                // if ($plength != '') {
+                $this->db->where('discount <=', 100);
+                $this->db->where('discount >=', 0);
+                // }
                 break;
             case '2':
-                $this->db->where('discount >=', 1000);
-                $this->db->where('discount <=', 101);
+                $this->db->where('discount <=', 1000);
+                $this->db->where('discount >=', 101);
                 break;
             case '3':
-                $this->db->where('discount >=', 5000);
-                $this->db->where('discount <=', 1001);
+                $this->db->where('discount <=', 5000);
+                $this->db->where('discount >=', 1001);
             case '4':
-                $this->db->where('discount >=', 10000);
-                $this->db->where('discount <=', 5001);
+                $this->db->where('discount <=', 10000);
+                $this->db->where('discount >=', 5001);
             case '5':
                 $this->db->where('discount >=', 10000);
                 break;
+        }
+
+        if (count($ids) > 0) {
+            $this->db->where_in('status', $ids);
         }
         if ($pricesort != "") {
             $this->db->order_by('discount', $pricesort);
@@ -349,21 +367,21 @@ class Select_model extends CI_Model
             case '0':
                 break;
             case '1':
-                if ($plength != '') {
-                    $this->db->where('discount >=', 100);
-                    $this->db->where('discount <=', 0);
-                }
+                // if ($plength != '') {
+                $this->db->where('discount <=', 100);
+                $this->db->where('discount >=', 0);
+                // }
                 break;
             case '2':
-                $this->db->where('discount >=', 1000);
-                $this->db->where('discount <=', 101);
+                $this->db->where('discount <=', 1000);
+                $this->db->where('discount >=', 101);
                 break;
             case '3':
-                $this->db->where('discount >=', 5000);
-                $this->db->where('discount <=', 1001);
+                $this->db->where('discount <=', 5000);
+                $this->db->where('discount >=', 1001);
             case '4':
-                $this->db->where('discount >=', 10000);
-                $this->db->where('discount <=', 5001);
+                $this->db->where('discount <=', 10000);
+                $this->db->where('discount >=', 5001);
             case '5':
                 $this->db->where('discount >=', 10000);
                 break;
@@ -390,21 +408,21 @@ class Select_model extends CI_Model
             case '0':
                 break;
             case '1':
-                if ($plength != '') {
-                    $this->db->where('discount >=', 100);
-                    $this->db->where('discount <=', 0);
-                }
+                // if ($plength != '') {
+                $this->db->where('discount <=', 100);
+                $this->db->where('discount >=', 0);
+                // }
                 break;
             case '2':
-                $this->db->where('discount >=', 1000);
-                $this->db->where('discount <=', 101);
+                $this->db->where('discount <=', 1000);
+                $this->db->where('discount >=', 101);
                 break;
             case '3':
-                $this->db->where('discount >=', 5000);
-                $this->db->where('discount <=', 1001);
+                $this->db->where('discount <=', 5000);
+                $this->db->where('discount >=', 1001);
             case '4':
-                $this->db->where('discount >=', 10000);
-                $this->db->where('discount <=', 5001);
+                $this->db->where('discount <=', 10000);
+                $this->db->where('discount >=', 5001);
             case '5':
                 $this->db->where('discount >=', 10000);
                 break;
@@ -461,6 +479,36 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function auctiontransaction($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('auctiontransaction');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+    function auctiontransactionUniqCustid($cond)
+    {
+        $this->db->select('DISTINCT(custid) as custid');
+        $this->db->from('auctiontransaction');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+
+    function v_auctionhistoryformerchant($cond)
+    {
+        $this->db->select('*');
+        $this->db->from('v_auctionhistoryformerchant');
+        $this->db->where($cond);
+        $query = $this->db->get();
+        return $query;
+    }
+
     function v_auction($cond)
     {
         $this->db->select('*');
@@ -509,11 +557,18 @@ class Select_model extends CI_Model
         return $query;
     }
 
-    function v_merchantwithpackage($cond)
+    function v_merchantwithpackage($cond, $searchtxt = "")
     {
         $this->db->select('*');
         $this->db->from('v_merchantwithpackage');
         $this->db->where($cond);
+        if($searchtxt != ""){
+            $this->db->like('firstname', $searchtxt);
+            $this->db->or_like('lastname', $searchtxt);
+            $this->db->or_like('email', $searchtxt);
+            $this->db->or_like('tel', $searchtxt);
+        }
+      
         $this->db->order_by('id', 'desc');
         $query = $this->db->get();
         return $query;
@@ -610,10 +665,12 @@ class Select_model extends CI_Model
         $this->db->select('*');
         $this->db->from('v_merchantwithpackage');
         $this->db->where($cond);
-        $this->db->like('firstname', $searchtxt);
-        $this->db->or_like('lastname', $searchtxt);
-        $this->db->or_like('email', $searchtxt);
-        $this->db->or_like('tel', $searchtxt);
+        if ($searchtxt != "") {
+            $this->db->like('firstname', $searchtxt);
+            $this->db->or_like('lastname', $searchtxt);
+            $this->db->or_like('email', $searchtxt);
+            $this->db->or_like('tel', $searchtxt);
+        }
         $this->db->order_by('status , id', 'desc');
         $query = $this->db->get();
         return $query;
@@ -892,7 +949,7 @@ FROM dual");
     (select count(id)  from  `orders` where status not in(3) and merchantid = $merchantid and closestatus = 0) as bills
 , (select count(id)  from  `orders` where status in(2) and merchantid = $merchantid and closestatus = 0) as paid
 , (select count(id)  from  `orders` where status in(1) and merchantid = $merchantid and closestatus = 0) as unpaid
-, (select sum(total)  from  `orders` where status in(2) and MONTH(updatedate) = MONTH(CURRENT_DATE()) and merchantid = $merchantid and closestatus = 0) as monthlytotal
+, (select sum(total)  from  `orders` where status in(3) and MONTH(updatedate) = MONTH(CURRENT_DATE()) and merchantid = $merchantid and closestatus = 0) as monthlytotal
 FROM dual");
 
         return $query;

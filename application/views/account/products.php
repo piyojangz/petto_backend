@@ -121,41 +121,99 @@
                             <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
                         <?php else : ?>
                             <p style="color: #f55252;
-    font-size: 16px;">ไม่สามารถเพิ่มสินค้าได้เนื่องจากเกินกำหนดตามแพคเก็จ</p>
+    font-size: 16px;">ไม่สามารถเพิ่มสินค้าได้เนื่องจากเกินกำหนดตามแพคเก็จ (จำนวนที่ขายได้ตามแพคเก็จ = <?= $package->saleslot ?>)</p>
                         <?php endif; ?>
                         <hr>
                     </div>
-                    <?php foreach ($items as $item) : ?>
+                    <div class="col-md-12 text-right">
+                        <a href="?display=row"><i style="font-size: 20px;" class="ti-layout-list-thumb"></i></a> / <a href="?display=column"><i style="font-size: 20px;" class="ti-layout-grid3"></i></a>
+                    </div>
 
-                        <!-- /.usercard -->
-                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                            <div class="white-box">
-                                <div class="el-card-item">
-                                    <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;min-height:100px"><img src="<?= $item->image ?>" />
-                                        <div class="el-overlay">
-                                            <ul class="el-info">
-                                                <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
-                                                <li><a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a></li>
-                                            </ul>
+                    <?php if ($display == 'column') : ?>
+                        <?php foreach ($items as $item) : ?>
+
+                            <!-- /.usercard -->
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                                <div class="white-box" style="height:450px;max-height: 450px;
+    overflow-y: scroll;">
+                                    <div class="el-card-item">
+                                        <?php if ($item->status == 2) : ?>
+
+                                            <form action="<?= base_url("account/$token/unlockproduct") ?>" method="post">
+                                                <div class="overlay-box">
+                                                    <div style="width: 100%;align-items: center; text-align: center;">
+                                                        <h3>สินค้าปิดใช้งาน</h3>
+                                                        <?php if ($disabledunlock == 'false') : ?>
+                                                            <button class="btn">ปลดล๊อครายการนี้</button>
+                                                        <?php endif; ?>
+                                                        <input type="hidden" name="productid" id="productid" value="<?= $item->id ?>">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        <?php endif; ?>
+                                        <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;min-height:100px"><img src="<?= $item->image ?>" />
+                                            <div class="el-overlay">
+                                                <ul class="el-info">
+                                                    <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
+                                                    <li><a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a></li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="el-card-content">
-                                        <h4 class="box-title text-info"><?= $item->name ?></h4>
-                                        <small>฿<?= number_format($item->price) ?></small>
-                                        <br>
-                                        <code>คลัง <?= $item->stock ?></code>
-                                        <br>
-                                    </div>
+                                        <div class="el-card-content">
+                                            <h4 class="box-title text-info"><?= $item->name ?></h4>
+                                            <small>฿<?= number_format($item->price) ?></small>
+                                            <br>
+                                            <code>คลัง <?= $item->stock ?></code>
+                                            <br>
+                                        </div>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- /.usercard-->
-                    <?php endforeach; ?>
+                            <!-- /.usercard-->
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
+                <?php if ($display != 'column') : ?>
+                    <div class="white-box">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th colspan="1" style="width: 250px; text-align: left;">ชื่อสินค้า</th>
+                                        <th style="min-width:120px;">คลัง</th>
+                                        <th style="min-width:140px;">ราคา</th>
+                                        <th style="min-width:150px;">วันที่สร้าง</th>
+                                        <th>#</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="items">
+                                    <?php foreach ($items as $item) : ?>
+                                        <tr>
+                                            <td>
+                                                <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;max-height:50px"><img style="width: 50px;" src="<?= $item->image ?>" />
+                                            </td>
+                                            <td colspan="1" style="min-width: 80px; text-align: left;">
+                                                <h4 class="box-title "><?= $item->name ?></h4>
+                                            </td>
+                                            <td><?= $item->stock ?></td>
+                                            <td style="min-width:120px;">฿<?= number_format($item->price) ?></td>
+                                            <td style="min-width:140px;"><?= $item->updatedate ?></td>
+                                            <td>
+                                                <a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a>
+                                                <a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a>
 
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
-            <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit">
+            <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit"  enctype="multipart/form-data">
                 <div class="panel panel-default">
                     <div class="panel-heading">เพิ่ม / แก้ไข</div>
                     <div class="panel-wrapper collapse in">
@@ -170,6 +228,15 @@
                                                     <label class="control-label col-md-3">ชื่อสินค้า</label>
                                                     <div class="col-md-9">
                                                         <input type="text" name="name" id="name" class="form-control" maxlength="120" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">ปิดใช้งานสินค้าชิ้นนี้</label>
+                                                    <div class="col-md-9">
+                                                        <select id="status" name="status" class="form-control">
+                                                            <option value="1">เปิดการใช้งาน</option>
+                                                            <option value="2">ปิดการใช้งาน</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -199,19 +266,25 @@
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ราคา</label>
                                                     <div class="col-md-9">
-                                                        <input type="number" name="price" id="price" required class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" >
+                                                        <input type="number" name="price" id="price" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">ราคาลด</label>
                                                     <div class="col-md-9">
-                                                        <input type="number" name="discount" id="discount" required class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
+                                                        <input type="number" name="discount" id="discount" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-3">ค่าขนส่ง</label>
+                                                    <div class="col-md-9">
+                                                        <input type="number" name="shippingfee" id="shippingfee" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label col-md-3">คลัง</label>
                                                     <div class="col-md-9">
-                                                        <input type="number" name="stock" id="stock" required class="form-control"  oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
+                                                        <input type="number" name="stock" id="stock" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -221,11 +294,15 @@
                                                         <input value="" name="inputcustomtext" id="inputcustomtext" type="hidden">
                                                     </div>
                                                 </div>
-
                                                 <div class="form-group">
-                                                    <label class="control-label col-md-3">ลิงค์วีดีโอ <br /><code>ตัวอย่าง https://www.youtube.com/embed/714KiXU15eU</code></label>
+                                                    <label class="control-label col-md-3">วีดีโอ (ไม่เกิน25MB)</label>
                                                     <div class="col-md-9">
-                                                        <input type="text" name="vdourl" id="vdourl" class="form-control">
+                                                        <video width="320" height="240" controls id="vdo">
+                                                            <source id="vdosrc1" type="video/mp4">
+                                                            <source id="vdosrc2" type="video/ogg">
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                        <input type="file" name="uploadan" id="uploadan"  onchange="return validateSize(this)" accept="video/mp4,video/x-m4v,video/*">
                                                     </div>
                                                 </div>
 
@@ -454,7 +531,9 @@
             $("#category").val("");
             $("#category1").val("");
             $("#category2").val("");
-
+            $("#vdo").hide();
+            $("#vdosrc1").attr('src', '');
+            $("#vdosrc2").attr('src', '');
             $("#category1").html('<option value="0">ไม่มี</option>');
             $("#category2").html('<option value="0">ไม่มี</option>');
 
@@ -528,6 +607,16 @@
         });
     }
 
+    function validateSize(input) {
+        const fileSize = input.files[0].size / 1024 / 1024; // in MiB
+        if (fileSize > 25) {
+            alert('File size exceeds 25 MiB');
+            $('#uploadan').val(''); //for clearing with Jquery
+        } else {
+            // Proceed further
+        }
+    }
+
     function removeimage(index) {
         $('#imagesother' + index).remove();
         $('#multipleimages' + index).remove();
@@ -557,11 +646,23 @@
                     $("#name").val(data.result.name);
                     $("#price").val(data.result.price);
                     $("#discount").val(data.result.discount);
+                    $("#shippingfee").val(data.result.shippingfee);
 
                     $("#stock").val(data.result.stock);
                     $("#vdourl").val(data.result.video);
                     $(".summernote").code(data.result.description);
                     $("#category").val(data.result.cateid);
+
+                    if (data.result.video != "") {
+                        $("#vdosrc1").attr('src', data.result.video);
+                        $("#vdosrc2").attr('src', data.result.video);
+                        $("#vdo").show();
+                    } else {
+                        $("#vdosrc1").attr('src', '');
+                        $("#vdosrc2").attr('src', '');
+                        $("#vdo").hide();
+                    }
+
 
                     if (data.result.cateid1 != 0) {
                         getcate1(data.result.cateid, data.result.cateid1);
@@ -585,7 +686,7 @@
 
                         for (var i = 0; i < images.length; i++) {
                             if (i > 0) {
-                                $('#imagesother').append('<div    id="imagesother' + i + '" class="col-xs-4 imagesother" style="margin:5px;"><a onclick="removeimage(' + i + ')" class="removeimg"><i class="fa fa-times"></i></a><img id="imgedit" src="' + images[i] + '" style="width:150px"></div>');
+                                $('#imagesother').append('<div    id="imagesother' + i + '" class="col-xs-4 imagesother" style="margin:5px;min-height: 210px;"><a onclick="removeimage(' + i + ')" class="removeimg"><i class="fa fa-times"></i></a><img id="imgedit" src="' + images[i] + '" style="width:150px"></div>');
                                 $('<input>').attr({
                                     type: 'hidden',
                                     id: 'multipleimages' + i,

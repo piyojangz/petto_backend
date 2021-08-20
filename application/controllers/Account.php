@@ -46,6 +46,11 @@ class Account extends CI_Controller
         if ($merchant->status == 0) {
             redirect(base_url("account/$merchant->token/setting"));
         }
+
+        if ($merchant->forcelogout == 1) {
+            $this->user->logout();
+            redirect(base_url());
+        }
     }
 
     public function index($acctoken = "")
@@ -230,7 +235,7 @@ class Account extends CI_Controller
             if ($image != "") {
                 $input["image"] = $image;
             }
-            if ($this->set->merchant($input)) { 
+            if ($this->set->merchant($input)) {
                 redirect(base_url("account/$acctoken/setting?update=success"));
             }
         }
@@ -567,7 +572,7 @@ class Account extends CI_Controller
         if ($_POST) {
             $searchtxt = $this->input->post("searchtxt");
             $data["searchtxt"] = $searchtxt;
-            $data["merchant"] = $this->get->searchmerchant(array("status != " => 9, 'isadmin' => false), $searchtxt)->result();
+            $data["merchant"] = $this->get->v_merchantwithpackage(array("status != " => 9, 'isadmin' => false), $searchtxt)->result();
         } else {
             $data["merchant"] = $this->get->v_merchantwithpackage(array("status != " => 9, 'isadmin' => false))->result();
         }
@@ -593,7 +598,7 @@ class Account extends CI_Controller
             $data["searchtxt"] = $searchtxt;
             $data["merchant"] = $this->get->searchmerchant(array("status = " => 9), $searchtxt)->result();
         } else {
-            $data["merchant"] = $this->get->merchant(array("status = " => 9))->result();
+            $data["merchant"] = $this->get->searchmerchant(array("status = " => 9), "")->result();
         }
 
         if (!$this->user->is_login()) {
@@ -722,6 +727,8 @@ class Account extends CI_Controller
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["paidorder"] = $this->paidorder;
         $data['disabledadditem'] = 'false';
+        $data['disabledunlock'] = 'false';
+        $data['display'] = $this->input->get("display");
         if (!$this->user->is_login()) {
             redirect('/');
         }
@@ -729,10 +736,21 @@ class Account extends CI_Controller
 
         $data['package'] = $package;
 
-        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id, "status" => '1'))->result();
+        $data["items"] = $this->get->items(array("merchantid" => $data["merchant"]->id), 0, "", array(1, 2))->result();
         if ($package->saleslot > 0) {
             if (count($data["items"]) >= $package->saleslot) {
                 $data['disabledadditem'] = 'true';
+            }
+
+            $cntunlock = 0;
+            foreach ($data["items"] as $key => $value) {
+                if ($value->status == 1) {
+                    $cntunlock++;
+                }
+            }
+
+            if ($cntunlock >= $package->saleslot) {
+                $data['disabledunlock'] = 'true';
             }
         }
 
@@ -751,6 +769,8 @@ class Account extends CI_Controller
             redirect('/');
         }
         $data["auctionlist"] = $this->get->auctionlist(array("merchantid" => $data["merchant"]->id, "status" => '1'))->result();
+
+        $data["auctionhistory"] = $this->get->v_auctionhistoryformerchant(array("merchantid" => $data["merchant"]->id, "status" => '2'))->result();
 
         $this->load->view('account/auction', $data);
     }
@@ -1014,7 +1034,7 @@ class Account extends CI_Controller
 
             redirect("account/$acctoken/setting_lang");
         }
-        
+
         $this->load->view('account/settinglang', $data);
     }
 
@@ -1078,16 +1098,62 @@ class Account extends CI_Controller
 
                 if ($this->set->merchantbyid($input)) {
                     if ($status == 1) {
-                        $this->pushMsgNotifyMerchant($id, "เจ้าหน้าที่อนุมัติแล้ว ยินดีตอนรับเข้าใช้งาน Petto.co ขอให้สนุกกับการช๊อปปิ้งค่ะ");
+                        $this->pushMsgNotifyMerchant($id, "เจ้าหน้าที่อนุมัติแล้ว ยินดีตอนรับเข้าใช้งาน Pettogo.co ขอให้สนุกกับการช๊อปปิ้งค่ะ");
                     }
                     if ($status == 9) {
                         $this->pushMsgNotifyMerchant($id, "ท่านถูกระงับบัญชี กรุณาติดต่อเจ้าหน้าที่ค่ะ");
+
+
+                        $auctionlist = $this->get->auctionlist(array('merchantid' => $id, 'status' => 1))->result();
+                        print_r($auctionlist);
+                        foreach ($auctionlist as $key => $auction) {
+                            # code...
+                            $cond = array('auctionid' => $auction->id);
+                            $auctiontransaction = $this->get->auctiontransactionUniqCustid($cond)->result();
+                            // print_r($auctiontransaction);
+                            $input = array(
+                                'id' => $auction->id,
+                                'status' => 2,
+                            );
+                            $this->set->auctionlist($input);
+
+
+                            foreach ($auctiontransaction as $key => $act) {
+                                $customer = $this->get->customer(array('id' => $act->custid))->row();
+                                //email and line 
+                                $subject = "รายการประมูล $auction->name สิ้นสุดลงแล้ว";
+                                $msg = "รายการการประมูล $auction->name ถูกระงับโดยผู้ลงประมูล";
+                                $this->msgnotifyCustomer($customer, $subject, $msg);
+                            }
+                        }
                     }
                     redirect("account/$acctoken/userlist");
                 }
             }
         }
     }
+
+
+    function msgnotifyCustomer($customer, $subject, $msg)
+    {
+        $this->sendtoLine($customer->lineid, $msg);
+        if (!$this->isLocalhost()) {
+            $this->Semail->sendinfo($msg, $customer->email, $subject);
+        }
+    }
+
+    public function sendtoLine($userLineID, $msg)
+    {
+        // push message block
+        $pushmessages = [];
+        $pushmessages['to'] = $userLineID;
+        $pushmessages['messages'][0] = $this->getFormatTextMessage($msg);
+        $encodeJson2 = json_encode($pushmessages);
+        // push message block
+
+        $results = $this->lineapi->pushMessage($encodeJson2);
+    }
+
 
     public function changemerchantrecommend($acctoken = "")
     {
@@ -1172,6 +1238,12 @@ class Account extends CI_Controller
                 );
 
                 if ($this->set->packagemappingbymerchantid($input)) {
+
+                    $input3 = array(
+                        'id' => $id,
+                        'forcelogout' => 1,
+                    );
+                    $this->set->merchantbyid($input3);
 
 
                     $pack =   $this->get->package(array('id' => $package))->row();
@@ -1276,6 +1348,21 @@ class Account extends CI_Controller
     {
         return (bool) preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $s);
     }
+
+    public function unlockproduct($acctoken = "")
+    {
+        if ($_POST) {
+            $id = $this->input->post("productid");
+            $input = array(
+                'id' => $id,
+                'status' => 1,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            if ($this->set->items($input)) {
+                redirect("account/$acctoken/products");
+            }
+        }
+    }
     public function addnewproduct($acctoken = "")
     {
         if ($_POST) {
@@ -1283,6 +1370,7 @@ class Account extends CI_Controller
             $imageData = $this->input->post("imageData");
             $data["user"] = $this->user->get_account_cookie();
             $name = $this->input->post("name");
+            $status = $this->input->post("status");
             $price = $this->input->post("price");
             $discount = $this->input->post("discount");
             $vdourl = $this->input->post("vdourl");
@@ -1292,7 +1380,36 @@ class Account extends CI_Controller
             $stock = $this->input->post("stock");
             $inputcustomtext = $this->input->post("inputcustomtext");
             $fileUpload = $this->input->post("multipleimages");
+            $shippingfee = $this->input->post("shippingfee");
             $images = "";
+
+            $vdourl = "";
+
+            if (isset($_FILES['uploadan']) && is_uploaded_file($_FILES['uploadan']['tmp_name'])) {
+
+                $configVideo['upload_path'] =  'public/upload/acc/' . $acctoken . "/";
+                $configVideo['max_size'] = '1024' * 25;
+                $configVideo['allowed_types'] = '*'; # add video extenstion on here
+                $configVideo['overwrite'] = FALSE;
+                $configVideo['remove_spaces'] = TRUE;
+                $video_name = $this->random_string(5);
+                $configVideo['file_name'] = $video_name;
+
+                $this->load->library('upload', $configVideo);
+                $this->upload->initialize($configVideo);
+
+                $fileExt = pathinfo($_FILES["uploadan"]["name"], PATHINFO_EXTENSION);
+
+                if (!$this->upload->do_upload('uploadan')) # form input field attribute
+                {
+                    # Upload Failed 
+                    print_r($this->upload->display_errors());
+                } else {
+                    # Upload Successfull
+                    $vdourl = base_url("public/upload/acc/$acctoken/") .  $video_name . ".$fileExt";
+                }
+            }
+
             // print_r($fileUpload);
             if (!empty($imageData)) {
                 if ($this->is_base64($imageData)) {
@@ -1317,12 +1434,12 @@ class Account extends CI_Controller
             if (empty($id)) {
                 $input = array(
                     'name' => $name,
+                    'shippingfee' => $shippingfee,
                     'price' => $price,
                     'discount' => $discount,
                     'cateid' => $category,
                     'cateid1' => $category1,
                     'cateid2' => $category2,
-                    'video' => $vdourl,
                     'description' => $inputcustomtext,
                     'image' => rtrim($images, "#"),
                     'status' => "1",
@@ -1331,6 +1448,10 @@ class Account extends CI_Controller
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
 
+                if ($vdourl != "") {
+                    $input["video"] = $vdourl;
+                }
+
                 if ($this->put->items($input)) {
                     redirect("account/$acctoken/products");
                 }
@@ -1338,18 +1459,23 @@ class Account extends CI_Controller
                 $input = array(
                     'id' => $id,
                     'name' => $name,
-                    'video' => $vdourl,
+                    'shippingfee' => $shippingfee,
                     'cateid' => $category,
                     'cateid1' => $category1,
                     'cateid2' => $category2,
                     'description' => $inputcustomtext,
                     'price' => $price,
                     'discount' => $discount,
+                    'status' => $status,
                     'stock' => $stock,
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
                 // if ($image != "") {
                 $input["image"] = rtrim($images, "#");
+
+                if ($vdourl != "") {
+                    $input["video"] = $vdourl;
+                }
                 // }
                 if ($this->set->items($input)) {
                     redirect("account/$acctoken/products");
@@ -1359,10 +1485,20 @@ class Account extends CI_Controller
     }
 
 
-
+    function random_string($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
     public function addnewauction($acctoken = "")
     {
         if ($_POST) {
+
             $id = $this->input->post("id");
             $imageData = $this->input->post("imageData");
             $data["user"] = $this->user->get_account_cookie();
@@ -1377,6 +1513,55 @@ class Account extends CI_Controller
             $daterange   = explode(" - ", $daterange);
             $dfrom = str_replace('/', '-', $daterange[0]);
             $dto = str_replace('/', '-', $daterange[1]);
+            $fileUpload = $this->input->post("multipleimages");
+            $vdourl = "";
+
+            if (isset($_FILES['uploadan']) && is_uploaded_file($_FILES['uploadan']['tmp_name'])) {
+
+                $configVideo['upload_path'] =  'public/upload/acc/' . $acctoken . "/";
+                $configVideo['max_size'] = '1024' * 25;
+                $configVideo['allowed_types'] = '*'; # add video extenstion on here
+                $configVideo['overwrite'] = FALSE;
+                $configVideo['remove_spaces'] = TRUE;
+                $video_name = $this->random_string(5);
+                $configVideo['file_name'] = $video_name;
+
+                $this->load->library('upload', $configVideo);
+                $this->upload->initialize($configVideo);
+
+                $fileExt = pathinfo($_FILES["uploadan"]["name"], PATHINFO_EXTENSION);
+
+                if (!$this->upload->do_upload('uploadan')) # form input field attribute
+                {
+                    # Upload Failed 
+                    print_r($this->upload->display_errors());
+                } else {
+                    # Upload Successfull
+                    $vdourl = base_url("public/upload/acc/$acctoken/") .  $video_name . ".$fileExt";
+                }
+            }
+
+            $images = "";
+            // print_r($fileUpload);
+            if (!empty($imageData)) {
+                if ($this->is_base64($imageData)) {
+                    $image = $this->base64_to_jpeg($imageData, $acctoken);
+                    $images .= base_url("public/upload/item/$acctoken/") . $image["upload_data"]["file_name"] . "#";
+                } else {
+                    $images .= $imageData . "#";
+                }
+            }
+
+            foreach ($fileUpload as $img) {
+                $img = preg_replace('#data:image/[^;]+;base64,#', '', $img);
+                if ($this->is_base64($img)) {
+                    $image = $this->base64_to_jpeg($img, $acctoken);
+                    $images .= base_url("public/upload/item/$acctoken/") . $image["upload_data"]["file_name"] . "#";
+                } else {
+                    $images .= $img . "#";
+                }
+            }
+
 
 
             // $image = "";
@@ -1385,6 +1570,7 @@ class Account extends CI_Controller
             //     $image = base_url("public/upload/item/$acctoken/") . $image["upload_data"]["file_name"];
             // }
 
+            // print_r($images);
             if (empty($id)) {
                 $input = array(
                     'name' => $name,
@@ -1394,14 +1580,18 @@ class Account extends CI_Controller
                     'description' => $inputcustomtext,
                     'dfrom' => date('Y-m-d H:i:s', strtotime($dfrom)),
                     'dto' => date('Y-m-d H:i:s', strtotime($dto)),
+                    'image' => rtrim($images, "#"),
                     'status' => 1,
                     'stock' => 1,
                     'merchantid' => $data["user"]["id"],
                     'updatedate' => date('Y-m-d H:i:s'),
                 );
 
-                if ($imageData != "") {
-                    $input["image"] = "data:image/jpeg;base64,$imageData";
+                // if ($imageData != "") {
+                //     $input["image"] = "data:image/jpeg;base64,$imageData"; 
+                // }
+                if ($vdourl != "") {
+                    $input["vdourl"] = $vdourl;
                 }
 
                 if ($this->put->auctionlist($input)) {
@@ -1421,11 +1611,15 @@ class Account extends CI_Controller
                     'stock' => 1,
                     'merchantid' => $data["user"]["id"],
                     'updatedate' => date('Y-m-d H:i:s'),
+                    'image' => rtrim($images, "#"),
                 );
-
-                if ($imageData != "") {
-                    $input["image"] = "data:image/jpeg;base64,$imageData";
+                if ($vdourl != "") {
+                    $input["vdourl"] = $vdourl;
                 }
+                // if ($imageData != "") {
+                // $input["image"] = "data:image/jpeg;base64,$imageData";
+                // $input["image"] = rtrim($images, "#");
+                // }
 
                 if ($this->set->auctionlist($input)) {
                     redirect("account/$acctoken/auction");

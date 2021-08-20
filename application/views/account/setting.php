@@ -95,6 +95,11 @@
                                 <?= $merchant->reason ?>
                             </div>
                         <?php endif; ?>
+                        <?php if ($merchant->status == 0) : ?>
+                            <div class="alert alert-warning" id="passwordnotmath">
+                               กรุณารออนุมัติจากผู้ดูแล
+                            </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if ($this->input->get('update') == 'success') : ?>

@@ -259,6 +259,24 @@ tbody.selected tr small {
     color: #2b2b2b;
 }
 
+.overlay-box { 
+    background: #000000b8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    display : flex;
+    align-items: center; 
+}
+.overlay-box h3{
+    color: #fff;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+}
+
 .panel-blue .panel-heading a, .panel-info .panel-heading a:hover {
     color: #2b2b2b;
 }

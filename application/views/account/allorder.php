@@ -241,7 +241,7 @@
     $(document).ready(function() {
 
         $("#checkAll").click(function() {
-            $('input:checkbox').not(this).prop('checked', this.checked);
+            $('input:checkbox').not(this).not(':disabled').prop('checked', this.checked);
         });
 
         getorderstatus(0, 'ทั้งหมด');

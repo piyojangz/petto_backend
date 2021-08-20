@@ -120,24 +120,24 @@
                                             <th width="70" class="text-center">#</th>
                                             <th>ชื่อ</th>
                                             <th>อีเมลล์</th>
-                                            <th>เบอร์โทร</th>
-                                            <th>หมายเหตุ</th>
+                                            <th>เบอร์โทร</th> 
                                             <!-- <th>ไฟล์แนบ</th> -->
                                             <th>สถานะ</th>
                                             <th>การยกเลิกการระงับบัญชี</th>
+                                            <th width="150">หมายเหตุ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach ($merchant as $index => $item) : ?>
                                             <tr>
                                                 <td class="text-center" style="vertical-align: middle;"><?= $index + 1 ?></td>
-                                                <td style="vertical-align: middle;"><?= $item->title ?></td>
+                                                <td style="vertical-align: middle;"><?= $item->firstname ?> <?= $item->lastname ?></td>
                                                 <td style="vertical-align: middle;"><?= $item->email ?></td>
-                                                <td style="vertical-align: middle;"><?= $item->tel ?></td>
-                                                <td style="vertical-align: middle;color:red"><?= $item->reason ?></td>
+                                                <td style="vertical-align: middle;"><?= $item->tel ?></td> 
                                                 <!-- <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-danger' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">view</a></td> -->
                                                 <td style="vertical-align: middle;"><span class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-danger' ?> " href="#"><?= 'ถูกระงับบัญชี' ?></span> </td>
                                                 <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-danger' : 'badge-danger' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">คลิก</a></td>
+                                                <td style="vertical-align: middle;color:red"><?= $item->reason ?></td>
                                             </tr>
                                         <?php endforeach; ?>
 
@@ -173,7 +173,7 @@
                                                         <div class="col-md-9">
                                                             <select class="form-control" name="status" id="status" required>
                                                                 <option value="">เลือกคำสั่ง</option>
-                                                                <option value="0">ยกเลิกการระงับ</option>
+                                                                <option value="1">ยกเลิกการระงับ</option>
                                                             </select>
                                                         </div>
                                                     </div>
