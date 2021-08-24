@@ -1163,7 +1163,7 @@ class Service extends CI_Controller
         $limit = $post['limit'];
         $pricelength = $post['pricelength'];
         $pricesort = $post['pricesort'];
-        $cond = array('status' => 1, 'stock > ' => 0);
+        $cond = array('status' => 1, 'stock > ' => 0, 'image !=' => '');
         $data['result'] = $this->get->v_product($cond, $limit, $pricelength, $pricesort)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -1173,7 +1173,7 @@ class Service extends CI_Controller
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $id = $post['id'];
-        $cond = array('status' => 1, 'id' => $id, 'stock > ' => 0);
+        $cond = array('status' => 1, 'id' => $id, 'stock > ' => 0, 'image !=' => '');
         $data['result'] = $this->get->v_product($cond)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -1184,7 +1184,7 @@ class Service extends CI_Controller
         $post = json_decode(file_get_contents('php://input'), true);
         $limit = $post['limit'];
         $searchtext = $post['searchtext'];
-        $cond = array('status' => 1, 'stock > ' => 0);
+        $cond = array('status' => 1, 'stock > ' => 0, 'image !=' => '');
         $data['result'] = $this->get->v_product($cond, $limit, "", "", $searchtext)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -1207,7 +1207,7 @@ class Service extends CI_Controller
         $limit = $post['limit'];
         $pricelength = $post['pricelength'];
         $pricesort = $post['pricesort'];
-        $cond = array('status' => 1, 'isoffer' => 1, 'stock > ' => 0);
+        $cond = array('status' => 1, 'isoffer' => 1, 'stock > ' => 0, 'image !=' => '');
         $data['result'] = $this->get->v_product($cond, $limit, $pricelength, $pricesort)->result();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
@@ -1220,10 +1220,10 @@ class Service extends CI_Controller
         $pricelength = $post['pricelength'];
         $pricesort = $post['pricesort'];
         if ($id == '0') {
-            $cond = array('status' => 1, 'stock > ' => 0);
+            $cond = array('status' => 1, 'stock > ' => 0, 'image !=' => '');
             $data['result'] = $this->get->items($cond, $pricelength, $pricesort)->result();
         } else {
-            $cond = array('status' => 1, 'stock > ' => 0, 'cateid' => $id);
+            $cond = array('status' => 1, 'stock > ' => 0, 'cateid' => $id, 'image !=' => '');
             $data['result'] = $this->get->itemsbycateid($cond, $pricelength, $pricesort)->result();
         }
 
