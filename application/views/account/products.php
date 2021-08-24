@@ -121,299 +121,310 @@
                             <h4>กรุณาแนบบเพิ่มบัญชีรับเงิน</h4> <a href="<?= base_url("account/$token/paymentmethod") ?>" class=" btn   btn-primary waves-effect waves-light">ไปที่หน้า เพิ่มบัญชี</a>
                         </div>
                     <?php else :  ?>
-                     
-                    <div class="row el-element-overlay m-b-40 block1">
-                        <div class="col-md-12">
-                            <?php if ($disabledadditem == 'false') : ?>
-                                <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
-                            <?php else : ?>
-                                <p style="color: #f55252;
+
+                        <div class="row el-element-overlay m-b-40 block1">
+                            <div class="col-md-12">
+                                <?php if ($disabledadditem == 'false') : ?>
+                                    <button class="btn-item-modal btn btn-outline btn-primary waves-effect waves-light"><i class="fa fa-cart-plus m-r-5"></i> <span>เพิ่มสินค้าใหม่</span></button>
+                                <?php else : ?>
+                                    <p style="color: #f55252;
     font-size: 16px;">ไม่สามารถเพิ่มสินค้าได้เนื่องจากเกินกำหนดตามแพคเก็จ (จำนวนที่ขายได้ตามแพคเก็จ = <?= $package->saleslot ?>)</p>
-                            <?php endif; ?>
-                            <hr>
-                        </div>
-                        <div class="col-md-12 text-right">
-                            <a href="?display=row"><i style="font-size: 20px;" class="ti-layout-list-thumb"></i></a> / <a href="?display=column"><i style="font-size: 20px;" class="ti-layout-grid3"></i></a>
-                        </div>
+                                <?php endif; ?>
+                                <hr>
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <a href="?display=row"><i style="font-size: 20px;" class="ti-layout-list-thumb"></i></a> / <a href="?display=column"><i style="font-size: 20px;" class="ti-layout-grid3"></i></a>
+                            </div>
 
-                        <?php if ($display == 'column') : ?>
-                            <?php foreach ($items as $item) : ?>
+                            <?php if ($display == 'column') : ?>
+                                <?php foreach ($items as $item) : ?>
 
-                                <!-- /.usercard -->
-                                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                    <div class="white-box" style="height:450px;max-height: 450px;
+                                    <!-- /.usercard -->
+                                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                                        <div class="white-box" style="height:450px;max-height: 450px;
     overflow-y: scroll;">
-                                        <div class="el-card-item">
-                                            <?php if ($item->status == 2) : ?>
+                                            <div class="el-card-item">
+                                                <?php if ($item->status == 2) : ?>
 
-                                                <form action="<?= base_url("account/$token/unlockproduct") ?>" method="post">
-                                                    <div class="overlay-box">
-                                                        <div style="width: 100%;align-items: center; text-align: center;">
-                                                            <h3>สินค้าปิดใช้งาน</h3>
-                                                            <?php if ($disabledunlock == 'false') : ?>
-                                                                <button class="btn">ปลดล๊อครายการนี้</button>
-                                                            <?php endif; ?>
-                                                            <input type="hidden" name="productid" id="productid" value="<?= $item->id ?>">
+                                                    <form action="<?= base_url("account/$token/unlockproduct") ?>" method="post">
+                                                        <div class="overlay-box">
+                                                            <div style="width: 100%;align-items: center; text-align: center;">
+                                                                <h3>สินค้าปิดใช้งาน</h3>
+                                                                <?php if ($disabledunlock == 'false') : ?>
+                                                                    <button class="btn">ปลดล๊อครายการนี้</button>
+                                                                <?php endif; ?>
+                                                                <input type="hidden" name="productid" id="productid" value="<?= $item->id ?>">
+                                                            </div>
                                                         </div>
+                                                    </form>
+                                                <?php endif; ?>
+                                                <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;min-height:100px"><img src="<?= $item->image ?>" />
+                                                    <div class="el-overlay">
+                                                        <ul class="el-info">
+                                                            <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
+                                                            <li><a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a></li>
+                                                        </ul>
                                                     </div>
-                                                </form>
-                                            <?php endif; ?>
-                                            <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;min-height:100px"><img src="<?= $item->image ?>" />
-                                                <div class="el-overlay">
-                                                    <ul class="el-info">
-                                                        <li><a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a></li>
-                                                        <li><a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a></li>
-                                                    </ul>
                                                 </div>
-                                            </div>
-                                            <div class="el-card-content">
-                                                <h4 class="box-title text-info"><?= $item->name ?></h4>
-                                                <small>฿<?= number_format($item->price) ?></small>
-                                                <br>
-                                                <code>คลัง <?= $item->stock ?></code>
-                                                <br>
-                                            </div>
+                                                <div class="el-card-content">
+                                                    <h4 class="box-title text-info"><?= $item->name ?></h4>
+                                                    <small>฿<?php
+                                                            if ($item->discount > 0) {
+                                                                echo "<del>" . number_format($item->price) . "</del>" . " " . "<b>" . number_format($item->discount) . "</b>";
+                                                            } else {
+                                                                echo number_format($item->price);
+                                                            } ?></td> 
+                                                    </small>
+                                                    <br>
+                                                    <code>คลัง <?= $item->stock ?></code>
+                                                    <br>
+                                                </div>
 
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- /.usercard-->
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                    <?php if ($display != 'column') : ?>
-                        <div class="white-box">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th colspan="1" style="width: 250px; text-align: left;">ชื่อสินค้า</th>
-                                            <th style="min-width:120px;">คลัง</th>
-                                            <th style="min-width:140px;">ราคา</th>
-                                            <th style="min-width:150px;">วันที่สร้าง</th>
-                                            <th>#</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="items">
-                                        <?php foreach ($items as $item) : ?>
-                                            <tr>
-                                                <td>
-                                                    <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;max-height:50px"><img style="width: 50px;" src="<?= $item->image ?>" />
-                                                </td>
-                                                <td colspan="1" style="min-width: 80px; text-align: left;">
-                                                    <h4 class="box-title "><?= $item->name ?></h4>
-                                                </td>
-                                                <td><?= $item->stock ?></td>
-                                                <td style="min-width:120px;">฿<?= number_format($item->price) ?></td>
-                                                <td style="min-width:140px;"><?= $item->updatedate ?></td>
-                                                <td>
-                                                    <a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a>
-                                                    <a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a>
-
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                    <!-- /.usercard-->
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
-                    <?php endif; ?>
+                        <?php if ($display != 'column') : ?>
+                            <div class="white-box">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th colspan="1" style="width: 250px; text-align: left;">ชื่อสินค้า</th>
+                                                <th style="min-width:120px;">คลัง</th>
+                                                <th style="min-width:140px;">ราคา</th>
+                                                <th style="min-width:150px;">วันที่สร้าง</th>
+                                                <th>#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="items">
+                                            <?php foreach ($items as $item) : ?>
+                                                <tr>
+                                                    <td>
+                                                        <div class="el-card-avatar el-overlay-1" style="width:100%;overflow: hidden;max-height:50px"><img style="width: 50px;" src="<?= $item->image ?>" />
+                                                    </td>
+                                                    <td colspan="1" style="min-width: 80px; text-align: left;">
+                                                        <h4 class="box-title "><?= $item->name ?></h4>
+                                                    </td>
+                                                    <td><?= $item->stock ?></td>
+                                                    <td style="min-width:120px;">฿<?php
+                                                                                    if ($item->discount > 0) {
+                                                                                        echo "<del>" . number_format($item->price) . "</del>" . " " . "<b>" . number_format($item->discount) . "</b>";
+                                                                                    } else {
+                                                                                        echo number_format($item->price);
+                                                                                    } ?></td>
+                                                    <td style="min-width:140px;"><?= $item->updatedate ?></td>
+                                                    <td>
+                                                        <a class="btn default btn-outline image-popup-vertical-fit" href="javascript:void(0);" onclick="edititem('<?= $item->id ?>')"><i class="ti-pencil-alt"></i></a>
+                                                        <a class="btn default btn-outline" href="javascript:void(0);" onclick="removeitem('<?= $item->id ?>', '<?= $token ?>', 'true')"><i class="ti-trash"></i></a>
 
-                <?php endif;  ?>
-            </div>
-            <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit" enctype="multipart/form-data">
-                <div class="panel panel-default">
-                    <div class="panel-heading">เพิ่ม / แก้ไข</div>
-                    <div class="panel-wrapper collapse in">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="panel panel-info ">
-                                        <div class="panel-body">
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        <?php endif; ?>
 
-                                            <div class="form-body">
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">ชื่อสินค้า</label>
-                                                    <div class="col-md-9">
-                                                        <input type="text" name="name" id="name" class="form-control" maxlength="120" required>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">ปิดใช้งานสินค้าชิ้นนี้</label>
-                                                    <div class="col-md-9">
-                                                        <select id="status" name="status" class="form-control">
-                                                            <option value="1">เปิดการใช้งาน</option>
-                                                            <option value="2">ปิดการใช้งาน</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">หมวดหมู่</label>
-                                                    <div class="col-md-9">
-                                                        <select id="category" name="category" class="form-control">
-                                                            <option value="0">ไม่มี</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">หมวดหมู่ย่อย1</label>
-                                                    <div class="col-md-9">
-                                                        <select id="category1" name="category1" class="form-control">
-                                                            <option value="0">ไม่มี</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">หมวดหมู่ย่อย2</label>
-                                                    <div class="col-md-9">
-                                                        <select id="category2" name="category2" class="form-control">
-                                                            <option value="0">ไม่มี</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">ราคา</label>
-                                                    <div class="col-md-9">
-                                                        <input type="number" name="price" id="price" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">ราคาลด</label>
-                                                    <div class="col-md-9">
-                                                        <input type="number" name="discount" id="discount" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">ค่าขนส่ง</label>
-                                                    <div class="col-md-9">
-                                                        <input type="number" name="shippingfee" id="shippingfee" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">คลัง</label>
-                                                    <div class="col-md-9">
-                                                        <input type="number" name="stock" id="stock" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">รายละเอียดสินค้า</label>
-                                                    <div class="col-md-9">
-                                                        <textarea id="customtext" name="customtext" class="summernote"></textarea>
-                                                        <input value="" name="inputcustomtext" id="inputcustomtext" type="hidden">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-3">วีดีโอ (ไม่เกิน25MB)</label>
-                                                    <div class="col-md-9">
-                                                        <video width="320" height="240" controls id="vdo">
-                                                            <source id="vdosrc1" type="video/mp4">
-                                                            <source id="vdosrc2" type="video/ogg">
-                                                            Your browser does not support the video tag.
-                                                        </video>
-                                                        <input type="file" name="uploadan" id="uploadan" onchange="return validateSize(this)" accept="video/mp4,video/x-m4v,video/*">
-                                                    </div>
-                                                </div>
+                    <?php endif;  ?>
+                    </div>
+                    <form action="<?= base_url("account/$token/addnewproduct") ?>" method="post" class="form-material form-horizontal mfp-hide white-popup-block animate fadeInLeft" style="max-width: 800px;" id="form-submit" enctype="multipart/form-data">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">เพิ่ม / แก้ไข</div>
+                            <div class="panel-wrapper collapse in">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel panel-info ">
+                                                <div class="panel-body">
 
-                                                <div class="form-group">
-
-                                                    <label class="control-label col-md-3">รูปภาพปก</label>
-                                                    <div class="col-md-9">
-                                                        <div class="cropit-preview-edit"><img id="imgedit" src="" /></div>
-                                                        <button class="btn-edit-img btn btn-warning waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>แก้ไขรูปภาพ
-                                                        </button>
-
-
-                                                        <div class="image-editor">
-                                                            <input type="hidden" id="imageData" name="imageData" />
-                                                            <input type="file" class="cropit-image-input" data-max-file-size="2M" accept=".jpg,.png" />
-                                                            <div class="cropit-preview"></div>
-                                                            <div class="image-size-label">
-                                                                ย่อ / ขยายรูป
-                                                            </div>
-                                                            <input type="range" class="cropit-image-zoom-input" style="width:300px;">
-                                                            <button class="select-image-btn btn btn-info waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-image"></i></span>เลือกรูปภาพ
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-horizontal">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-3">รูปอื่นๆ</label>
-                                                        <div class="col-md-8">
-                                                            <div class="row">
-                                                                <div id="imagesother"></div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div id="coba"></div>
+                                                    <div class="form-body">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">ชื่อสินค้า</label>
+                                                            <div class="col-md-9">
+                                                                <input type="text" name="name" id="name" class="form-control" maxlength="120" required>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">ปิดใช้งานสินค้าชิ้นนี้</label>
+                                                            <div class="col-md-9">
+                                                                <select id="status" name="status" class="form-control">
+                                                                    <option value="1">เปิดการใช้งาน</option>
+                                                                    <option value="2">ปิดการใช้งาน</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">หมวดหมู่</label>
+                                                            <div class="col-md-9">
+                                                                <select id="category" name="category" class="form-control">
+                                                                    <option value="0">ไม่มี</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">หมวดหมู่ย่อย1</label>
+                                                            <div class="col-md-9">
+                                                                <select id="category1" name="category1" class="form-control">
+                                                                    <option value="0">ไม่มี</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">หมวดหมู่ย่อย2</label>
+                                                            <div class="col-md-9">
+                                                                <select id="category2" name="category2" class="form-control">
+                                                                    <option value="0">ไม่มี</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">ราคาขายปกติ</label>
+                                                            <div class="col-md-9">
+                                                                <input type="number" name="price" id="price" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">ราคาที่ลดจากราคาขายปกติ</label>
+                                                            <div class="col-md-9">
+                                                                <input type="number" name="discount" id="discount" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">ค่าขนส่ง</label>
+                                                            <div class="col-md-9">
+                                                                <input type="number" name="shippingfee" id="shippingfee" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">คลัง</label>
+                                                            <div class="col-md-9">
+                                                                <input type="number" name="stock" id="stock" required class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">รายละเอียดสินค้า</label>
+                                                            <div class="col-md-9">
+                                                                <textarea id="customtext" name="customtext" class="summernote"></textarea>
+                                                                <input value="" name="inputcustomtext" id="inputcustomtext" type="hidden">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">วีดีโอ (ไม่เกิน25MB)</label>
+                                                            <div class="col-md-9">
+                                                                <video width="320" height="240" controls id="vdo">
+                                                                    <source id="vdosrc1" type="video/mp4">
+                                                                    <source id="vdosrc2" type="video/ogg">
+                                                                    Your browser does not support the video tag.
+                                                                </video>
+                                                                <input type="file" name="uploadan" id="uploadan" onchange="return validateSize(this)" accept="video/mp4,video/x-m4v,video/*">
+                                                            </div>
+                                                        </div>
 
-                                                <div class="form-actions">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="row">
-                                                                <div class="col-md-offset-9 col-md-3">
-                                                                    <button type="submit" id="btnsubmit" class="btn btn-success"><i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล
+                                                        <div class="form-group">
+
+                                                            <label class="control-label col-md-3">รูปภาพปก</label>
+                                                            <div class="col-md-9">
+                                                                <div class="cropit-preview-edit"><img id="imgedit" src="" /></div>
+                                                                <button class="btn-edit-img btn btn-warning waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-edit"></i></span>แก้ไขรูปภาพ
+                                                                </button>
+
+
+                                                                <div class="image-editor">
+                                                                    <input type="hidden" id="imageData" name="imageData" />
+                                                                    <input type="file" class="cropit-image-input" data-max-file-size="2M" accept=".jpg,.png" />
+                                                                    <div class="cropit-preview"></div>
+                                                                    <div class="image-size-label">
+                                                                        ย่อ / ขยายรูป
+                                                                    </div>
+                                                                    <input type="range" class="cropit-image-zoom-input" style="width:300px;">
+                                                                    <button class="select-image-btn btn btn-info waves-effect waves-light" type="button"><span class="btn-label"><i class="fa fa-image"></i></span>เลือกรูปภาพ
                                                                     </button>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="form-horizontal">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-3">รูปอื่นๆ</label>
+                                                                <div class="col-md-8">
+                                                                    <div class="row">
+                                                                        <div id="imagesother"></div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div id="coba"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-actions">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="row">
+                                                                        <div class="col-md-offset-9 col-md-3">
+                                                                            <button type="submit" id="btnsubmit" class="btn btn-success"><i class="fa fa-check"></i> บันทึก/แก้ไขข้อมูล
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                    <input type="hidden" id="id" name="id" />
+
                                                 </div>
                                             </div>
-                                            <input type="hidden" id="id" name="id" />
-
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
 
-                    </div>
-                </div>
 
+                    </form>
 
-            </form>
+                    <!-- /.container-fluid -->
 
-            <!-- /.container-fluid -->
-
-            <?php $this->load->view('account/template/footer'); ?>
+                    <?php $this->load->view('account/template/footer'); ?>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Page Content -->
+            <!-- ============================================================== -->
         </div>
         <!-- ============================================================== -->
-        <!-- End Page Content -->
+        <!-- End Wrapper -->
         <!-- ============================================================== -->
-    </div>
-    <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- All Jquery -->
-    <!-- ============================================================== -->
-    <script src="<?= base_url("res/account/plugins/bower_components/jquery/dist/jquery.min.js") ?>"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="<?= base_url("res/account/bootstrap/dist/js/bootstrap.min.js") ?>"></script>
-    <!-- Menu Plugin JavaScript -->
-    <script src="<?= base_url("res/account/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js") ?>"></script>
-    <!--slimscroll JavaScript -->
-    <script src="<?= base_url("res/account/js/jquery.slimscroll.js") ?>"></script>
-    <!-- Custom Theme JavaScript -->
-    <script src="<?= base_url("res/account/js/custom.min.js") ?>"></script>
-    <script src="<?= base_url("res/account/plugins/bower_components/toast-master/js/jquery.toast.js") ?>"></script>
-    <!--Style Switcher -->
-    <script src="<?= base_url("res/account/plugins/bower_components/styleswitcher/jQuery.style.switcher.js") ?>"></script>
-    <!-- Sweet-Alert  -->
-    <script src="<?= base_url("res/account/plugins/bower_components/sweetalert/sweetalert.min.js") ?>"></script>
+        <!-- ============================================================== -->
+        <!-- All Jquery -->
+        <!-- ============================================================== -->
+        <script src="<?= base_url("res/account/plugins/bower_components/jquery/dist/jquery.min.js") ?>"></script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="<?= base_url("res/account/bootstrap/dist/js/bootstrap.min.js") ?>"></script>
+        <!-- Menu Plugin JavaScript -->
+        <script src="<?= base_url("res/account/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js") ?>"></script>
+        <!--slimscroll JavaScript -->
+        <script src="<?= base_url("res/account/js/jquery.slimscroll.js") ?>"></script>
+        <!-- Custom Theme JavaScript -->
+        <script src="<?= base_url("res/account/js/custom.min.js") ?>"></script>
+        <script src="<?= base_url("res/account/plugins/bower_components/toast-master/js/jquery.toast.js") ?>"></script>
+        <!--Style Switcher -->
+        <script src="<?= base_url("res/account/plugins/bower_components/styleswitcher/jQuery.style.switcher.js") ?>"></script>
+        <!-- Sweet-Alert  -->
+        <script src="<?= base_url("res/account/plugins/bower_components/sweetalert/sweetalert.min.js") ?>"></script>
 
-    <script src="<?= base_url("res/account/plugins/bower_components/dropify/dist/js/dropify.min.js") ?>"></script>
-    <script src="<?= base_url("res/account/plugins/bower_components/cropit/jquery.cropit.js") ?>"></script>
-    <script src="<?= base_url("res/account/plugins/bower_components/blockUI/jquery.blockUI.js") ?>"></script>
-    <script src="<?= base_url("res/account/plugins/bower_components/summernote/dist/summernote.min.js") ?>"></script>
-    <!-- Magnific popup JavaScript -->
-    <script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script>
-    <script src="<?= base_url("res/js/spartan-multi-image-picker.js") ?>"></script>
+        <script src="<?= base_url("res/account/plugins/bower_components/dropify/dist/js/dropify.min.js") ?>"></script>
+        <script src="<?= base_url("res/account/plugins/bower_components/cropit/jquery.cropit.js") ?>"></script>
+        <script src="<?= base_url("res/account/plugins/bower_components/blockUI/jquery.blockUI.js") ?>"></script>
+        <script src="<?= base_url("res/account/plugins/bower_components/summernote/dist/summernote.min.js") ?>"></script>
+        <!-- Magnific popup JavaScript -->
+        <script src="<?= base_url("res/account/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js") ?>"></script>
+        <script src="<?= base_url("res/js/spartan-multi-image-picker.js") ?>"></script>
 </body>
 <script>
     $(document).ready(function() {
