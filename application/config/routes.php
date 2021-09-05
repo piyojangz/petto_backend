@@ -137,6 +137,10 @@ else {
     $route['account/(:any)/addcover'] = "account/addcover/$1";
     $route['account/(:any)/shopslot'] = "account/shopslot/$1";
     $route['account/(:any)/addarticle'] = "account/addarticle/$1";
+    $route['account/(:any)/packagecheckout'] = "account/packagecheckout";
+    $route['account/(:any)/packageorderlist'] = "account/packageorderlist";
+    $route['account/(:any)/packagecheckoutdetail/(:any)'] = "account/packagecheckoutdetail/$2";
+    
 
 
 

@@ -82,11 +82,11 @@
                                                 <ul role="menu" class="dropdown-menu">
                                                     <li><a href="javascript:;" onclick="getorderstatus(0, 'ทั้งหมด')">ทั้งหมด</a>
                                                     </li>
-                                                    <li><a href="javascript:;" onclick="getorderstatus(1, 'ยังไม่จ่าย')">ยังไม่จ่าย</a>
+                                                    <li><a href="javascript:;" onclick="getorderstatus(1, 'ยังไม่จ่าย')">ยังไม่ชำระเงิน</a>
                                                     </li>
-                                                    <li><a href="javascript:;" onclick="getorderstatus(2, 'จ่ายแล้ว')">จ่ายแล้ว</a>
+                                                    <li><a href="javascript:;" onclick="getorderstatus(2, 'จ่ายแล้ว')">ชำระเงินแล้ว</a>
                                                     </li>
-                                                    <li><a href="javascript:;" onclick="getorderstatus(3, 'ส่งแล้ว')">ส่งแล้ว</a>
+                                                    <li><a href="javascript:;" onclick="getorderstatus(3, 'ส่งแล้ว')">จัดส่งแล้ว</a>
                                                     </li>
                                                     <li><a href="javascript:;" onclick="getorderstatus(4, 'ยกเลิก')">ยกเลิก</a></li>
                                                 </ul>

@@ -775,7 +775,7 @@ class Service extends CI_Controller
             $isbiding = $row->isbiding == 0 ? 'FALSE' : 'TRUE';
             $isactive = "";
             if ($row->packagename != 'STARTUP') {
-                $isactive = "<button onclick='alert(\"แอดไลน์ @pettogo แจ้งชื่อร้าน และแจ้งเปลี่ยนเป็นแพคเก็จ $row->packagename\")' class='btn btn-primary'>เปลี่ยนเป็นแพคเกจนี้</button>";
+                $isactive = "<button onclick='changepackage(\" $row->id\")' class='btn btn-primary'>เปลี่ยนเป็นแพคเกจนี้</button>";
             }
 
 
@@ -886,6 +886,45 @@ class Service extends CI_Controller
 
         echo  $html;
     }
+
+    public function job_updatepaymentovertime()
+    {
+        $min = 30;
+        $v_order = $this->get->getoverdueorder($min)->result();
+        foreach ($v_order as   $value) {
+
+            $orderdetails = $this->get->orderdetail(array('orderid' => $value->id))->result();
+            foreach ($orderdetails as   $odetails) {
+                $itemdetail = $this->get->items(array('id' => $odetails->itemid))->row();
+                $inputstock = array(
+                    'id' => $odetails->itemid,
+                    'stock' => intval($itemdetail->stock) + intval($odetails->amount),
+                    'updatedate' => date('Y-m-d H:i:s'),
+                );
+                $this->set->items($inputstock);
+            }
+
+            $input = array(
+                'id' => $value->id,
+                'closestatus' => 1,
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            $data['result'] = false;
+            if ($this->set->order($input)) {
+                $data['result'] = true;
+            }
+
+            $customer = $this->get->customer(array('id' => $value->custid))->row();
+            $subject = "แจ้งยกเลิกรายการสั่งซื้อ";
+            $msg = "ท่านถูกยกเลิกรายการสั่งซื้อเนื่องจากไม่ชำระเงินภายในเวลา $min นาที";
+            $this->msgnotifyCustomer($customer, $subject, $msg);
+            $this->pushMsgNotifyMerchant($value->merchantid, "รายการขาย #orderno $value->orderno ถูกยกเลิกเนื่องจากผู้ซื้อไม่ชำระเงินภายในเวลาที่กำหนด");
+        }
+
+        // $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        // echo json_encode($data);
+    }
+
     public function job_updateauctionovertime()
     {
         $v_auctionend = $this->get->v_auctionend(array())->result();
@@ -1119,9 +1158,12 @@ class Service extends CI_Controller
     public function getcontentbyid()
     {
         $post = json_decode(file_get_contents('php://input'), true);
-        $id = $post['id'];
+        $id = intval($post['id']);
+        //$id = 2;
         $cond = array('status' => 1, 'id' => $id);
         $data['result'] = $this->get->article($cond)->row();
+        $data['next']  = $this->get->nextarticle($id)->row();
+        $data['previous']  = $this->get->previousarticle($id)->row();
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
@@ -1189,6 +1231,18 @@ class Service extends CI_Controller
         $this->output->set_header('Content-Type: application/json; charset=utf-8');
         echo json_encode($data);
     }
+
+    public function getshopbysearch()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $limit = $post['limit'];
+        $searchtext = $post['searchtext'];
+        $cond = array('status' => 1);
+        $data['result'] = $this->get->merchantsearch($cond,  $searchtext)->result();
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
 
 
     public function getauctionbyid()
@@ -1770,6 +1824,54 @@ class Service extends CI_Controller
     }
 
 
+    public function changepackage()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $packageid =  $post['packageid'];
+
+        $data["user"] = $this->user->get_account_cookie();
+        $data["token"] = $data["user"]['token'];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $package = $this->get->package(array('id' => $packageid))->row();
+
+        $data['result'] = null;
+
+        $inputo = array(
+            'merchantid' => $data["merchant"]->id,
+            'status' => "0",
+            'updatedate' => date('Y-m-d H:i:s'),
+        );
+        if ($this->set->packageorderbymerchantid($inputo)) {
+            $orderno = date('Ymd') . substr(implode(null, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+            $input = array(
+                'orderno' => $orderno,
+                'packageid' => $packageid,
+                'merchantid' =>  $data["merchant"]->id,
+                'total' => $package->price,
+                'status' => 1,
+                'ispaid' => 0,
+                'isconfirm' => 0,
+                'createdate' => date('Y-m-d H:i:s'),
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+
+
+            $data['result'] = $this->put->packageorder($input);
+
+ 
+            // $subject = "แจ้งชำระเงินค่าเปลี่ยนแพคเกจ";
+            // $msg = "กรุณาชำระเงินสำหรับการเปลี่ยนแพคเกจ $package->packagename จำนวน $package->price บาทค่ะ"; 
+            $this->pushMsgNotifyMerchant($data["merchant"]->id, "กรุณาชำระเงินสำหรับการเปลี่ยนแพคเกจ $package->packagename จำนวน $package->price บาทค่ะ");
+        }
+
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data['result']);
+    }
+
+
+
+
     public function createorder()
     {
 
@@ -1787,10 +1889,12 @@ class Service extends CI_Controller
             $gtotal = 0;
             $shippingfee = 0;
             foreach ($cartItems as $item) {
-                $price =  $item['discount'] != "" ? $item['discount']  :  $item['price'];
-                $shippingfee =  $shippingfee + $item['shippingfee'];
-                $unit = $unit + intval($item['qty']);
-                $gtotal  =   $gtotal + ($price * $item["qty"]);
+                if ($merchant['id'] == $item['merchantid']) {
+                    $price =  $item['discount'] != "" ? $item['discount']  :  $item['price'];
+                    $shippingfee =  $shippingfee + $item['shippingfee'];
+                    $unit = $unit + intval($item['qty']);
+                    $gtotal  =   $gtotal + ($price * $item["qty"]);
+                }
             }
 
             // $shippingfee = $this->get->shippingrate($merchant['id'], $unit)->row();

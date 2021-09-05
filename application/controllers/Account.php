@@ -75,6 +75,7 @@ class Account extends CI_Controller
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');
@@ -89,6 +90,7 @@ class Account extends CI_Controller
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
 
@@ -106,6 +108,7 @@ class Account extends CI_Controller
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         $data["imagescover"] = $this->get->imagescover(array("merchantid" => $data["merchant"]->id, "status" => "1"))->result();
 
@@ -120,6 +123,7 @@ class Account extends CI_Controller
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         $data["ggscript"] = $this->get->googleanalytic(array("merchantid" => $data["merchant"]->id))->row();
         if (!$this->user->is_login()) {
@@ -499,7 +503,7 @@ class Account extends CI_Controller
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
         $data["paidorder"] = $this->paidorder;
         $data["merchants"] = $this->get->merchantlineuid(array("token" => $data["token"], "status" => 1))->result();
-
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
 
         if ($data["user"]["isadmin"] == 1) {
             $data["dashboarddata"] = $this->get->getdashboarddataforadmin()->row();
@@ -663,6 +667,7 @@ class Account extends CI_Controller
         $data["obj"] = $this;
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         // $data["order"] = $this->get->v_order(array("merchantid" => $data["merchant"]->id, "closestatus != " => 1), array("0", "3"))->result();
 
@@ -682,6 +687,7 @@ class Account extends CI_Controller
         $data["obj"] = $this;
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         $order = $this->get->order(array('id' => $orderid))->row();
         $orderdetail = $this->get->orderdetail(array('orderid' => $orderid))->result();
@@ -695,6 +701,95 @@ class Account extends CI_Controller
 
         $this->load->view('account/orderdetail', $data);
     }
+
+
+    public function  packageorderlist()
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["obj"] = $this;
+        $data["token"] = $data["user"]['token'];
+        $acctoken =  $data["token"];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
+        $data["packageorder"] =  $this->get->allpackageorder(array("a.status" => 1))->result();
+        $this->load->view('account/allpackageorder', $data);
+    }
+    public function  packagecheckout()
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["obj"] = $this;
+        $data["token"] = $data["user"]['token'];
+        $acctoken =  $data["token"];
+        $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["paidorder"] = $this->paidorder;
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
+        $merchantid = $data["user"]["id"];
+        $order = $this->get->packageorder(array('merchantid' => $merchantid, 'status' => 1))->row();
+        $data["order"] =  $order;
+
+
+        if (isset($_FILES['imageData']) && is_uploaded_file($_FILES['imageData']['tmp_name'])) {
+
+            //$orderno = date('Ymd') . substr(implode(null, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+
+            $input = array(
+                'id' => $order->id,
+                'ispaid' => "1",
+                'updatedate' => date('Y-m-d H:i:s'),
+                'paiddate' => date('Y-m-d H:i:s'),
+            );
+
+
+            $photoTmpPath = $_FILES['imageData']['tmp_name'];
+            $data = file_get_contents($photoTmpPath);
+            $base64 = base64_encode($data);
+            $input["imgslip"] = "data:image/jpeg;base64,$base64";
+
+            if ($this->set->packageorder($input)) {
+                redirect("account/$acctoken/packagecheckout");
+            }
+        }
+
+        $this->load->view('account/packagecheckout', $data);
+    }
+
+
+
+    public function  packagecheckoutdetail($id)
+    {
+        $data["user"] = $this->user->get_account_cookie();
+        $data["obj"] = $this;
+        $data["token"] = $data["user"]['token'];
+        $acctoken =  $data["token"];
+
+        $data["packageorder"] =  $this->get->packageorder(array("a.id" => $id, "status" => 1))->row();
+
+        $data["merchant"] = $this->get->merchant(array("id" => $data["packageorder"]->merchantid))->row();
+        $data["paidorder"] = $this->paidorder;
+
+        $merchantid =  $data["packageorder"]->merchantid;
+        $order = $this->get->packageorder(array('merchantid' => $merchantid, 'status' => 1))->row();
+        $data["order"] =  $order;
+
+
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
+            $input = array(
+                'id' => $order->id,
+                'isconfirm' => "1",
+                'updatedate' => date('Y-m-d H:i:s'),
+            );
+            if ($this->set->packageorder($input)) {
+
+                $this->pushMsgNotifyMerchant($data["packageorder"]->merchantid, "รายการสั่งซื้อแพคเกจได้รับการยืนยันแล้ว ขอบคุณที่ใช้บริการค่ะ");
+
+
+                redirect("account/$acctoken/packageorderlist");
+            }
+        }
+
+        $this->load->view('account/packagecheckout', $data);
+    }
+
 
     public function getorderstatus($status)
     {
@@ -725,6 +820,7 @@ class Account extends CI_Controller
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         $data['disabledadditem'] = 'false';
         $data['disabledunlock'] = 'false';
@@ -775,6 +871,7 @@ class Account extends CI_Controller
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');
@@ -1718,6 +1815,7 @@ class Account extends CI_Controller
         $data["user"] = $this->user->get_account_cookie();
         $data["token"] = $data["user"]['token'];
         $data["merchant"] = $this->get->merchant(array("token" => $data["token"]))->row();
+        $data["packageorder"] =  $this->get->packageorder(array("merchantid" => $data["merchant"]->id, "status" => 1))->row();
         $data["paidorder"] = $this->paidorder;
         if (!$this->user->is_login()) {
             redirect('/');

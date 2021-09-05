@@ -218,4 +218,11 @@ class Insert_model extends CI_Model
         endif;
     }
 
+    public function packageorder($input) { 
+        if ($this->db->insert('packageorder', $input)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
 }

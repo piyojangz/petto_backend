@@ -68,6 +68,27 @@ class Update_model extends CI_Model
         endif;
     }
 
+    public function packageorder($input)
+    {
+        $this->db->where('id', $input['id']);
+        if ($this->db->update('packageorder', $input)) :
+            return true;
+        else :
+            return false;
+        endif;
+    }
+
+    public function packageorderbymerchantid($input)
+    {
+        $this->db->where('merchantid', $input['merchantid']);
+        if ($this->db->update('packageorder', $input)) :
+            return true;
+        else :
+            return false;
+        endif;
+    }
+
+
     public function article($input)
     {
         $this->db->where('id', $input['id']);

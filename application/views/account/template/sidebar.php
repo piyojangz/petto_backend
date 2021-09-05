@@ -38,6 +38,26 @@ switch ($user['packageid']) {
                 </li>
                 <li class="devider"></li>
             <?php endif; ?>
+            <?php if ($user['isadmin'] == 1) :  ?>
+                <li class="devider"></li>
+                <li>
+                    <a  href="<?= base_url("account/$token/packageorderlist") ?>"><i class="ti-light-bulb  fa-fw" data-icon="v"></i>
+                        รายการสั่งซื้อ Package <span class="fa arrow"></span></a>
+                </li>
+                <li class="devider"></li>
+            <?php endif; ?>
+
+            <?php if ($user['isadmin'] != 1) :   ?>
+                <?php if ($packageorder) :   ?>
+                    <?php if ($packageorder->isconfirm != 1) :   ?>
+                        <li>
+                            <a style="background-color: #7ace4c;color:#fff" href="<?= base_url("account/$token/packagecheckout") ?>"><i class="ti-light-bulb  fa-fw" data-icon="v"></i>
+                                คุณมีรายการรอชำระ <span class="fa arrow"></span></a>
+                        </li>
+                        <li class="devider"></li>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
             <li>
                 <a href="<?= base_url("account/$token/dashboard") ?>"><i class="icon-graph  fa-fw" data-icon="v"></i>
                     แดชบอร์ด <span class="fa arrow"></span></a>
@@ -215,5 +235,25 @@ switch ($user['packageid']) {
             },
             error: function(XMLHttpRequest) {}
         });
+    }
+
+    function changepackage(packageid) {
+        if (confirm('ยืนยันการเปลี่ยนแพคเกจ')) {
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('service/changepackage'); ?>",
+                data: JSON.stringify({
+                    packageid: packageid
+                }),
+                dataType: "json",
+                success: function(data) {
+                    console.log('data', data);
+                    if (data) {
+                        location.href = "<?= base_url("account/$token/packagecheckout") ?>";
+                    }
+                },
+                error: function(XMLHttpRequest) {}
+            });
+        }
     }
 </script>

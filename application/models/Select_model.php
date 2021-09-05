@@ -115,6 +115,8 @@ class Select_model extends CI_Model
         return $query;
     }
 
+
+
     function v_order($cond, $notin = null, $in = null, $limit = 0, $offset = 0, $searchtxt, $dfrom = null, $dto = null)
     {
         if ($notin != null) {
@@ -285,6 +287,26 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function nextarticle($id)
+    {
+        $this->db->select('*');
+        $this->db->from('article');
+        $this->db->where('id >', $id);
+        $this->db->where('status', 1);
+        $query = $this->db->get();
+        return $query;
+    }
+
+    function previousarticle($id)
+    {
+        $this->db->select('*');
+        $this->db->from('article');
+        $this->db->where('id <', $id);
+        $this->db->where('status', 1);
+
+        $query = $this->db->get();
+        return $query;
+    }
     function imagescover($cond)
     {
         $this->db->select('*');
@@ -445,7 +467,7 @@ class Select_model extends CI_Model
         if ($searchtxt != "") {
             $this->db->like('id', $searchtxt);
             $this->db->or_like('name', $searchtxt);
-            $this->db->or_like('merchantname', $searchtxt);
+            // $this->db->or_like('merchantname', $searchtxt);
         }
 
         $this->db->select('*');
@@ -601,6 +623,18 @@ class Select_model extends CI_Model
         $query = $this->db->get();
         return $query;
     }
+    function merchantsearch($cond, $searchtxt = "")
+    {
+        $this->db->select('*');
+        $this->db->from('merchant');
+        $this->db->where($cond);
+        if ($searchtxt != "") {
+            $this->db->like('title', $searchtxt);
+        }
+        $this->db->order_by('status , id', 'desc');
+        $query = $this->db->get();
+        return $query;
+    }
 
     function merchant($cond)
     {
@@ -752,6 +786,32 @@ class Select_model extends CI_Model
         return $query;
     }
 
+    function packageorder($cond)
+    {
+        $this->db->select('a.*,p.packagename,p.price');
+        $this->db->from('packageorder a');
+        $this->db->join('package p', 'a.packageid = p.id');
+        $this->db->where($cond);
+        $this->db->limit(1);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query;
+    }
+
+
+    function allpackageorder($cond)
+    {
+        $this->db->select('a.*,p.packagename,p.price,m.firstname,m.lastname,m.name');
+        $this->db->from('packageorder a');
+        $this->db->join('package p', 'a.packageid = p.id');
+        $this->db->join('merchant m', 'm.id = a.merchantid');
+        $this->db->where($cond);
+        $this->db->order_by('id', "DESC");
+        $query = $this->db->get();
+        return $query;
+    }
+
+
 
     function orderdisplaylist($status, $custid, $delivery_iscomplete = 0)
     {
@@ -780,6 +840,38 @@ class Select_model extends CI_Model
         o.closestatus  != 1 AND
         o.delivery_iscomplete  = $delivery_iscomplete AND
         o.custid = '$custid'
+        ");
+
+        return $query;
+    }
+
+
+    function orderdisplaylistall($status,  $delivery_iscomplete = 0)
+    {
+        $query = $this->db->query("SELECT o.id
+         ,o.orderno
+        ,o.status
+        ,o.isconfirm
+        ,o.shippingfee
+        ,o.shippingaddress
+        ,o.payamount
+        ,o.imgslip
+        ,o.paymentinfo
+        ,o.paymentmethodid
+        ,o.custid
+        ,o.total
+        ,o.merchantid
+        ,o.delivery_trackid
+        ,o.delivery_company
+        ,o.delivery_other
+        ,m.title
+        ,m.image
+        ,m.name
+        ,m.webname
+        FROM `orders` o join merchant m on o.merchantid = m.id
+        where o.status  in ($status) AND
+        o.closestatus  != 1 AND
+        o.delivery_iscomplete  = $delivery_iscomplete 
         ");
 
         return $query;
@@ -857,6 +949,19 @@ class Select_model extends CI_Model
 
         return $query;
     }
+
+
+    function getoverdueorder($min)
+    {
+        $query = $this->db->query("SELECT * FROM `orders` WHERE 1=1
+        and isauction = 0
+        and closestatus = 0
+        and status = 1
+        and date_add(createdate,interval $min minute) < now()");
+
+        return $query;
+    }
+
 
 
     function orderids($uid)
