@@ -806,7 +806,7 @@ class Select_model extends CI_Model
         $this->db->join('package p', 'a.packageid = p.id');
         $this->db->join('merchant m', 'm.id = a.merchantid');
         $this->db->where($cond);
-        $this->db->order_by('id', "DESC");
+        $this->db->order_by('a.createdate', "DESC");
         $query = $this->db->get();
         return $query;
     }
