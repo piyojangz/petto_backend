@@ -62,7 +62,7 @@ $(document).ready(function () {
 
                 if (width < 1170) {
                     body.addClass('content-wrapper');
-                    $(".sidebar-nav, .slimScrollDiv").css("overflow-x", "visible").parent().css("overflow", "visible");
+                    // $(".sidebar-nav, .slimScrollDiv").css("overflow-x", "visible").parent().css("overflow", "visible");
                 } else {
                     body.removeClass('content-wrapper');
                 }
