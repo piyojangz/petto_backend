@@ -23,7 +23,8 @@ switch ($user['packageid']) {
 ?>
 
 <div class="navbar-default sidebar" role="navigation">
-    <div class="sidebar-nav ">
+    <div class="sidebar-nav">
+    <div   style="width:250px;">
         <div class="sidebar-head">
             <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span>
             </h3>
@@ -155,6 +156,7 @@ switch ($user['packageid']) {
                 </li> -->
                 <?php endif; ?>
             </ul>
+        </div>
         </div>
     </div>
 </div>
