@@ -5,7 +5,7 @@
             <a class="logo" href="<?= base_url("account/$token/dashboard") ?>">
                 <!-- Logo icon image, you can use font-icon also --><b>
                     <!--This is dark logo icon--><img src="<?= base_url("res/account/plugins/images/admin-logo.png") ?>" style="width: 50px;" alt="home" class="dark-logo" />
-                    <!--This is light logo icon--><img src="https://pettodemo.web.app/assets/images/icon/logo/petto_logo.png" alt="home" class="light-logo" style="width:60px;" />
+                    <!--This is light logo icon--><img src="<?= base_url("res/img/218860.jpg") ?>" alt="home" class="light-logo" style="width:60px;" />
                 </b>
                 <?php if ($user["isadmin"]) : ?>
                     <!-- Logo text image you can use text also --><span class="hidden-xs" style="color: #0072be;

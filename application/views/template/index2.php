@@ -36,7 +36,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                 </button>
-                <a href="<?= base_url() ?>" class="logo"><img src="https://pettodemo.web.app/assets/images/icon/logo/petto_logo.png"
+                <a href="<?= base_url() ?>" class="logo"><img src="<?= base_url("res/img/218860.jpg") ?>"
                                                               style="width: 150px;"/> </a>
             </div>
             <div class="navbar-collapse collapse">

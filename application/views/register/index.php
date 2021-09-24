@@ -46,7 +46,7 @@
     <section id="wrapper" class="new-login-register" style="overflow-y: scroll;">
         <div class="lg-info-panel">
             <div class="inner-panel">
-                <a href="<?= base_url() ?>" class="p-20 di"><img src="https://pettodemo.web.app/assets/images/icon/logo/petto_logo.png" style="width: 150px;"></a>
+                <a href="<?= base_url() ?>" class="p-20 di"><img src="<?= base_url("res/img/218860.jpg") ?>" style="width: 150px;"></a>
                 <div class="lg-content">
                     <h2>Petto.co</h2>
                     <p class="text-muted">บริการร้านค้าออนไลน์สำหรับซื้อขายสัตว์เลี้ยง</p>

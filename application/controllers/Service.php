@@ -38,6 +38,9 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
+    public function testsendline(){
+        $this->sendtoLine('Udfcbf53c439d110a0b0f588166c4c54b', "ยินดีตอนรับสู่ Pettogo.co ท่านสามารถเข้าใช้งานระบบได้เลยที่ https://pettogo.co/");
+    }
 
     public function registercust()
     {
@@ -135,7 +138,7 @@ class Service extends CI_Controller
         $encodeJson2 = json_encode($pushmessages);
         // push message block
 
-        $results = $this->lineapi->pushMessage($encodeJson2);
+        print_r($results = $this->lineapi->pushMessage($encodeJson2));
     }
 
     function getFormatTextMessage($text)
