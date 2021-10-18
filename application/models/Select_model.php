@@ -588,7 +588,36 @@ class Select_model extends CI_Model
 
     function v_merchantwithpackage($cond, $searchtxt = "")
     {
-        $this->db->select('*');
+        $this->db->select('id,title	,
+        tel	,
+        lineaddurl	,
+        email	,
+        password	,
+        name	,
+        firstname	,
+        lastname	,
+        webname	,
+        description	,
+        lineid	,
+        image	,
+        token	,
+        createdate	,
+        updatedate	,
+        textcustom	,
+        billtoken	,
+        status	, 
+        reason	,
+        isadmin	,
+        isrecommend	,
+        packageid	,
+        packagestatus	,
+        packagecreatedate	,
+        packageupdatedate	,
+        packageduraion	,
+        islineverify	,
+        sold	,
+        rating	,
+        ');
         $this->db->from('v_merchantwithpackage');
         $this->db->where($cond);
         if ($searchtxt != "") {

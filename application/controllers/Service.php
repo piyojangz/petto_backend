@@ -38,7 +38,8 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
-    public function testsendline(){
+    public function testsendline()
+    {
         $this->sendtoLine('Udfcbf53c439d110a0b0f588166c4c54b', "ยินดีตอนรับสู่ Pettogo.co ท่านสามารถเข้าใช้งานระบบได้เลยที่ https://pettogo.co/");
     }
 
@@ -1192,7 +1193,18 @@ class Service extends CI_Controller
         echo json_encode($data);
     }
 
-    public function getarticle()
+    public function getmerchant()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $id = $post['id'];
+        $cond = array('id' => $id);
+        $data['result'] = $this->get->merchant($cond)->row();
+
+        $this->output->set_header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($data);
+    }
+
+    public function getfireatta()
     {
         $post = json_decode(file_get_contents('php://input'), true);
         $id = $post['id'];
@@ -1861,7 +1873,7 @@ class Service extends CI_Controller
 
             $data['result'] = $this->put->packageorder($input);
 
- 
+
             // $subject = "แจ้งชำระเงินค่าเปลี่ยนแพคเกจ";
             // $msg = "กรุณาชำระเงินสำหรับการเปลี่ยนแพคเกจ $package->packagename จำนวน $package->price บาทค่ะ"; 
             $this->pushMsgNotifyMerchant($data["merchant"]->id, "กรุณาชำระเงินสำหรับการเปลี่ยนแพคเกจ $package->packagename จำนวน $package->price บาทค่ะ");

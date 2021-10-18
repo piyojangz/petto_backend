@@ -53,7 +53,7 @@ class Register extends CI_Controller
                 );
                 $this->put->merchant($input);
 
-                if ($this->isLocalhost()) {
+                if (!$this->isLocalhost()) {
                     $this->sendemail($token, $firstname, $email);
                 } 
                 $data["register"] = true;

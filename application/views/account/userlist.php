@@ -166,8 +166,8 @@
                                                 <?php else : ?>
                                                     <td style="vertical-align: middle;"></td>
                                                 <?php endif; ?> -->
-
-                                                <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-success' : 'badge-success' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">คลิก</a></td>
+                                                <!-- <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-success' : 'badge-success' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','<?= $item->fileattached ?>')" href="javascript:;">คลิก</a></td> -->
+                                                <td style="vertical-align: middle;"><a class="badge  <?= $item->status == 0 ? 'badge-success' : 'badge-success' ?> btn-file-modal" onclick="openfile('<?= $item->id ?>','')" href="javascript:;">คลิก</a></td>
 
                                             </tr>
                                         <?php endforeach; ?>
@@ -243,7 +243,7 @@
                                         <div class="panel panel-info ">
                                             <div class="panel-body">
 
-                                                <div class="form-body"> 
+                                                <div class="form-body">
                                                     <div class="form-group">
                                                         <label class="control-label col-md-3">สถานะ</label>
                                                         <div class="col-md-9">
@@ -425,18 +425,35 @@
         });
     });
 
-    function openprofile(profile) { 
+    function openprofile(profile) {
         $('#merchantid2').val(profile.id);
         $('#pf-name').html(profile.firstname + " " + profile.lastname);
         $('#pf-tel').html(profile.tel);
         $('#pf-address').html(profile.address);
-        $('#pf-image').attr("src", profile.fileattached);
-        $.magnificPopup.open({
-            items: {
-                src: '#form-profile'
+
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getmerchant'); ?>",
+            data: JSON.stringify({
+                'id': profile.id
+            }),
+            dataType: "json",
+            success: function(data) { 
+
+                $('#pf-image').attr("src", data.result.fileattached);
+                $.magnificPopup.open({
+                    items: {
+                        src: '#form-profile'
+                    },
+                    type: 'inline'
+                }, 0);
+
+
             },
-            type: 'inline'
-        }, 0);
+            error: function(XMLHttpRequest) {}
+        });
+
     }
 
     function openpack(id, packid) {
@@ -451,14 +468,28 @@
 
 
     function openfile(id, _file) {
-        $("#fileattached").attr("src", _file);
+
         $("#merchantid").val(id);
-        $.magnificPopup.open({
-            items: {
-                src: '#form-submit'
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('service/getmerchant'); ?>",
+            data: JSON.stringify({
+                'id': id
+            }),
+            dataType: "json",
+            success: function(data) {
+                $("#fileattached").attr("src", data.result.fileattached);
+                $.magnificPopup.open({
+                    items: {
+                        src: '#form-submit'
+                    },
+                    type: 'inline'
+                }, 0);
+
             },
-            type: 'inline'
-        }, 0);
+            error: function(XMLHttpRequest) {}
+        });
     }
 
     function statuschange() {
